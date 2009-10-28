@@ -27,10 +27,19 @@ function getSearchResults(element){
 	myRequest.send();
 }
 
+//Hold the JSON object with current song
+var currentSongPlaying = null;
+
 window.addEvent('domready', function() {
+
+	//Init the song manager
 	currentSongManager = new SongManager({
 		getCurrentSongUrl: 'getcurrent.html',
 		onUpdate: function(responseJSON){
+			//Back it up
+			currentSongPlaying = responseJSON;
+
+			//Update the html
 			$('currentAlbum').set('html', "Album: " + responseJSON.album);
 			$('currentArtist').set('html', "Artist: " + responseJSON.artist);
 			$('currentTitle').set('html', "Title: " + responseJSON.title);
@@ -50,11 +59,73 @@ window.addEvent('domready', function() {
 		currentSongManager.update();
 	});
 
+	//When the play controls are clicked, get the html page and update the current song
 	$('playControls').getElements('a').each(function(el){
 		el.addEvent('click', function(event){
 			event.preventDefault();
 			currentSongManager.update(el.get('href'));
 		});
+	});
+
+	//Init the searcher
+	searcher = new MusicSearcher({
+		//The url for the searches
+		getSearchResultsUrl: 'getsearchresults.html?query=',
+
+		//When the request is complete
+		onSearchComplete: function(responseJSON){
+			//Empty the loading...
+			$('searchList').empty();
+
+			//For echt song in the JSON response
+			responseJSON.each(function(song){
+				new Element('a',{
+					'href': 'javascript:void(0)',
+					'html': song.title,
+					'events':{
+						'click': function(){
+							//If it has two li items, dont create them plx
+							if(this.getElements('li').length==2)
+								return;
+
+							//Create the 'Play' link
+							new Element('a',{
+								'href': '#current',
+								'html': 'Play',
+								'events':{
+									'click': function(){
+										currentSongManager.update('?file='+song.filename);
+									}
+								}
+							}).inject(
+								new Element('li').inject(this) //this refers to 'ul > li > a'
+							);
+
+							//Create the 'Enqueue' link
+							new Element('a',{
+								'href': 'javascript:void(0)',
+								'html': 'Enqueue',
+								'events':{
+									'click': function(e){
+										e.stopPropagation();
+										currentSongManager.update('?add='+song.filename+'&playaddedifnotplaying');
+										this.getParent().getParent().getElements('li').dispose();
+									}
+								}
+							}).inject(
+								new Element('li').inject(this) //this refers to 'ul > li > a'
+							);
+						}
+					}
+				})
+				.inject(new Element('li').inject('searchList')); //Inject the list item to the ul
+			});
+		}
+	});
+
+	//Add listener for album searching
+	$('currentAlbum').addEvent('click',function(){
+		searcher.search('ALBUM HAS "'+currentSongPlaying.album+'"');
 	});
 });
 </script>
@@ -105,7 +176,7 @@ window.addEvent('domready', function() {
 		</table>
 
         <ul>
-			<li><a href="javascript:void(0)" id="currentAlbum">Album: <img src="images/loading.gif" width="20" /></a></li>
+			<li><a href="#searchResults" id="currentAlbum">Album: <img src="images/loading.gif" width="20" /></a></li>
 			<li id="currentArtist">Artist: <img src="images/loading.gif" width="20" /></li>
 			<li id="currentTitle">Title: <img src="images/loading.gif" width="20" /></li>
 			<li id="currentInfo">Info: <img src="images/loading.gif" width="20" /></li>
@@ -183,7 +254,10 @@ window.addEvent('domready', function() {
         <p>asdf</p>
     </div>
     <div id="searchResults" class="panel" title="Search" onfocus="getSearchResults(this)">
-		<h2>asdf</h2>
+		<h2>Search Results</h2>
+		<ul id="searchList">
+			<li><img src="images/loading.gif" width="24"></li>
+		</ul>
     </div>
     <form id="searchForm" class="dialog" action="#searchResults">
         <fieldset>

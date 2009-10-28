@@ -32,3 +32,45 @@ var SongManager = new Class({
 		this.fireEvent('update', responseJSON);
 	}
 });
+
+var MusicSearcher = new Class({
+	
+	Implements: [Options,Events],
+	
+	options: {
+		//getSearchResultsUrl: '',
+		// onSearchComplete: $empty
+	},
+	
+	initialize: function(options) {
+		//set options
+		this.setOptions(options);
+	},
+	
+	// Query the media library with ajax request and fire the event
+	search: function(query){
+		if(!$chk)
+		{
+			alert('Error, no search query');
+			return false;
+		}
+		requestUrl = this.options.getSearchResultsUrl + query;
+		var myRequest = new Request.JSON({
+			method: "get",
+			url: requestUrl,
+			onSuccess: function(responseJSON, responseText){
+				this.fireEvent('searchComplete', [responseJSON, responseText]);
+			}.bind(this),
+			onFailure: function(){
+				alert('Error getting search results');
+			}
+		});
+		myRequest.send();
+		return true;
+	}, 
+	
+	onRequestSuccess: function(responseJSON){
+		alert(responseJSON);
+		
+	}
+});
