@@ -44,24 +44,22 @@ addEventListener("click", function(event)
     // Search the <a> tag
     while (link && link.localName && link.localName.toLowerCase() != "a")
         link = link.parentNode;
-
-    if (link && link.hash)
+    
+    // Dont do anything with normal links
+    if (link && link.hash && link.hash != '' && link.hash != '#')
     {
-		// Dont do anything with javascript links
-		if(!link.href.startsWith('javascript:'))
+		//Stop event
+		event.preventDefault();
+		
+		//Get the page, and when found, go to it
+		var page = document.getElementById(link.hash.substr(1));
+		if(page)
 		{
-			//Stop event
-			event.preventDefault();
-			//Get the page, and when found, go to it
-			var page = document.getElementById(link.hash.substr(1));
-			if(page)
-			{
-				showPage(page);
-			}
-			else
-			{
-				alert('Page not found: '+link.hash);
-			}
+			showPage(page);
+		}
+		else
+		{
+			alert('Page not found: '+link.hash);
 		}
     }
 }, true);
