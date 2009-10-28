@@ -127,6 +127,10 @@ window.addEvent('domready', function() {
 	$('currentAlbum').addEvent('click',function(){
 		searcher.search('ALBUM HAS "'+currentSongPlaying.album+'"');
 	});
+	//Add listener for artist searching
+	$('currentArtist').addEvent('click',function(){
+		searcher.search('ARTIST HAS "'+currentSongPlaying.artist+'"');
+	});
 });
 </script>
 </head>
@@ -177,7 +181,7 @@ window.addEvent('domready', function() {
 
         <ul>
 			<li><a href="#searchResults" id="currentAlbum">Album: <img src="images/loading.gif" width="20" /></a></li>
-			<li id="currentArtist">Artist: <img src="images/loading.gif" width="20" /></li>
+			<li><a href="#searchResults" id="currentArtist">Artist: <img src="images/loading.gif" width="20" /></a></li>
 			<li id="currentTitle">Title: <img src="images/loading.gif" width="20" /></li>
 			<li id="currentInfo">Info: <img src="images/loading.gif" width="20" /></li>
 		</ul>
