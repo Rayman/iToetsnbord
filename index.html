@@ -11,22 +11,6 @@
 <script type="application/x-javascript" src="scripts/itoetsnbord.js"></script>
 <script type="application/x-javascript">
 
-function getSearchResults(element){
-	var artist = $(lastSubmittedForm).getElement('input[name=artist]').value;
-	var song   = $(lastSubmittedForm).getElement('input[name=song]').value;
-	artist = artist == '' ? '' : 'ARTIST HAS "' + artist +'"';
-	song   = song   == '' ? '' : 'TITLE HAS  "' + song   +'"';
-	query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
-	var myRequest = new Request.JSON({
-		method: "get",
-		url: 'getsearchresults.html?query='+query,
-		onSuccess: function(responseJSON, responseText){
-			alert(responseText);
-		}
-	});
-	myRequest.send();
-}
-
 //Hold the JSON object with current song
 var currentSongPlaying = null;
 
@@ -127,11 +111,23 @@ window.addEvent('domready', function() {
 	$('currentAlbum').addEvent('click',function(){
 		searcher.search('ALBUM HAS "'+currentSongPlaying.album+'"');
 	});
+	
 	//Add listener for artist searching
 	$('currentArtist').addEvent('click',function(){
 		searcher.search('ARTIST HAS "'+currentSongPlaying.artist+'"');
 	});
+	
+	//Add listener for search form submit
+	$('searchForm').addEvent('submit',function(e){
+		var artist = this.getElement('input[name=artist]').value;
+		var song   = this.getElement('input[name=song]').value;
+		artist = artist == '' ? '' : 'ARTIST HAS "' + artist +'"';
+		song   = song   == '' ? '' : 'TITLE HAS  "' + song   +'"';
+		query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
+		searcher.search(query);
+	});
 });
+
 </script>
 </head>
 
@@ -142,10 +138,10 @@ window.addEvent('domready', function() {
 
     <ul id="home" title="Home" selected="true">
         <li><a id="getCurrent" href="#current">Current Played File</a></li>
-        <li><a href="#test">Enqueue</a></li>
+        <li><a href="#search">Search</a></li>
         <li><a href="#options">Options</a></li>
-        <li><a href="#player">Jasdfdf</a></li>
-        <li><a href="asdf">Normal link</a></li>
+        <li><a href="getcurrent.html">Normal link</a></li>
+        <li><a href="#test">Test</a></li>
     </ul>
 
     <div id="current" class="panel" title="Current">
@@ -217,6 +213,7 @@ window.addEvent('domready', function() {
     </div>
 
     <div id="options" class="panel" title="Options">
+		<h2>Basic options</h2>
         <ul>
 			<li>dsfg</li>
 			<li>sdfars</li>
@@ -225,48 +222,26 @@ window.addEvent('domready', function() {
 		</ul>
 	</div>
 
-    <ul id="CrowdedHouse" title="Crowded House">
-        <li><a href="#songs">Crowded House</a></li>
-        <li><a href="#songs">Temple of Low Men</a></li>
-        <li><a href="#songs">Together Alone</a></li>
-        <li><a href="#songs">Woodface</a></li>
-    </ul>
-    <ul id="JohnMayer" title="John Mayer">
-        <li><a href="#songs">Continuum</a></li>
-        <li><a href="#songs">Heavier Things</a></li>
-        <li><a href="#songs">Room for Squares</a></li>
-    </ul>
-    <ul id="Zero7" title="Zero 7">
-        <li><a href="#songs">The Garden</a></li>
-        <li><a href="#songs">Simple Things</a></li>
-        <li><a href="#songs">When it Falls</a></li>
-    </ul>
-    <ul id="songs" title="Songs">
-        <li><a href="#player">Song 1</a></li>
-        <li><a href="#player">Song 2</a></li>
-        <li><a href="#player">Song 3</a></li>
-        <li><a href="#player">Song 4</a></li>
-        <li><a href="#player">Song 5</a></li>
-        <li><a href="#player">Song 6</a></li>
-        <li><a href="#player">Song 7</a></li>
-        <li><a href="#player">Song 8</a></li>
-        <li><a href="#player">Song 9</a></li>
-        <li><a href="#player">Song 10</a></li>
-        <li><a href="#player">Song 11</a></li>
-    </ul>
-    <div id="player" class="panel" title="Now Playing">
-        <p>asdf</p>
+    <div id="search" class="panel" title="Search">
+		<ul>
+			<li><a href="#searchQuery">Search by Query</a></li>
+			<li>Other option</li>
+			<li>Other option</li>
+		</ul>    
     </div>
-    <div id="searchResults" class="panel" title="Search" onfocus="getSearchResults(this)">
+    
+    <div id="searchResults" class="panel" title="Search">
 		<h2>Search Results</h2>
 		<ul id="searchList">
 			<li><img src="images/loading.gif" width="24"></li>
 		</ul>
     </div>
+    
     <form id="searchForm" class="dialog" action="#searchResults">
         <fieldset>
             <h1>Music Search</h1>
-            <a class="button toolButton goButton" href="#searchResults">Search</a>
+            <!-- Fire the event and after that the DOM event -->
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event).onsubmit(event)">Search</a>
 
             <label>Artist:</label>
             <input type="text" name="artist" />

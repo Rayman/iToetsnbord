@@ -155,7 +155,7 @@ function showDialog(form)
     
     //Add an onsubmit handler
     form.onsubmit = function(event){
-    	//Stop the event
+    	//Stop the default action
 		event.preventDefault();
 		
 		//Hide the form
@@ -176,7 +176,6 @@ function showDialog(form)
 			{
 				lastSubmittedForm = form;			
 				showPage(element);
-				element.onfocus.run();
 			}
 			else
 			{
