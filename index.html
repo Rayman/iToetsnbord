@@ -8,34 +8,8 @@
 <style type="text/css" media="screen">@import "iphonenav.css";</style>
 <script type="application/x-javascript" src="scripts/mootools-1.2.4-core.js"></script>
 <script type="application/x-javascript" src="scripts/iphonenav.js"></script>
+<script type="application/x-javascript" src="scripts/itoetsnbord.js"></script>
 <script type="application/x-javascript">
-
-function updateCurrent(responseJSON){
-	$('currentAlbum').set('html', "Album: " + responseJSON.album);
-	$('currentArtist').set('html', "Artist: " + responseJSON.artist);
-	$('currentTitle').set('html', "Title: " + responseJSON.title);
-	$('currentInfo').set(
-		'html',
-		"Info: " + responseJSON.bitrate + "kbps, " + 
-		responseJSON.samplerate + "kHz " + 
-		responseJSON.channels
-	);
-	$('currentAlbumArt').setProperty('src', responseJSON.albumart);
-}
-
-function loadAsync(requestUrl, processFunction){
-	var myRequest = new Request.JSON({
-		method: "get",
-		url: requestUrl,
-		onSuccess: function(responseJSON, responseText){
-			processFunction(responseJSON);
-		},
-		onFailure: function(){
-			alert('Error getting current song');
-		}
-	});
-	myRequest.send();
-}
 
 function getSearchResults(element){
 	var artist = $(lastSubmittedForm).getElement('input[name=artist]').value;
@@ -50,11 +24,38 @@ function getSearchResults(element){
 			alert(responseText);
 		}
 	});
-	myRequest.send();	
+	myRequest.send();
 }
 
 window.addEvent('domready', function() {
-	loadAsync('getcurrent.html', updateCurrent);
+	currentSongManager = new SongManager({
+		getCurrentSongUrl: 'getcurrent.html',
+		onUpdate: function(responseJSON){
+			$('currentAlbum').set('html', "Album: " + responseJSON.album);
+			$('currentArtist').set('html', "Artist: " + responseJSON.artist);
+			$('currentTitle').set('html', "Title: " + responseJSON.title);
+			$('currentInfo').set(
+				'html',
+				"Info: " + responseJSON.bitrate + "kbps, " +
+				responseJSON.samplerate + "kHz " +
+				responseJSON.channels
+			);
+			$('currentAlbumArt').setProperty('src', responseJSON.albumart);
+		},
+	});
+
+	//When user clicks this link, get the current song played
+	$('getCurrent').addEvent('click', function(){
+		// If we do addEvent('click',currentSongmanager.update), then 'this' gets set as 'window'
+		currentSongManager.update();
+	});
+
+	$('playControls').getElements('a').each(function(el){
+		el.addEvent('click', function(event){
+			event.preventDefault();
+			currentSongManager.update(el.get('href'));
+		});
+	});
 });
 </script>
 </head>
@@ -63,45 +64,45 @@ window.addEvent('domready', function() {
     <h1 id="pageTitle"></h1>
     <a id="homeButton" class="button" href="#home">Home</a>
     <a class="button" href="#searchForm">Search</a>
-    
+
     <ul id="home" title="Home" selected="true">
         <li><a id="getCurrent" href="#current">Current Played File</a></li>
         <li><a href="#test">Enqueue</a></li>
         <li><a href="#options">Options</a></li>
         <li><a href="#player">Jasdfdf</a></li>
     </ul>
-    
+
     <div id="current" class="panel" title="Current">
-    	<table width="100%">
+    	<table id="playControls" width="100%">
 			<tr>
 				<td>
-					<a href="javascript:void(0)" onclick="loadAsync('getcurrent.html?prev',updateCurrent)">
+					<a href="?prev">
 						<img src="images/prev.gif" width="24" height="24" border="0" alt="jump to previous song">
 					</a>
 				</td>
 				<td>
-					<a href="javascript:void(0)" onclick="loadAsync('getcurrent.html?play',updateCurrent)">
+					<a href="?play">
 						<img src="images/play.gif" width="24" height="24" border="0" alt="start playback">
 					</a>
 				</td>
 				<td>
-					<a href="javascript:void(0)" onclick="loadAsync('getcurrent.html?stop',updateCurrent)">
+					<a href="?stop">
 						<img src="images/stop.gif" width="24" height="24" border="0" alt="stop playback">
 					</a>
 				</td>
 				<td>
-					<a href="javascript:void(0)" onclick="loadAsync('getcurrent.html?pause',updateCurrent)">
+					<a href="?pause">
 						<img src="images/pause.gif" width="24" height="24" border="0" alt="pause playback">
 					</a>
 				</td>
 				<td>
-					<a href="javascript:void(0)" onclick="loadAsync('getcurrent.html?next',updateCurrent)">
+					<a href="?next">
 						<img src="images/next.gif" width="24" height="24" border="0" alt="jump to next song">
 					</a>
 				</td>
 			</tr>
 		</table>
-		
+
         <ul>
 			<li><a href="javascript:void(0)" id="currentAlbum">Album: <img src="images/loading.gif" width="20" /></a></li>
 			<li id="currentArtist">Artist: <img src="images/loading.gif" width="20" /></li>
@@ -110,7 +111,7 @@ window.addEvent('domready', function() {
 		</ul>
 		<img id="currentAlbumArt" src="images/loading.gif" width="100" />
     </div>
-    
+
     <div id="test" class="panel" title="Belle & Sebastian">
 		<h2>Normal list</h2>
 		<ul>
@@ -124,13 +125,13 @@ window.addEvent('domready', function() {
 			<li><a href="#development.html">Development</a></li>
 		</ul>
 		<h2>About</h2>
-		<p>Jonathan Stark is a web developer, speaker, and author. His 
+		<p>Jonathan Stark is a web developer, speaker, and author. His
 		   consulting firm, Jonathan Stark Consulting, Inc., has attracted
 		   clients such as Staples, Turner Broadcasting, and the PGA Tour.
 		   ...
 		</p>
 		<p>Jonathan Stark is a mobile and web application developer who the
-		   Wall Street Journal has called an expert on publishing desktop 
+		   Wall Street Journal has called an expert on publishing desktop
 		   data to the web.</p>
 		<ul>
 			<li><a href="#services.html">Services</a></li>
@@ -138,16 +139,16 @@ window.addEvent('domready', function() {
 			<li><a href="#blog.html">Blog</a></li>
 		</ul>
     </div>
-    
-    <div id="options" class="panel" title="Options">		
+
+    <div id="options" class="panel" title="Options">
         <ul>
 			<li>dsfg</li>
 			<li>sdfars</li>
 			<li>ds ase rtg fg</li>
 			<li>araw</li>
 		</ul>
-	</div>    
-    
+	</div>
+
     <ul id="CrowdedHouse" title="Crowded House">
         <li><a href="#songs">Crowded House</a></li>
         <li><a href="#songs">Temple of Low Men</a></li>
@@ -187,7 +188,7 @@ window.addEvent('domready', function() {
         <fieldset>
             <h1>Music Search</h1>
             <a class="button toolButton goButton" href="#searchResults">Search</a>
-            
+
             <label>Artist:</label>
             <input type="text" name="artist" />
             <label>Song:</label>
