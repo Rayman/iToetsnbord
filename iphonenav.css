@@ -151,8 +151,6 @@ input {
 
 body > div > ul {
     list-style: none;
-    width: "80%",
-    margin: 30px;
     padding: 0;
 }
 

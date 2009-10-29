@@ -240,8 +240,8 @@ window.addEvent('domready', function() {
     <form id="searchForm" class="dialog" action="#searchResults">
         <fieldset>
             <h1>Music Search</h1>
-            <!-- Fire the event and after that the DOM event -->
-            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event).onsubmit(event)">Search</a>
+            <!-- Fire the onSubmit event -->
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
 
             <label>Artist:</label>
             <input type="text" name="artist" />
