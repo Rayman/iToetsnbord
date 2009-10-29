@@ -10,14 +10,16 @@ String.prototype.endsWith = function(str){
 //Everything is wrapped in a function, so these ugly variables are hidden :)
 (function() {
 
-var animateX = -20;
-var animateInterval = 24;
+//Constants for the page swiping
+var animateX = -20; //Percentage of the screen moved in one step
+var animateInterval = 24; //Time between two intervals of the animation in ms
 
-var currentPage = null;
-var currentWidth = 0;
-var currentHash = location.hash;
-var hashPrefix = "#_";
-var pageHistory = [];
+//Usefull variables for page navigation
+var currentPage = null; //Hold the element of the current page
+var currentWidth = 0; //Hold the current width of the window
+var currentHash = location.hash; //Holds the current id of the page
+var hashPrefix = "#_"; //The pageId gets prefixed in the url by this
+var pageHistory = []; //Hold the history so that back/forward buttons work
 
 addEventListener("click", function(event)
 {
@@ -55,6 +57,7 @@ function checkOrientAndLocation()
         document.body.setAttribute("orient", orient);
     }
 
+    //If back/forward buttons are used, the location.hash changes
     if (location.hash != currentHash)
     {
         currentHash = location.hash;
@@ -62,6 +65,7 @@ function checkOrientAndLocation()
         var page = $(pageId);
         if (page)
         {
+			//Try to find that page in the history
             var index = pageHistory.indexOf(pageId);
             var backwards = index != -1;
             if (backwards)
@@ -84,6 +88,7 @@ function showPage(page, backwards)
     else
     {
         location.href = currentHash = hashPrefix + page.id;
+        //Save the page in the history
         pageHistory.push(page.id);
 
         var fromPage = currentPage;
