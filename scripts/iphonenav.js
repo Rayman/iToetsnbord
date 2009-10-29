@@ -10,13 +10,13 @@ String.prototype.endsWith = function(str){
 // Now comes all the nav stuff
 var lastSubmittedForm = null;
 
+//Everything is wrapped in a function, so these ugly variables are hidden :)
 (function() {
 
 var animateX = -20;
 var animateInterval = 24;
 
 var currentPage = null;
-var currentDialog = null;
 var currentWidth = 0;
 var currentHash = location.hash;
 var hashPrefix = "#_";
@@ -48,7 +48,7 @@ addEventListener("click", function(event)
     // Dont do anything with normal links
     if (link && link.hash && link.hash != '' && link.hash != '#')
     {
-		//Stop event
+		//Stop default action
 		event.preventDefault();
 		
 		//Get the page, and when found, go to it
@@ -96,17 +96,13 @@ function checkOrientAndLocation()
 }
     
 function showPage(page, backwards)
-{
-    if (currentDialog)
-    {
-        currentDialog.removeAttribute("selected");
-        currentDialog = null;
-    }
-
+{    
+    // If classname == dialog means that it is a form that has to be shown
     if (page.className.indexOf("dialog") != -1)
         showDialog(page);
     else
-    {        
+    {
+		//This is the case if it's a normal page
         location.href = currentHash = hashPrefix + page.id;
         pageHistory.push(page.id);
 
@@ -149,47 +145,54 @@ function swipePage(fromPage, toPage, backwards)
 
 function showDialog(form)
 {
-	// Display the form
-    currentDialog = form;
     form.setAttribute("selected", "true");
-    
-    //Add an onsubmit handler
-    form.onsubmit = function(event){
-    	//Stop the default action
-		event.preventDefault();
-		
-		//Hide the form
-		form.removeAttribute("selected");
-		
-		// Deselect all
-		$$('#searchForm input').each(function(item){
-			item.blur();
-		});
-
-		//Check if the action is to a #id
-		var index = form.action.lastIndexOf("#");
-		if (index != -1)
-		{
-			//Get the submit location
-			var element = document.getElementById(form.action.substr(index+1));
-			if(element)
-			{
-				lastSubmittedForm = form;			
-				showPage(element);
-			}
-			else
-			{
-				alert('Page not found');
-			}
-		}
-	};
-    
-    //Deselect the form
-    form.onclick = function(event)
-    {
-        if (event.target == form)
-            form.removeAttribute("selected");
-    }
 }
 
-})();
+window.addEvent('domready', function() {
+
+	//Add some events to forms with class=dialog
+    $$('[class=dialog]').addEvents({
+    
+		//Add an onsubmit event handler to all forms that have class=dialog   
+		'submit': function(event){
+			
+			//Stop the submitting of the form
+			event.preventDefault();
+			
+			// Deselect all inputs
+			this.getElements('input').each(function(item){
+				item.blur();
+			});
+			
+			//Hide the form
+			this.removeAttribute("selected");
+
+			//Check if the action is to a #id
+			var index = this.action.lastIndexOf("#");
+			if (index != -1)
+			{
+				//Get the submit location
+				var element = document.getElementById(this.action.substr(index+1));
+				if(element)
+				{
+					lastSubmittedForm = this;			
+					showPage(element);
+				}
+				else
+				{
+					alert('Page not found');
+				}
+			}
+			
+		},
+		
+		//Hide the form when an click event occurs 
+		'click': function(event){
+			if (event.target == this)
+				this.removeAttribute("selected");
+		}
+	});	
+});
+
+
+})(); //End of wrapper function
