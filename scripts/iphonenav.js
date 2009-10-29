@@ -59,7 +59,7 @@ function checkOrientAndLocation()
     {
         currentHash = location.hash;
         var pageId = currentHash.substr(hashPrefix.length);
-        var page = $('pageId');
+        var page = $(pageId);
         if (page)
         {
             var index = pageHistory.indexOf(pageId);
@@ -101,7 +101,7 @@ function showPage(page, backwards)
 }
 
 function swipePage(fromPage, toPage, backwards)
-{
+{	
     toPage.style.left = "100%";
     toPage.setAttribute("selected", "true");
     scrollTo(0, 1);
