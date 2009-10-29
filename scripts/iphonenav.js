@@ -7,9 +7,6 @@ String.prototype.endsWith = function(str){
 	return (this.match(str+"$")==str);
 };
 
-// Now comes all the nav stuff
-var lastSubmittedForm = null;
-
 //Everything is wrapped in a function, so these ugly variables are hidden :)
 (function() {
 
@@ -174,8 +171,7 @@ window.addEvent('domready', function() {
 				//Get the submit location
 				var element = document.getElementById(this.action.substr(index+1));
 				if(element)
-				{
-					lastSubmittedForm = this;			
+				{		
 					showPage(element);
 				}
 				else
