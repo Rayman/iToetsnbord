@@ -21,16 +21,16 @@ var pageHistory = [];
 
 addEventListener("load", function(event)
 {
-    var body = document.getElementsByTagName("body")[0];
-    for (var child = body.firstChild; child; child = child.nextSibling)
-    {
-        if (child.nodeType == 1 && child.getAttribute("selected") == "true")
-        {
-            showPage(child);
-            break;
-        }
-    }
-
+	// Get all elements with selected = true (there is no other way)
+	list = $(document.body).getChildren().filter(function(el){
+		return el.getAttribute('selected')
+	});
+	//Startpage is the first selected = true, pick the fist div when no elements are found
+	startPage = list.length > 0 ? list[0] : $(document.body).getElement('div');
+	//Show the startpage
+	showPage(startPage);
+	
+	//Add some time stuff
     setInterval(checkOrientAndLocation, 300);
     setTimeout(scrollTo, 0, 0, 1);
 }, false);
@@ -94,12 +94,11 @@ function checkOrientAndLocation()
     
 function showPage(page, backwards)
 {    
-    // If classname == dialog means that it is a form that has to be shown
+    // If classname == dialog means that it is a form
     if (page.className.indexOf("dialog") != -1)
         showDialog(page);
     else
     {
-		//This is the case if it's a normal page
         location.href = currentHash = hashPrefix + page.id;
         pageHistory.push(page.id);
 
