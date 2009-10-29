@@ -88,42 +88,48 @@ function showPage(page, backwards)
 
         var fromPage = currentPage;
         currentPage = page;
-        
+
         //Set the title
         $('pageTitle').set('html', page.title || "");
-      
+
 		//Hide the homebutton when page == home
         $('homeButton').setStyle('display', ("#"+page.id) == $('homeButton').hash ? "none" : "inline");
-        
+
         if (fromPage)
             setTimeout(swipePage, 0, fromPage, page, backwards);
     }
 }
 
 function swipePage(fromPage, toPage, backwards)
-{	
-    toPage.style.left = "100%";
+{
+	// position the toPage right next to the current page ???
+    toPage.setStyle('left', '100%');
+
+    //Unhide it
     toPage.setAttribute("selected", "true");
+
+    //Scroll to the top
     scrollTo(0, 1);
 
     var percent = 100;
-    var timer = setInterval(function()
+    var timer = function()
     {
         percent += animateX;
         if (percent <= 0)
         {
             percent = 0;
-            fromPage.removeAttribute("selected");
-            clearInterval(timer);
+            fromPage.removeAttribute("selected"); //Hide the fromPage
+            $clear(timer); //Stop the timer
         }
 
-        fromPage.style.left = (backwards ? (100-percent) : (percent-100)) + "%";
-        toPage.style.left = (backwards ? -percent : percent) + "%";
-    }, animateInterval);
+        fromPage.setStyle('left', (backwards ? (100-percent) : (percent-100)) + "%");
+        toPage.setStyle('left', (backwards ? -percent : percent) + "%");
+    }.periodical(animateInterval);
 }
 
 function showDialog(form)
 {
+	//Unhide the form
     form.setAttribute("selected", "true");
 }
 
