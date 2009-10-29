@@ -59,7 +59,7 @@ function checkOrientAndLocation()
     {
         currentHash = location.hash;
         var pageId = currentHash.substr(hashPrefix.length);
-        var page = document.getElementById(pageId);
+        var page = $('pageId');
         if (page)
         {
             var index = pageHistory.indexOf(pageId);
@@ -79,7 +79,7 @@ function checkOrientAndLocation()
 function showPage(page, backwards)
 {
     // If classname == dialog means that it is a form
-    if (page.className.indexOf("dialog") != -1)
+    if (page.hasClass('dialog'))
         showDialog(page);
     else
     {
@@ -88,14 +88,13 @@ function showPage(page, backwards)
 
         var fromPage = currentPage;
         currentPage = page;
-
-        var pageTitle = document.getElementById("pageTitle");
-        pageTitle.innerHTML = page.title || "";
-
-        var homeButton = document.getElementById("homeButton");
-        if (homeButton)
-            homeButton.style.display = ("#"+page.id) == homeButton.hash ? "none" : "inline";
-
+        
+        //Set the title
+        $('pageTitle').set('html', page.title || "");
+      
+		//Hide the homebutton when page == home
+        $('homeButton').setStyle('display', ("#"+page.id) == $('homeButton').hash ? "none" : "inline");
+        
         if (fromPage)
             setTimeout(swipePage, 0, fromPage, page, backwards);
     }
