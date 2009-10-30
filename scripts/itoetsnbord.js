@@ -39,6 +39,7 @@ var MusicSearcher = new Class({
 	
 	options: {
 		//getSearchResultsUrl: '',
+		// getSearchByKeyUrl: '',
 		// onSearchComplete: $empty
 	},
 	
@@ -68,7 +69,29 @@ var MusicSearcher = new Class({
 		myRequest.send();
 		this.fireEvent('searchStart', query);
 		return true;
-	}, 
+	},
+	
+	searchByKey: function(key){
+		if(!$chk(key))
+		{
+			alert('Error, no key');
+			return false;
+		}
+		requestUrl = this.options.getSearchByKeyUrl + key;
+		var myRequest = new Request.JSON({
+			method: "get",
+			url: requestUrl,
+			onSuccess: function(responseJSON, responseText){
+				this.fireEvent('searchComplete', [responseJSON, responseText]);
+			}.bind(this),
+			onFailure: function(){
+				alert('Error getting search results');
+			}
+		});
+		myRequest.send();
+		this.fireEvent('searchStart', 'Search for: ' + key);
+		return true;
+	},
 	
 	onRequestSuccess: function(responseJSON){
 		alert(responseJSON);		

@@ -55,6 +55,7 @@ window.addEvent('domready', function() {
 	searcher = new MusicSearcher({
 		//The url for the searches
 		getSearchResultsUrl: 'getsearchresults.html?query=',
+		getSearchByKeyUrl:   'getsearchresults.html?search_ml=',
 
 		onSearchStart: function(query){
 			$('searchQuery').set('html',query);
@@ -124,6 +125,16 @@ window.addEvent('domready', function() {
 		song   = song   == '' ? '' : 'TITLE HAS  "' + song   +'"';
 		query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
 		searcher.search(query);
+	});
+
+	//Add listener for search by query
+	$('searchByQuery').addEvent('submit',function(e){
+		searcher.search(this.getElement('input[name=query]').value.trim());
+	});
+
+	//Add listener for search by keyword
+	$('searchByKeyword').addEvent('submit',function(e){
+		searcher.searchByKey(this.getElement('input[name=key]').value.trim());
 	});
 });
 
@@ -223,11 +234,33 @@ window.addEvent('domready', function() {
 
     <div id="search" class="panel" title="Search">
 		<ul>
-			<li><a href="#searchQuery">Search by Query</a></li>
-			<li>Other option</li>
+			<li><a href="#searchByQuery">Search by Query</a></li>
+			<li><a href="#searchByKeyword">Search by Keyword</a></li>
 			<li>Other option</li>
 		</ul>
     </div>
+
+    <form id="searchByQuery" class="dialog" action="#searchResults">
+        <fieldset>
+            <h1>Search By Query</h1>
+            <!-- Fire the onSubmit event -->
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+
+            <label>Query:</label>
+            <input type="text" name="query" />
+        </fieldset>
+    </form>
+
+    <form id="searchByKeyword" class="dialog" action="#searchResults">
+        <fieldset>
+            <h1>Search By Keyword</h1>
+            <!-- Fire the onSubmit event -->
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+
+            <label>Key:</label>
+            <input type="text" name="key" />
+        </fieldset>
+    </form>
 
     <div id="searchResults" class="panel" title="Search">
 		<h2 id="searchQuery">Search Results</h2>
