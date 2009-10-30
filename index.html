@@ -118,8 +118,8 @@ window.addEvent('domready', function() {
 
 	//Add listener for search form submit
 	$('searchForm').addEvent('submit',function(e){
-		var artist = this.getElement('input[name=artist]').value;
-		var song   = this.getElement('input[name=song]').value;
+		var artist = this.getElement('input[name=artist]').value.trim();
+		var song   = this.getElement('input[name=song]').value.trim();
 		artist = artist == '' ? '' : 'ARTIST HAS "' + artist +'"';
 		song   = song   == '' ? '' : 'TITLE HAS  "' + song   +'"';
 		query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
