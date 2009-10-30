@@ -58,52 +58,40 @@ window.addEvent('domready', function() {
 
 		//When the request is complete
 		onSearchComplete: function(responseJSON){
-			//Empty the loading...
+			//Empty the list (it has a spinner)
 			$('searchList').empty();
 
-			//For echt song in the JSON response
-			responseJSON.each(function(song){
-				new Element('a',{
-					'href': 'javascript:void(0)',
-					'html': song.title,
-					'events':{
-						'click': function(){
-							//If it has two li items, dont create them plx
-							if(this.getElements('li').length==2)
-								return;
+			//Get a reference to this (searcher)
+			var searcherRef = this;
 
-							//Create the 'Play' link
-							new Element('a',{
-								'href': '#current',
-								'html': 'Play',
-								'events':{
-									'click': function(){
-										currentSongManager.update('?file='+song.filename);
-									}
-								}
-							}).inject(
-								new Element('li').inject(this) //this refers to 'ul > li > a'
-							);
+			//When clicked on this link, it loads 30 more items in the list
+			//After that, it moved itself to the end of the list
+			var loadMoreLink = new Element('a',{
+				'href': 'javascript:void(0)',
+				'html': 'Load more...',
+				'events':{
+					'click': function(){
+						//Get the todo Items
+						var todo = this.retrieve('todoItems');
+						//Inject the first 20
+						todo.splice(0,30).each(function(item){
+							searcherRef.formatSearchResult(item).inject('searchList');
+						});
 
-							//Create the 'Enqueue' link
-							new Element('a',{
-								'href': 'javascript:void(0)',
-								'html': 'Enqueue',
-								'events':{
-									'click': function(e){
-										e.stopPropagation();
-										currentSongManager.update('?add='+song.filename+'&playaddedifnotplaying');
-										this.getParent().getParent().getElements('li').dispose();
-									}
-								}
-							}).inject(
-								new Element('li').inject(this) //this refers to 'ul > li > a'
-							);
+						//Remove the link
+						var removedElement = this.getParent().dispose();
+						if(todo.length>0)
+						{
+							//And inject it back in
+							removedElement.inject('searchList');
+							this.store('todoItems',todo);
 						}
 					}
-				})
-				.inject(new Element('li').inject('searchList')); //Inject the list item to the ul
+				}
 			});
+			loadMoreLink.inject(new Element('li').inject('searchList'));
+			loadMoreLink.store('todoItems',responseJSON);
+			loadMoreLink.fireEvent('click');
 		}
 	});
 
@@ -111,12 +99,12 @@ window.addEvent('domready', function() {
 	$('currentAlbum').addEvent('click',function(){
 		searcher.search('ALBUM HAS "'+currentSongPlaying.album+'"');
 	});
-	
+
 	//Add listener for artist searching
 	$('currentArtist').addEvent('click',function(){
 		searcher.search('ARTIST HAS "'+currentSongPlaying.artist+'"');
 	});
-	
+
 	//Add listener for search form submit
 	$('searchForm').addEvent('submit',function(e){
 		var artist = this.getElement('input[name=artist]').value;
@@ -227,16 +215,16 @@ window.addEvent('domready', function() {
 			<li><a href="#searchQuery">Search by Query</a></li>
 			<li>Other option</li>
 			<li>Other option</li>
-		</ul>    
+		</ul>
     </div>
-    
+
     <div id="searchResults" class="panel" title="Search">
 		<h2>Search Results</h2>
 		<ul id="searchList">
 			<li><img src="images/loading.gif" width="24"></li>
 		</ul>
     </div>
-    
+
     <form id="searchForm" class="dialog" action="#searchResults">
         <fieldset>
             <h1>Music Search</h1>
