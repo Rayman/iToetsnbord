@@ -49,7 +49,7 @@ var MusicSearcher = new Class({
 	
 	// Query the media library with ajax request and fire the event
 	search: function(query){
-		if(!$chk)
+		if(!$chk(query))
 		{
 			alert('Error, no search query');
 			return false;
@@ -66,6 +66,7 @@ var MusicSearcher = new Class({
 			}
 		});
 		myRequest.send();
+		this.fireEvent('searchStart', query);
 		return true;
 	}, 
 	

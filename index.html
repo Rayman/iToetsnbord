@@ -56,6 +56,17 @@ window.addEvent('domready', function() {
 		//The url for the searches
 		getSearchResultsUrl: 'getsearchresults.html?query=',
 
+		onSearchStart: function(query){
+			$('searchQuery').set('html',query);
+			new Element('img',{
+				src: 'images/loading.gif',
+				width: '24'
+			})
+			.inject(new Element('li')
+				.inject('searchList')
+			);
+		},
+
 		//When the request is complete
 		onSearchComplete: function(responseJSON){
 			//Empty the list (it has a spinner)
@@ -219,10 +230,8 @@ window.addEvent('domready', function() {
     </div>
 
     <div id="searchResults" class="panel" title="Search">
-		<h2>Search Results</h2>
-		<ul id="searchList">
-			<li><img src="images/loading.gif" width="24"></li>
-		</ul>
+		<h2 id="searchQuery">Search Results</h2>
+		<ul id="searchList"></ul>
     </div>
 
     <form id="searchForm" class="dialog" action="#searchResults">
