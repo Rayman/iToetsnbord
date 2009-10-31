@@ -50,11 +50,9 @@ var MusicSearcher = new Class({
 	
 	// Query the media library with ajax request and fire the event
 	search: function(query){
+		this.fireEvent('searchStart', query);
 		if(!$chk(query))
-		{
-			alert('Error, no search query');
 			return false;
-		}
 		requestUrl = this.options.getSearchResultsUrl + query;
 		var myRequest = new Request.JSON({
 			method: "get",
@@ -66,17 +64,13 @@ var MusicSearcher = new Class({
 				alert('Error getting search results');
 			}
 		});
-		myRequest.send();
-		this.fireEvent('searchStart', query);
+		myRequest.send();		
 		return true;
 	},
 	
 	searchByKey: function(key){
 		if(!$chk(key))
-		{
-			alert('Error, no key');
 			return false;
-		}
 		requestUrl = this.options.getSearchByKeyUrl + key;
 		var myRequest = new Request.JSON({
 			method: "get",

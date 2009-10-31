@@ -69,9 +69,17 @@ window.addEvent('domready', function() {
 		},
 
 		//When the request is complete
-		onSearchComplete: function(responseJSON){
+		onSearchComplete: function(responseJSON, responseText){
 			//Empty the list (it has a spinner)
 			$('searchList').empty();
+
+			if(responseJSON==null||responseJSON.length==null||responseJSON.length==0)
+			{
+				new Element('li',{
+					html: 'No Results: ' + responseText
+				}).inject('searchList');
+				return;
+			}
 
 			//Get a reference to this (searcher)
 			var searcherRef = this;
@@ -124,17 +132,22 @@ window.addEvent('domready', function() {
 		artist = artist == '' ? '' : 'ARTIST HAS "' + artist +'"';
 		song   = song   == '' ? '' : 'TITLE HAS  "' + song   +'"';
 		query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
-		searcher.search(query);
+
+		//Query valid?
+		if(!searcher.search(query))
+			searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
 	});
 
 	//Add listener for search by query
 	$('searchByQuery').addEvent('submit',function(e){
-		searcher.search(this.getElement('input[name=query]').value.trim());
+		if(!searcher.search(this.getElement('input[name=query]').value.trim()))
+			searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
 	});
 
 	//Add listener for search by keyword
 	$('searchByKeyword').addEvent('submit',function(e){
-		searcher.searchByKey(this.getElement('input[name=key]').value.trim());
+		if(!searcher.searchByKey(this.getElement('input[name=key]').value.trim()))
+			searcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
 	});
 });
 
