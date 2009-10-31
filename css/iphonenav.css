@@ -199,3 +199,7 @@ body > div > ul li a {
 body > div {
 	width: 94%;
 }
+
+img {
+	border: 0px solid;
+}

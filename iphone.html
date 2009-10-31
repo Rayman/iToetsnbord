@@ -159,27 +159,27 @@ window.addEvent('domready', function() {
 			<tr>
 				<td>
 					<a href="?prev">
-						<img src="images/prev.gif" width="24" height="24" border="0" alt="jump to previous song">
+						<img src="images/prev.gif" width="24" height="24" alt="jump to previous song" />
 					</a>
 				</td>
 				<td>
 					<a href="?play">
-						<img src="images/play.gif" width="24" height="24" border="0" alt="start playback">
+						<img src="images/play.gif" width="24" height="24" alt="start playback" />
 					</a>
 				</td>
 				<td>
 					<a href="?stop">
-						<img src="images/stop.gif" width="24" height="24" border="0" alt="stop playback">
+						<img src="images/stop.gif" width="24" height="24" alt="stop playback" />
 					</a>
 				</td>
 				<td>
 					<a href="?pause">
-						<img src="images/pause.gif" width="24" height="24" border="0" alt="pause playback">
+						<img src="images/pause.gif" width="24" height="24" alt="pause playback" />
 					</a>
 				</td>
 				<td>
 					<a href="?next">
-						<img src="images/next.gif" width="24" height="24" border="0" alt="jump to next song">
+						<img src="images/next.gif" width="24" height="24" alt="jump to next song" />
 					</a>
 				</td>
 			</tr>
@@ -264,7 +264,9 @@ window.addEvent('domready', function() {
 
     <div id="searchResults" class="panel" title="Search">
 		<h2 id="searchQuery">Search Results</h2>
-		<ul id="searchList"></ul>
+		<ul id="searchList">
+			<li><img src="images/loading.gif" /></li>
+		</ul>
     </div>
 
     <form id="searchForm" class="dialog" action="#searchResults">
