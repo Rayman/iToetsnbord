@@ -30,7 +30,9 @@ body > h1 {
     top: 8px;
     right: 6px;
     -webkit-border-image: url(../images/iPhoneButton.png) 0 5 0 5;
+    -moz-border-image: url(../images/iPhoneButton.png) 0 5 0 5;
     -webkit-border-radius: 0;
+    -moz-border-radius: 0;
     border-width: 0 5px 0 5px;
     padding: 0;
     height: 28px;
@@ -48,11 +50,13 @@ body > h1 {
     left: 6px;
     right: auto;
     -webkit-border-image: url(../images/iPhoneBackButton.png) 0 8 0 14;
+    -moz-border-image: url(../images/iPhoneBackButton.png) 0 8 0 14;
     border-width: 0 8px 0 14px;
 }
 
 .goButton {
     -webkit-border-image: url(../images/iPhoneGoButton.png) 0 5 0 5;
+    -moz-border-image: url(../images/iPhoneGoButton.png) 0 5 0 5;
     border-width: 0 5px;
 }
 
@@ -169,11 +173,17 @@ body > div > ul li {
 body > div > ul li:first-child {
     -webkit-border-top-left-radius: 8px;
     -webkit-border-top-right-radius: 8px;
+    
+    -moz-border-radius-topleft: 8px;
+    -moz-border-radius-topright: 8px;
 }
 
 body > div > ul li:last-child {
     -webkit-border-bottom-left-radius: 8px;
     -webkit-border-bottom-right-radius: 8px;
+    
+    -moz-border-radius-bottomleft: 8px;
+    -moz-border-radius-bottomright: 8px;
 }
 
 /* Show the iPhoneArrow.png when there's a link */
