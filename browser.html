@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=<#Charset>">
+
+<!--
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<meta http-equiv="refresh" content="1">
+-->
+<title>Winamp Control Center</title>
+<link href="base.css" rel="stylesheet" type="text/css">
+
+</head>
+<body text="#000000" bgcolor="#E0FFFF" link="#000000" vlink="#000000" alink="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<center>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr align="center">
+	    <td colspan="7" class="head1"><b>Toets &amp; Bord v3.0</b><br /></td>
+	</tr>
+	<tr align="center">
+	    <td class="small"> <a href="browser.html?prev"><img src="famicons/prev.png" border="0" alt="next"></a></td>
+	    <td class="small"><a href="browser.html?reverse"><img src="famicons/fastr.png" border="0" alt="rev"></a></td>
+	    <td class="small"> <a href="browser.html?play"><img src="famicons/play.png" border="0" alt="play"></a></td>
+	    <td class="small"> <a href="browser.html?stop"><img src="famicons/stop.png" border="0" alt="stop"></a></td>
+	    <td class="small"> <a href="browser.html?pause"><img src="famicons/pause.png" border="0" alt="pause"></a></td>
+	    <td class="small"><a href="browser.html?forward"><img src="famicons/fastf.png" border="0" alt="fwd"></a></td>
+	    <td class="small"> <a href="browser.html?next"><img src="famicons/next.png" border="0" alt="next"></a></td>
+	</tr>
+  </table>
+  
+  <form action="" method="get" name="searchform" target="_self" class="standard" id="searchform">
+    <p>
+      <a href="index.html"><img src="famicons/home.png" border="0" alt="home"></a>
+      &nbsp;
+      <a href="browser.html?refresh"><img src="famicons/refresh.png" border="0" alt="refresh"></a>
+      &nbsp;
+      <input name="search_files_string" size="18" type="text" id="search_files_string" value="<#search_files_string>">
+      <input type="image" src="famicons/search.png" alt=" search " />
+      <br />
+      <a href="browser.html?home"><img src="famicons/homefolder.png" border="0" alt="refresh"></a>
+      &nbsp;
+      &nbsp;
+      for:
+      <input name="search_for_directories" type="checkbox" id="search_for_directories" value="true" checked />
+      dirs
+      <input name="search_for_files" type="checkbox" id="search_for_files" value="true" checked />
+      files 
+      <input name="search_in_subdirs" type="checkbox" id="search_in_subdirs" value="true" checked />
+      incl. sub. 
+      </p>
+    </form>
+  <p class="small">CurDir: <#CurrentBrowserDirectory></p>
+  <#include file=templates/browser_template.html>
+</center>
+</body>
+</html>
+

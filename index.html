@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=<#Charset>">
+<meta http-equiv="refresh" content="30;URL=index.html?refresh">
+<title>Toets & Bord v3.0</title>
+
+<link href="base.css" rel="stylesheet" type="text/css">
+
+</head>
+<body text="#000000" bgcolor="#E0FFFF" link="#4682B4" vlink="#CCCCCC" alink="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<center>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr align="center">
+	    <td colspan="7" class="head1"><b>Toets &amp; Bord v3.0</b><br /></td>
+	</tr>
+	<tr align="center">
+	    <td class="small"> <a href="index.html?prev"><img src="famicons/prev.png" border="0" alt="next"></a></td>
+	    <td class="small"><a href="index.html?reverse"><img src="famicons/fastr.png" border="0" alt="rev"></a></td>
+	    <td class="small"> <a href="index.html?play"><img src="famicons/play.png" border="0" alt="play"></a></td>
+	    <td class="small"> <a href="index.html?stop"><img src="famicons/stop.png" border="0" alt="stop"></a></td>
+	    <td class="small"> <a href="index.html?pause"><img src="famicons/pause.png" border="0" alt="pause"></a></td>
+	    <td class="small"><a href="index.html?forward"><img src="famicons/fastf.png" border="0" alt="fwd"></a></td>
+	    <td class="small"> <a href="index.html?next"><img src="famicons/next.png" border="0" alt="next"></a></td>
+	</tr>
+	<tr align="center">
+	    <td colspan="7" class="head3"><br /><#Metadata field=album></td>
+	</tr>
+	<tr align="center">
+	    <td colspan="7" class="head2"><#SongTitle></td>
+	</tr>
+	<tr align="center">
+	    <td colspan="7" class="small">
+		<#status on_play="playing @" on_stop=stopped on_pause=paused> <#Bitrate>kbps, <#Samplerate>kHz <img src="famicons/<#Channels on_stereo=stereo.gif on_mono=mono.gif>"> (<#SongLengthMin>:<#SongLengthSec>)
+	    </td>
+	</tr>
+	<tr align="center">
+	    <td colspan="7"> &nbsp; </td>
+	</tr>
+	<tr align="center">
+	    <td style="color: #4682B4; font-size: 9px; " colspan="7">
+		<#SongPositionMin>:<#SongPositionSec>
+		<a href="?playifnotplaying&trackpos=0">+</a>
+		<a href="?playifnotplaying&trackpos=10">-</a>
+		<a href="?playifnotplaying&trackpos=20">-</a>
+		<a href="?playifnotplaying&trackpos=30">-</a>
+		<a href="?playifnotplaying&trackpos=40">-</a>
+		<a href="?playifnotplaying&trackpos=50">+</a>
+		<a href="?playifnotplaying&trackpos=60">-</a>
+		<a href="?playifnotplaying&trackpos=70">-</a>
+		<a href="?playifnotplaying&trackpos=80">-</a>
+		<a href="?playifnotplaying&trackpos=90">-</a>
+		<a href="?playifnotplaying&trackpos=100">+</a>
+		-<#SongRemainMin>:<#SongRemainSec>
+	    </td>
+	</tr>
+	<tr align="center">
+	    <td colspan="7"> &nbsp; </td>
+	</tr>
+	<tr align="center">
+	    <td><a href="index.html?shuffle"><img src="famicons/shuffle_<#ShuffleStatus>.png" border="0" alt="<#ShuffleStatus>" /></a></td>
+	    <td><a href="index.html?repeatall"><img src="famicons/rep_<#RepeatStatus>.png" border="0" alt="<#RepeatStatus>" /></a></td>
+	    <td><a href="index.html?volume=0"><img src="famicons/sound_mute.png" border="0" alt="mute" /></a></td>
+	    <td><a href="index.html?decvol=10"><img src="famicons/sound_low.png" border="0" alt="vol-" /></a></td>
+	    <td class="small"><#volume>%</td>
+	    <td><a href="index.html?incvol=10"><img src="famicons/sound.png" border="0" alt="vol+" /></a></td>
+	    <td><a href="fileinfo.html"><img src="famicons/fileinfo.png" border="0" alt="i" /></a></td>
+	</tr>
+	<tr align="center">
+	    <td colspan="7"> &nbsp; <br /> &nbsp;</td>
+	</tr>
+<form action="browser.html" method="get" name="searchform" target="browser.html" class="standard" id="searchform">
+	<tr align="center">
+	    <td>
+		  <a href="index.html?refresh"><img src="famicons/refresh.png" border="0" alt="refresh"></a>
+	    </td>
+	    <td colspan="5">
+		  <input name="search_files_string" size="22" type="text" id="search_files_string" value="<#search_files_string>">
+	    </td>
+	    <td>
+		  <input type="image" src="famicons/search.png" alt=" search " />
+	    </td>
+	</tr>
+	<tr align="center">
+	    <td><a href="browser.html"><img src="famicons/browser.png" border="0" alt-"browse" /></a></td>
+	    <td colspan="5">
+		  for:
+		  <input name="search_for_directories" type="checkbox" id="search_for_directories" value="true" checked />
+		  dirs
+		  <input name="search_for_files" type="checkbox" id="search_for_files" value="true" checked />
+		  files 
+		  <input name="search_in_subdirs" type="checkbox" id="search_in_subdirs" value="true" checked />
+		  incl. sub. 
+	    </td>
+	    <td><a href="options.html"><img src="famicons/config.png" border="0" alt="cfg" /></a></td>
+	</tr>
+</form> 
+    </table>	
+  <div align="center"><p class="errormsg"><#ErrorMessage></p></div>
+  </center>
+</body>
+</html>
+
