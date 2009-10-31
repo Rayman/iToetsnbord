@@ -18,7 +18,7 @@ window.addEvent('domready', function() {
 
 	//Init the song manager
 	currentSongManager = new SongManager({
-		getCurrentSongUrl: 'getcurrent.html',
+		getCurrentSongUrl: 'json/getcurrent.html',
 		onUpdate: function(responseJSON){
 			//Back it up
 			currentSongPlaying = responseJSON;
@@ -54,8 +54,8 @@ window.addEvent('domready', function() {
 	//Init the searcher
 	searcher = new MusicSearcher({
 		//The url for the searches
-		getSearchResultsUrl: 'getsearchresults.html?query=',
-		getSearchByKeyUrl:   'getsearchresults.html?search_ml=',
+		getSearchResultsUrl: 'json/getsearchresults.html?query=',
+		getSearchByKeyUrl:   'json/getsearchresults.html?search_ml=',
 
 		onSearchStart: function(query){
 			$('searchQuery').set('html',query);
@@ -150,7 +150,7 @@ window.addEvent('domready', function() {
         <li><a id="getCurrent" href="#current">Current Played File</a></li>
         <li><a href="#search">Search</a></li>
         <li><a href="#options">Options</a></li>
-        <li><a href="getcurrent.html">Normal link</a></li>
+        <li><a href="index.html">Normal Version</a></li>
         <li><a href="#test">Test</a></li>
     </ul>
 

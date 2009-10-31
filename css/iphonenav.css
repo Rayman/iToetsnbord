@@ -21,7 +21,7 @@ body > h1 {
     text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0;
     text-overflow: ellipsis;
     color: #FFFFFF;
-    background: url(images/iPhoneToolbar.png) #6d84a2 repeat-x;
+    background: url(../images/iPhoneToolbar.png) #6d84a2 repeat-x;
     border-bottom: 1px solid #2d3642;
 }
 
@@ -29,7 +29,7 @@ body > h1 {
     position: absolute;
     top: 8px;
     right: 6px;
-    -webkit-border-image: url(images/iPhoneButton.png) 0 5 0 5;
+    -webkit-border-image: url(../images/iPhoneButton.png) 0 5 0 5;
     -webkit-border-radius: 0;
     border-width: 0 5px 0 5px;
     padding: 0;
@@ -47,12 +47,12 @@ body > h1 {
     display: none;
     left: 6px;
     right: auto;
-    -webkit-border-image: url(images/iPhoneBackButton.png) 0 8 0 14;
+    -webkit-border-image: url(../images/iPhoneBackButton.png) 0 8 0 14;
     border-width: 0 8px 0 14px;
 }
 
 .goButton {
-    -webkit-border-image: url(images/iPhoneGoButton.png) 0 5 0 5;
+    -webkit-border-image: url(../images/iPhoneGoButton.png) 0 5 0 5;
     border-width: 0 5px;
 }
 
@@ -80,7 +80,7 @@ body > ul > li {
     margin: 0;
     border-bottom: 1px solid #E0E0E0;
     padding: 0;
-    background: url(images/iPhoneArrow.png) no-repeat right center;
+    background: url(../images/iPhoneArrow.png) no-repeat right center;
     font-size: 20px;
     font-weight: bold;
     list-style: none;
@@ -97,7 +97,7 @@ body > ul > li > a {
 .panel {
     box-sizing: border-box;
     padding: 10px;
-    background: #c8c8c8 url(images/pinstripes.png);
+    background: #c8c8c8 url(../images/pinstripes.png);
 }
 
 /* A dialog is a pop up */
@@ -118,7 +118,7 @@ fieldset {
     margin: 0;
     border: none;
     padding: 10px 6px;
-    background: url(images/iPhoneToolbar.png) #7388a5 repeat-x;
+    background: url(../images/iPhoneToolbar.png) #7388a5 repeat-x;
 }
 
 fieldset > h1 {
@@ -182,7 +182,7 @@ body > div > ul li a {
     display: block;
     font-weight: bold;
     text-decoration: none;
-	background: url(images/iPhoneArrow.png) no-repeat right center;
+	background: url(../images/iPhoneArrow.png) no-repeat right center;
 }
 
 /* A CSS fix, i dont know how to do this in a other way */
