@@ -78,12 +78,16 @@ window.addEvent('domready', function() {
 
 	//Init the searcher
 	searcher = new MusicSearcher({
-		//The url for the searches
+		//The url for the searches by query
 		getSearchResultsUrl: 'json/getsearchresults.html?query=',
+		//The url for searches by keyword
 		getSearchByKeyUrl:   'json/getsearchresults.html?search_ml=',
 
 		onSearchStart: function(query){
-			$('searchQuery').set('html',query);
+
+			$('searchQuery').set('html','"'+query+'"');
+			// Make a loading image inside a list
+			// ul > li > a
 			new Element('img',{
 				src: 'images/loading.gif',
 				width: '24'
@@ -93,13 +97,16 @@ window.addEvent('domready', function() {
 			);
 		},
 
-		//When the request is complete
+		//When the search request is complete
 		onSearchComplete: function(responseJSON, responseText){
+
 			//Empty the list (it has a spinner)
 			$('searchList').empty();
 
+			//When the response has no songs in it
 			if(responseJSON==null||responseJSON.length==null||responseJSON.length==0)
 			{
+				//Maybe the responseText has some info ?
 				new Element('li',{
 					html: 'No Results: ' + responseText
 				}).inject('searchList');
@@ -110,7 +117,8 @@ window.addEvent('domready', function() {
 			var searcherRef = this;
 
 			//When clicked on this link, it loads 30 more items in the list
-			//After that, it moved itself to the end of the list
+			//After that, it moves itself to the end of the list
+			//It as the todo-items in the element's storage space (el.store(key,value))
 			new Element('a',{
 				'href': 'javascript:void(0)',
 				'html': 'Load more...',
@@ -118,7 +126,7 @@ window.addEvent('domready', function() {
 					'click': function(){
 						//Get the todo Items
 						var todo = this.retrieve('todoItems');
-						//Inject the first 20
+						//Inject the first 30
 						todo.splice(0,30).each(function(item){
 							searcherRef.formatSearchResult(item).inject('searchList');
 						});
@@ -129,14 +137,15 @@ window.addEvent('domready', function() {
 						{
 							//And inject it back in
 							removedElement.inject('searchList');
+							//Store the todo items in the element's space :p
 							this.store('todoItems',todo);
 						}
 					}
 				}
 			})
 			.inject(new Element('li').inject('searchList'))
-			.store('todoItems',responseJSON)
-			.fireEvent('click');
+			.store('todoItems',responseJSON) //All items are todo items
+			.fireEvent('click'); //Load the first 30 NOW!
 		}
 	});
 
@@ -152,8 +161,11 @@ window.addEvent('domready', function() {
 
 	//Add listener for search form submit
 	$('searchForm').addEvent('submit',function(e){
+		//Get the artist and song value
 		var artist = this.getElement('input[name=artist]').value.trim();
 		var song   = this.getElement('input[name=song]').value.trim();
+
+		//Format the query
 		artist = artist == '' ? '' : 'ARTIST HAS "' + artist +'"';
 		song   = song   == '' ? '' : 'TITLE HAS  "' + song   +'"';
 		query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
@@ -165,12 +177,14 @@ window.addEvent('domready', function() {
 
 	//Add listener for search by query
 	$('searchByQuery').addEvent('submit',function(e){
+		//query valid?
 		if(!searcher.search(this.getElement('input[name=query]').value.trim()))
 			searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
 	});
 
 	//Add listener for search by keyword
 	$('searchByKeyword').addEvent('submit',function(e){
+		//query valid?
 		if(!searcher.searchByKey(this.getElement('input[name=key]').value.trim()))
 			searcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
 	});
