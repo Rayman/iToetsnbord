@@ -58,9 +58,8 @@ window.addEvent('domready', function() {
 		},
 	});
 
-	//When user clicks this link, get the current song played
+	//When user clicks the link to currentSong, we do a quick request of the current song
 	$('getCurrent').addEvent('click', function(){
-		// If we do addEvent('click',currentSongmanager.update), then 'this' gets set as 'window'
 		currentSongManager.update();
 	});
 
@@ -70,6 +69,11 @@ window.addEvent('domready', function() {
 			event.preventDefault();
 			currentSongManager.update(el.get('href'));
 		});
+	});
+
+	//Add listener for refreshing the current song
+	$('currentInfo').addEvent('click',function(){
+		currentSongManager.update('?refresh');
 	});
 
 	//Init the searcher
