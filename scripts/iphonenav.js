@@ -52,16 +52,17 @@ function checkOrientAndLocation()
     if (window.outerWidth != currentWidth)
     {
         currentWidth = window.outerWidth;
-
-        var orient = currentWidth == 320 ? "profile" : "landscape";
-        document.body.setAttribute("orient", orient);
+        document.body.setAttribute("orient", currentWidth == 320 ? "profile" : "landscape");
     }
 
     //If back/forward buttons are used, the location.hash changes
     if (location.hash != currentHash)
     {
+		//Save current hash
         currentHash = location.hash;
         var pageId = currentHash.substr(hashPrefix.length);
+
+        //Try to get the page
         var page = $(pageId);
         if (page)
         {
@@ -87,7 +88,9 @@ function showPage(page, backwards)
         showDialog(page);
     else
     {
+		//Change the location to the page that about to be shown
         location.href = currentHash = hashPrefix + page.id;
+
         //Save the page in the history
         pageHistory.push(page.id);
 
@@ -146,7 +149,7 @@ window.addEvent('domready', function() {
 	});
 
 	//Startpage is the first selected = true, pick the fist div when no elements are found
-	startPage = list.length > 0 ? list[0] : $(document.body).getElement('div');
+	var startPage = list.length > 0 ? list[0] : $(document.body).getElement('div');
 	//Show the startpage
 	showPage(startPage);
 
