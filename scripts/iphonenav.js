@@ -103,7 +103,7 @@ function showPage(page, backwards)
 		//Hide the homebutton when page == home
         $('homeButton').setStyle('display', ("#"+page.id) == $('homeButton').hash ? "none" : "inline");
 
-        if (fromPage)
+        if (fromPage && fromPage != currentPage)
             setTimeout(swipePage, 0, fromPage, page, backwards);
     }
 }
