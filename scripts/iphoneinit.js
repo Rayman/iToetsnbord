@@ -13,8 +13,12 @@ window.addEvent('domready', function() {
 		onUpdateStart: function(){
 			//Hide all
 			$('currentTitle').getParent().setStyle('display', 'none');
+
 			//Unhide the loading
 			$('currentLoading').setStyle('display', 'block');
+
+			//set the albumart to the loading image
+			$('currentAlbumArt').setProperty('src', 'images/loading.gif');
 		},
 		onUpdate: function(responseJSON){
 			//Back it up
