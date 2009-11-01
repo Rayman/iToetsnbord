@@ -19,21 +19,51 @@ window.addEvent('domready', function() {
 	//Init the song manager
 	currentSongManager = new SongManager({
 		getCurrentSongUrl: 'json/getcurrent.html',
+		onUpdateStart: function(){
+			//Hide all
+			$('currentTitle').getParent().setStyle('display', 'none');
+			//Unhide the loading
+			$('currentLoading').setStyle('display', 'block');
+		},
 		onUpdate: function(responseJSON){
 			//Back it up
 			currentSongPlaying = responseJSON;
 
+			//Unhide the ul
+			$('currentTitle').getParent().setStyle('display', 'block');
+
 			//Update the html
-			$('currentAlbum').set('html', "Album: " + responseJSON.album);
+
 			$('currentArtist').set('html', "Artist: " + responseJSON.artist);
 			$('currentTitle').set('html', "Title: " + responseJSON.title);
+
+			if(responseJSON.album=='')
+			{
+				//Hide the album li
+				$('currentAlbum').getParent().setStyle('display', 'none');
+			}
+			else
+			{
+				$('currentAlbum').set('html', "Album: " + responseJSON.album);
+				$('currentAlbum').getParent().setStyle('display', 'block');
+			}
+
 			$('currentInfo').set(
 				'html',
-				"Info: " + responseJSON.bitrate + "kbps, " +
+				"Info: " +
+				responseJSON.length + ", " +
+				responseJSON.bitrate + "kbps, " +
 				responseJSON.samplerate + "kHz " +
 				responseJSON.channels
 			);
+			if(responseJSON.albumart == 'images/question.png')
+				$('currentAlbumArt').getParent().setStyle('display', 'none');
+			else
+				$('currentAlbumArt').getParent().setStyle('display', 'block');
 			$('currentAlbumArt').setProperty('src', responseJSON.albumart);
+
+			//hide the loading...
+			$('currentLoading').setStyle('display', 'none');
 		},
 	});
 
@@ -198,13 +228,19 @@ window.addEvent('domready', function() {
 			</tr>
 		</table>
 
+		<ul id="currentLoading">
+			<li><img src="images/loading.gif" width="20" /></li>
+		</ul>
+
         <ul>
-			<li><a href="#searchResults" id="currentAlbum">Album: <img src="images/loading.gif" width="20" /></a></li>
-			<li><a href="#searchResults" id="currentArtist">Artist: <img src="images/loading.gif" width="20" /></a></li>
 			<li id="currentTitle">Title: <img src="images/loading.gif" width="20" /></li>
+			<li><a href="#searchResults" id="currentArtist">Artist: <img src="images/loading.gif" width="20" /></a></li>
+			<li><a href="#searchResults" id="currentAlbum">Album: <img src="images/loading.gif" width="20" /></a></li>
+			<li><img id="currentAlbumArt" src="images/loading.gif" width="100" /></li>
 			<li id="currentInfo">Info: <img src="images/loading.gif" width="20" /></li>
 		</ul>
-		<img id="currentAlbumArt" src="images/loading.gif" width="100" />
+
+
     </div>
 
     <div id="test" class="panel" title="Belle & Sebastian">

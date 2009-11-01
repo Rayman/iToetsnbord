@@ -1,19 +1,21 @@
 var SongManager = new Class({
-	
+
 	Implements: [Options,Events],
 
 	options: {
-		// onRequestComplete: $empty,
+		// onUpdateStart: $empty,
+		// onUpdate: $empty,
 		getCurrentSongUrl: ''
 	},
-	
+
 	initialize: function(options) {
 		//set options
 		this.setOptions(options);
 	},
-	
+
 	//Get the current song with an ajax request and fire the update event
 	update: function(data){
+		this.fireEvent('onUpdateStart');
 		requestUrl = this.options.getCurrentSongUrl;
 		if(data)
 			requestUrl += data;
@@ -26,28 +28,28 @@ var SongManager = new Class({
 			}
 		});
 		myRequest.send();
-	}, 
-	
+	},
+
 	onRequestSuccess: function(responseJSON){
 		this.fireEvent('update', responseJSON);
 	}
 });
 
 var MusicSearcher = new Class({
-	
+
 	Implements: [Options,Events],
-	
+
 	options: {
 		//getSearchResultsUrl: '',
 		// getSearchByKeyUrl: '',
 		// onSearchComplete: $empty
 	},
-	
+
 	initialize: function(options) {
 		//set options
 		this.setOptions(options);
 	},
-	
+
 	// Query the media library with ajax request and fire the event
 	search: function(query){
 		this.fireEvent('searchStart', query);
@@ -64,10 +66,10 @@ var MusicSearcher = new Class({
 				alert('Error getting search results');
 			}
 		});
-		myRequest.send();		
+		myRequest.send();
 		return true;
 	},
-	
+
 	searchByKey: function(key){
 		if(!$chk(key))
 			return false;
@@ -86,11 +88,11 @@ var MusicSearcher = new Class({
 		this.fireEvent('searchStart', 'Search for: ' + key);
 		return true;
 	},
-	
+
 	onRequestSuccess: function(responseJSON){
-		alert(responseJSON);		
+		alert(responseJSON);
 	},
-	
+
 	//Helper function, it formats a song to a html element
 	//It creates a li element with inside it a anchor
 	//When the anchor is clicked, it shows two options
