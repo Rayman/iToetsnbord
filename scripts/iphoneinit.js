@@ -88,10 +88,14 @@ window.addEvent('domready', function() {
 		getSearchByKeyUrl:   'json/getsearchresults.html?search_ml=',
 
 		onSearchStart: function(query){
+			//Empty the old search
+			$('searchList').empty();
 
+			//Set the title
 			$('searchQuery').set('html','"'+query+'"');
+
 			// Make a loading image inside a list
-			// ul > li > a
+			// ul > li > img
 			new Element('img',{
 				src: 'images/loading.gif',
 				width: '24'
