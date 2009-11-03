@@ -12,9 +12,12 @@ var SongManager = new Class({
 		//set options
 		this.setOptions(options);
 
+		//The request instance
 		this.xhr = new Request.JSON({
 			method: "get",
-			onSuccess: this.onRequestSuccess.bind(this),
+			onSuccess: function(responseJSON){
+				this.fireEvent('update', responseJSON);
+			}.bind(this),
 			onFailure: function(){
 				alert('Error getting current song');
 			}
@@ -31,10 +34,6 @@ var SongManager = new Class({
 			url: requestUrl
 		});
 	},
-
-	onRequestSuccess: function(responseJSON){
-		this.fireEvent('update', responseJSON);
-	}
 });
 
 var MusicSearcher = new Class({
@@ -50,49 +49,42 @@ var MusicSearcher = new Class({
 	initialize: function(options) {
 		//set options
 		this.setOptions(options);
+
+		//The request instance
+		this.xhr = new Request.JSON({
+			method: "get",
+			onSuccess: function(responseJSON, responseText){
+				this.fireEvent('searchComplete', [responseJSON, responseText]);
+			}.bind(this),
+			onFailure: function(){
+				alert('Error getting search results');
+			}
+		});
 	},
 
-	// Query the media library with ajax request and fire the event
+	//Query the media library with ajax request and fire the event
 	search: function(query){
 		this.fireEvent('searchStart', query);
 		if(!$chk(query))
 			return false;
 		requestUrl = this.options.getSearchResultsUrl + query;
-		var myRequest = new Request.JSON({
-			method: "get",
-			url: requestUrl,
-			onSuccess: function(responseJSON, responseText){
-				this.fireEvent('searchComplete', [responseJSON, responseText]);
-			}.bind(this),
-			onFailure: function(){
-				alert('Error getting search results');
-			}
+		this.xhr.send({
+			url: requestUrl
 		});
-		myRequest.send();
 		return true;
 	},
-
+	
+	//Search in the media library for this key
 	searchByKey: function(key){
+		this.fireEvent('searchStart', 'Search for: ' + key);
 		if(!$chk(key))
 			return false;
 		requestUrl = this.options.getSearchByKeyUrl + key;
-		var myRequest = new Request.JSON({
-			method: "get",
+		this.xhr.send({
 			url: requestUrl,
-			onSuccess: function(responseJSON, responseText){
-				this.fireEvent('searchComplete', [responseJSON, responseText]);
-			}.bind(this),
-			onFailure: function(){
-				alert('Error getting search results');
-			}
 		});
-		myRequest.send();
-		this.fireEvent('searchStart', 'Search for: ' + key);
-		return true;
-	},
 
-	onRequestSuccess: function(responseJSON){
-		alert(responseJSON);
+		return true;
 	},
 
 	//Helper function, it formats a song to a html element
