@@ -11,6 +11,14 @@ var SongManager = new Class({
 	initialize: function(options) {
 		//set options
 		this.setOptions(options);
+
+		this.xhr = new Request.JSON({
+			method: "get",
+			onSuccess: this.onRequestSuccess.bind(this),
+			onFailure: function(){
+				alert('Error getting current song');
+			}
+		});
 	},
 
 	//Get the current song with an ajax request and fire the update event
@@ -19,15 +27,9 @@ var SongManager = new Class({
 		requestUrl = this.options.getCurrentSongUrl;
 		if(data)
 			requestUrl += data;
-		var myRequest = new Request.JSON({
-			method: "get",
-			url: requestUrl,
-			onSuccess: this.onRequestSuccess.bind(this),
-			onFailure: function(){
-				alert('Error getting current song');
-			}
+		this.xhr.send({
+			url: requestUrl
 		});
-		myRequest.send();
 	},
 
 	onRequestSuccess: function(responseJSON){
