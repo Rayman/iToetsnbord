@@ -65,25 +65,20 @@ var MusicSearcher = new Class({
 	//Query the media library with ajax request and fire the event
 	search: function(query){
 		this.fireEvent('searchStart', query);
-		if(!$chk(query))
-			return false;
-		requestUrl = this.options.getSearchResultsUrl + query;
+		if(!$chk(query)) return false;
 		this.xhr.send({
-			url: requestUrl
+			url: this.options.getSearchResultsUrl + query
 		});
 		return true;
 	},
-	
+
 	//Search in the media library for this key
 	searchByKey: function(key){
 		this.fireEvent('searchStart', 'Search for: ' + key);
-		if(!$chk(key))
-			return false;
-		requestUrl = this.options.getSearchByKeyUrl + key;
+		if(!$chk(key)) return false;
 		this.xhr.send({
-			url: requestUrl,
+			url: this.options.getSearchByKeyUrl + key
 		});
-
 		return true;
 	}
 });
