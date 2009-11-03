@@ -21,17 +21,17 @@ window.addEvent('domready', function() {
 			$('currentAlbumArt').setProperty('src', 'images/loading.gif');
 		},
 		onUpdate: function(responseJSON){
-			//Back it up
+
+			//Backup the reponse
 			currentSongPlaying = responseJSON;
 
-			//Unhide the ul
-			$('currentTitle').getParent().setStyle('display', 'block');
+			//Set the title of the div
+			var title = $('currentTitle').set('html', "Title: " + responseJSON.title);
 
-			//Update the html
-
+			//Set the current artist
 			$('currentArtist').set('html', "Artist: " + responseJSON.artist);
-			$('currentTitle').set('html', "Title: " + responseJSON.title);
 
+			//Set the album, if there is no album, hide it
 			if(responseJSON.album=='')
 			{
 				//Hide the album li
@@ -39,10 +39,11 @@ window.addEvent('domready', function() {
 			}
 			else
 			{
-				$('currentAlbum').set('html', "Album: " + responseJSON.album);
-				$('currentAlbum').getParent().setStyle('display', 'block');
+				var album = $('currentAlbum').set('html', "Album: " + responseJSON.album);
+				album.getParent().setStyle('display', 'block');
 			}
 
+			//Set the 'info'
 			$('currentInfo').set(
 				'html',
 				"Info: " +
@@ -51,14 +52,16 @@ window.addEvent('domready', function() {
 				responseJSON.samplerate + "kHz " +
 				responseJSON.channels
 			);
-			if(responseJSON.albumart == 'images/question.png')
-				$('currentAlbumArt').getParent().setStyle('display', 'none');
-			else
-				$('currentAlbumArt').getParent().setStyle('display', 'block');
-			$('currentAlbumArt').setProperty('src', responseJSON.albumart);
+
+			//If the albumart is not found, hide the ul, else display it
+			var albumArt = $('currentAlbumArt').setProperty('src', responseJSON.albumart);
+			albumArt.getParent().setStyle('display', responseJSON.albumart == 'images/question.png' ? 'none' : 'block');
 
 			//hide the loading...
 			$('currentLoading').setStyle('display', 'none');
+
+			//Unhide the ul with all the info
+			title.getParent().setStyle('display', 'block');
 		},
 	});
 
