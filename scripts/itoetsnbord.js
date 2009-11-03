@@ -27,11 +27,8 @@ var SongManager = new Class({
 	//Get the current song with an ajax request and fire the update event
 	update: function(data){
 		this.fireEvent('onUpdateStart');
-		requestUrl = this.options.getCurrentSongUrl;
-		if(data)
-			requestUrl += data;
 		this.xhr.send({
-			url: requestUrl
+			url: data ? this.options.getCurrentSongUrl + data : this.options.getCurrentSongUrl
 		});
 	},
 });
