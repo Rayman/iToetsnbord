@@ -19,6 +19,12 @@ window.addEvent('domready', function() {
 
 			//set the albumart to the loading image
 			$('currentAlbumArt').setProperty('src', 'images/loading.gif');
+
+			//Hide the options
+			$('optionsShuffle').getParent().getParent().setStyle('display', 'none');
+
+			//Show the loading...
+			$('optionsLoading').setStyle('display', 'block');
 		},
 		onUpdate: function(responseJSON){
 
@@ -57,8 +63,19 @@ window.addEvent('domready', function() {
 			var albumArt = $('currentAlbumArt').setProperty('src', responseJSON.albumart);
 			albumArt.getParent().setStyle('display', responseJSON.albumart == 'images/question.png' ? 'none' : 'block');
 
+
+
+			//Set the html
+			$('optionsShuffle').set('html','Shuffle: '+responseJSON.shuffle);
+			$('optionsRepeat').set('html','Repeat: '+responseJSON.repeat);
+			$('optionsLock').set('html','Lock: '+responseJSON.lock);
+
 			//hide the loading...
 			$('currentLoading').setStyle('display', 'none');
+			$('optionsLoading').setStyle('display', 'none');
+
+			//Display!!!
+			$('optionsShuffle').getParent().getParent().setStyle('display', 'block');
 
 			//Unhide the ul with all the info
 			title.getParent().reveal();
@@ -245,6 +262,11 @@ window.addEvent('domready', function() {
 		//query valid?
 		if(!searcher.searchByKey(this.getElement('input[name=key]').value.trim()))
 			searcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
+	});
+
+	//When user clicks the link to options, we do a quick request of the variables
+	$('getOptions').addEvent('click', function(){
+		currentSongManager.update();
 	});
 });
 

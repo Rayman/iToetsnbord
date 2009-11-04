@@ -19,10 +19,10 @@
     <a class="button" href="#searchForm">Search</a>
 
     <ul id="home" title="Home" selected="true">
-        <li><a id="getCurrent" href="#current">Current Played File</a></li>
-        <li><a href="#search">Search</a></li>
-        <li><a href="#options">Options</a></li>
-        <li><a href="index.html">Normal Version</a></li>
+        <li><a id="getCurrent"	href="#current">Current Played File</a></li>
+        <li><a 					href="#search">Search</a></li>
+        <li><a id="getOptions" 	href="#options">Options</a></li>
+        <li><a					href="index.html">Normal Version</a></li>
         <li><a href="#test">Test</a></li>
     </ul>
 
@@ -101,12 +101,14 @@
     </div>
 
     <div id="options" class="panel" title="Options">
-		<h2>Basic options</h2>
+		<ul id="optionsLoading">
+			<li><img src="images/loading.gif" width="20" /></li>
+		</ul>
         <ul>
-			<li><a href="javascript:void(0)">Shuffle: on</a></li>
-			<li><a href="javascript:void(0)">Repeat: track</a></li>
-			<li><a href="javascript:void(0)">Lock: on</a></li>
-			<li><a href="javascript:void(0)">araw</a></li>
+			<li><a href="javascript:void(0)" id="optionsShuffle"></a></li>
+			<li><a href="javascript:void(0)" id="optionsRepeat"></a></li>
+			<li><a href="javascript:void(0)" id="optionsLock"></a></li>
+			<li><a href="javascript:void(0)" id="optionsasdf">VOLUME</a></li>
 		</ul>
 
 		<h2>Advanced Options</h2>
