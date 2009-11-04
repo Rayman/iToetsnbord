@@ -61,7 +61,7 @@ window.addEvent('domready', function() {
 			$('currentLoading').setStyle('display', 'none');
 
 			//Unhide the ul with all the info
-			title.getParent().setStyle('display', 'block');
+			title.getParent().reveal();
 		},
 	});
 
