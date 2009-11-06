@@ -268,6 +268,14 @@ window.addEvent('domready', function() {
 	$('getOptions').addEvent('click', function(){
 		currentSongManager.update();
 	});
+	
+	//Listener for options
+	$('options').getElements('a').each(function(el){
+		el.addEvent('click', function(event){
+			event.preventDefault();
+			currentSongManager.update(el.get('href'));
+		});
+	});
 });
 
 //End of file!
