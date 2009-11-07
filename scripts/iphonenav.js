@@ -68,9 +68,10 @@ function checkOrientAndLocation()
         {
 			//Try to find that page in the history
             var index = pageHistory.indexOf(pageId);
+            //If it is found, index != 1, thus backwards = true
             var backwards = index != -1;
             if (backwards)
-                pageHistory.splice(index, pageHistory.length);
+                pageHistory.splice(index, pageHistory.length); //Remove from the index to the end
 
             showPage(page, backwards);
         }
@@ -101,7 +102,8 @@ function showPage(page, backwards)
         $('pageTitle').set('html', page.title || "");
 
 		//Hide the homebutton when page == home
-        $('homeButton').setStyle('display', ("#"+page.id) == $('homeButton').hash ? "none" : "inline");
+		var homeButton = $('homeButton');
+        homeButton.setStyle('display', ("#" + page.id) == homeButton.hash ? "none" : "inline");
 
         if (fromPage && fromPage != currentPage)
             setTimeout(swipePage, 0, fromPage, page, backwards);
@@ -139,6 +141,9 @@ function showDialog(form)
 {
 	//Unhide the form
     form.setAttribute("selected", "true");
+
+    //Remove the old query
+    form.getElements('input').set('value','');
 }
 
 window.addEvent('domready', function() {
