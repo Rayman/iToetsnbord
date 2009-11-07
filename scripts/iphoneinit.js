@@ -79,7 +79,7 @@ window.addEvent('domready', function() {
 
 			//Unhide the ul with all the info
 			title.getParent().reveal();
-		},
+		}
 	});
 
 	//When user clicks the link to currentSong, we do a quick request of the current song

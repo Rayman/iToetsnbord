@@ -30,7 +30,7 @@ var SongManager = new Class({
 		this.xhr.send({
 			url: data ? this.options.getCurrentSongUrl + data : this.options.getCurrentSongUrl
 		});
-	},
+	}
 });
 
 var MusicSearcher = new Class({
