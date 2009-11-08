@@ -153,12 +153,12 @@ input {
 
 /* This is for lists inside a div */
 
-body > div > ul {
+body > div ul {
     list-style: none;
     padding: 0;
 }
 
-body > div > ul li {
+body > div ul li {
     background-color: #FFFFFF;
     border: 1px solid #999999;
     color: #222222;
@@ -170,7 +170,7 @@ body > div > ul li {
     text-decoration: none;
 }
 
-body > div > ul li:first-child {
+body > div ul li:first-child {
     -webkit-border-top-left-radius: 8px;
     -webkit-border-top-right-radius: 8px;
     
@@ -178,7 +178,7 @@ body > div > ul li:first-child {
     -moz-border-radius-topright: 8px;
 }
 
-body > div > ul li:last-child {
+body > div ul li:last-child {
     -webkit-border-bottom-left-radius: 8px;
     -webkit-border-bottom-right-radius: 8px;
     
@@ -187,7 +187,7 @@ body > div > ul li:last-child {
 }
 
 /* Show the iPhoneArrow.png when there's a link */
-body > div > ul li a {
+body > div ul a {
 	color: inherit;
     display: block;
     font-weight: bold;
