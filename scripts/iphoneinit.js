@@ -90,13 +90,19 @@ window.addEvent('domready', function() {
 	$('playControls').getElements('a').each(function(el){
 		el.addEvent('click', function(event){
 			event.preventDefault();
-			currentSongManager.update(el.get('href'));
+			$('currentLoading').show();
+			$('currentTitle').getParent().get('slide').start('out').chain(function(){
+				currentSongManager.update(el.get('href'));
+			});
 		});
 	});
 
 	//Add listener for refreshing the current song
 	$('currentInfo').addEvent('click',function(){
-		currentSongManager.update('?refresh');
+		$('currentLoading').show();
+		$('currentTitle').getParent().get('slide').start('out').chain(function(){
+			currentSongManager.update('?refresh');
+		});
 	});
 
 	//Helper function, it formats a song to a html element
