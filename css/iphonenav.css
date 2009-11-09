@@ -100,6 +100,8 @@ body > ul > li > a {
 /* Panels are just divs with class=panel */
 .panel {
     box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     padding: 10px;
     background: #c8c8c8 url(../images/pinstripes.png);
 }
@@ -173,7 +175,7 @@ body > div ul li {
 body > div ul li:first-child {
     -webkit-border-top-left-radius: 8px;
     -webkit-border-top-right-radius: 8px;
-    
+
     -moz-border-radius-topleft: 8px;
     -moz-border-radius-topright: 8px;
 }
@@ -181,7 +183,7 @@ body > div ul li:first-child {
 body > div ul li:last-child {
     -webkit-border-bottom-left-radius: 8px;
     -webkit-border-bottom-right-radius: 8px;
-    
+
     -moz-border-radius-bottomleft: 8px;
     -moz-border-radius-bottomright: 8px;
 }
@@ -195,11 +197,10 @@ body > div ul a {
 	background: url(../images/iPhoneArrow.png) no-repeat right center;
 }
 
-/* A CSS fix, i dont know how to do this in a other way */
-body > div {
-	width: 94%;
-}
-
 img {
 	border: 0px solid;
+}
+
+.floatingLoading {
+	position: absolute;
 }
