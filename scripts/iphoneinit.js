@@ -11,20 +11,21 @@ window.addEvent('domready', function() {
 	currentSongManager = new SongManager({
 		getCurrentSongUrl: 'json/getcurrent.html',
 		onUpdateStart: function(){
-			//Hide all
-			$('currentTitle').getParent().setStyle('display', 'none');
 
-			//Unhide the loading
+			//Show the options' loading...
+			$('optionsLoading').setStyle('display', 'block');
+
+			//Hide all current stuff
+			$('currentTitle').getParent().slide('hide');
+
+			//Show the current's loading...
 			$('currentLoading').setStyle('display', 'block');
 
 			//set the albumart to the loading image
 			$('currentAlbumArt').setProperty('src', 'images/loading.gif');
 
-			//Hide the options
+			//Hide the options stuff
 			$('optionsShuffle').getParent().getParent().setStyle('display', 'none');
-
-			//Show the loading...
-			$('optionsLoading').setStyle('display', 'block');
 		},
 		onUpdate: function(responseJSON){
 
@@ -45,8 +46,9 @@ window.addEvent('domready', function() {
 			}
 			else
 			{
-				var album = $('currentAlbum').set('html', "Album: " + responseJSON.album);
-				album.getParent().setStyle('display', 'block');
+				$('currentAlbum')
+				.set('html', "Album: " + responseJSON.album)
+				.getParent().setStyle('display', 'block');
 			}
 
 			//Set the 'info'
@@ -63,22 +65,19 @@ window.addEvent('domready', function() {
 			var albumArt = $('currentAlbumArt').setProperty('src', responseJSON.albumart);
 			albumArt.getParent().setStyle('display', responseJSON.albumart == 'images/question.png' ? 'none' : 'block');
 
-
-
 			//Set the html
 			$('optionsShuffle').set('html','Shuffle: '+responseJSON.shuffle);
 			$('optionsRepeat').set('html','Repeat: '+responseJSON.repeat);
 			$('optionsLock').set('html','Lock: '+responseJSON.lock);
 
-			//hide the loading...
-			$('currentLoading').setStyle('display', 'none');
-			$('optionsLoading').setStyle('display', 'none');
-
-			//Display!!!
+			//Display all options stuff
 			$('optionsShuffle').getParent().getParent().setStyle('display', 'block');
 
-			//Unhide the ul with all the info
-			title.getParent().reveal();
+			//Slide the current stuff into the view
+			//After that, fade the loading out, hide it and set opacity to 1
+			title.getParent().get('slide').slideIn().chain(function(){
+				$('currentLoading').hide();
+			});
 		}
 	});
 
@@ -268,7 +267,7 @@ window.addEvent('domready', function() {
 	$('getOptions').addEvent('click', function(){
 		currentSongManager.update();
 	});
-	
+
 	//Listener for options
 	$('options').getElements('a').each(function(el){
 		el.addEvent('click', function(event){
