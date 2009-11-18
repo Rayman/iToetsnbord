@@ -10,6 +10,20 @@ body {
     -webkit-text-size-adjust: none;
 }
 
+/* The default title values */
+div h2 {
+    line-height: 18px;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0;
+    color: #444444;
+}
+
+div a {
+	text-decoration: bold underline;
+	color: #444444;
+}	
+
 body > h1 {
     box-sizing: border-box;
     margin: 0;
@@ -204,4 +218,8 @@ img {
 .floatingLoading {
 	position: absolute;
 	width: 94%;
+}
+
+.small {
+	font-size: 70%;
 }
