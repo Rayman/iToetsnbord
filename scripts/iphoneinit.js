@@ -5,6 +5,10 @@
 //Hold the JSON object with current song
 var currentSongPlaying = null;
 
+//Public vars
+var currentSongManager;
+var searcher;
+
 window.addEvent('domready', function() {
 
 	//Init the song manager
@@ -104,56 +108,9 @@ window.addEvent('domready', function() {
 			currentSongManager.update('?refresh');
 		});
 	});
-
-	//Helper function, it formats a song to a html element
-	//It creates a li element with inside it a anchor
-	//When the anchor is clicked, it shows two options
-	//	Play
-	//	Enqueue
-	var formatSearchResult = function(song){
-		var link = new Element('a',{
-			'href': 'javascript:void(0)',
-			'html': song.title,
-			'events':{
-				'click': function(){
-					//If it has two li items, dont create them plx
-					if(this.getElements('li').length==2)
-						return;
-
-					//Create the 'Play' link
-					new Element('a',{
-						'href': '#current',
-						'html': 'Play',
-						'events':{
-							'click': function(){
-								currentSongManager.update('?file='+song.filename);
-							}
-						}
-					}).inject(
-						new Element('li').inject(this) //this refers to 'ul > li > a'
-					);
-
-					//Create the 'Enqueue' link
-					new Element('a',{
-						'href': 'javascript:void(0)',
-						'html': 'Enqueue',
-						'events':{
-							'click': function(e){
-								e.stopPropagation();
-								currentSongManager.update('?add='+song.filename+'&playaddedifnotplaying');
-								this.getParent().getParent().getElements('li').dispose();
-							}
-						}
-					}).inject(
-						new Element('li').inject(this) //this refers to 'ul > li > a'
-					);
-				}
-			}
-		});
-		var listItem = new Element('li');
-		link.inject(listItem);
-		return listItem;
-	};
+	
+	//Init the searchSorter
+	sorter = new SearchSorter();
 
 	//Init the searcher
 	searcher = new MusicSearcher({
@@ -195,6 +152,8 @@ window.addEvent('domready', function() {
 				}).inject('searchList');
 				return;
 			}
+			
+			var todoItems = sorter.sortByArtist(responseJSON)
 
 			//When clicked on this link, it loads 30 more items in the list
 			//After that, it moves itself to the end of the list
@@ -208,7 +167,7 @@ window.addEvent('domready', function() {
 						var todo = this.retrieve('todoItems');
 						//Inject the first 30
 						todo.splice(0,30).each(function(item){
-							formatSearchResult(item).inject('searchList');
+							sorter.formatSearchResult(item).inject('searchList');
 						});
 
 						//Remove the link
@@ -218,7 +177,7 @@ window.addEvent('domready', function() {
 							//And inject it back in
 							removedElement.inject('searchList');
 							//Store the todo items in the element's space :p
-							this.store('todoItems',todo);
+							this.store('todoItems',todoItems);
 						}
 					}
 				}
