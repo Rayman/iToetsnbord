@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>iPhone Navigation</title>
+<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+<style type="text/css" media="screen">@import "css/iphonenav.css";</style>
+<script type="application/x-javascript" src="scripts/mootools-1.2.4-core.js"></script>
+<script type="application/x-javascript" src="scripts/mootools-1.2.4.2-more.js"></script>
+<script type="application/x-javascript" src="scripts/iphonenav2.js"></script>
+<script type="application/x-javascript" src="scripts/itoetsnbord2.js"></script>
+<script type="application/x-javascript" src="scripts/iphoneinit2.js"></script>
+</head>
+
+<body>
+    <h1 id="pageTitle"></h1>
+    <a id="homeButton" class="button" href="#home">Home</a>
+    <a class="button" href="#searchByKeyword">Search</a>
+
+	<div id="home" class="panel" title="Toets & Bord v3.3" selected="true">
+		<table id="playControls" width="100%">
+			<tr>
+				<td>
+					<a href="?prev">
+						<img src="images/prev.gif" width="24" height="24" alt="jump to previous song" />
+					</a>
+				</td>
+				<td>
+					<a href="?play">
+						<img src="images/play.png" width="24" height="24" alt="start playback" />
+					</a>
+				</td>
+				<td>
+					<a href="?stop">
+						<img src="images/stop.png" width="24" height="24" alt="stop playback" />
+					</a>
+				</td>
+				<td>
+					<a href="?pause">
+						<img src="images/pause.png" width="24" height="24" alt="pause playback" />
+					</a>
+				</td>
+				<td>
+					<a href="?next">
+						<img src="images/next.gif" width="24" height="24" alt="jump to next song" />
+					</a>
+				</td>
+			</tr>
+		</table>
+
+		<h2>Current Song</h2>
+        <ul>
+			<li>Title: <span id="currentTitle"><img src="images/loading.gif" width="20" /></span></li>
+			<li><a href="#searchResults">Artist: <span id="currentArtist"><img src="images/loading.gif" width="20" /></span></a></li>
+			<li><a href="#searchResults">Album: <span id="currentArtist"><img src="images/loading.gif" width="20" /></span></a></li>
+			<li><img id="currentAlbumArt" src="images/loading.gif" width="100" /></li>
+		</ul>
+		
+		<ul>
+			<li><a href="#search">Search</a></li>
+			<li><a id="getOptions" href="#options">Options</a></li>
+			<li><a href="index.html">Normal Version</a></li>
+			<li><a href="#test">Test</a></li>
+		</ul>
+	</div>
+
+    <div id="test" class="panel" title="Belle & Sebastian">
+		<h2>Normal list</h2>
+		<ul>
+			<li>About</li>
+			<li>Blog</li>
+		</ul>
+		<h2>Link List:</h2>
+		<ul>
+			<li><a href="#consulting-clinic.html">Consulting Clinic</a></li>
+			<li><a href="#on-call.html">On Call</a></li>
+			<li><a href="#development.html">Development</a></li>
+		</ul>
+		<h2>About</h2>
+		<p>Jonathan Stark is a web developer, speaker, and author. His
+		   consulting firm, Jonathan Stark Consulting, Inc., has attracted
+		   clients such as Staples, Turner Broadcasting, and the PGA Tour.
+		   ...
+		</p>
+		<p>Jonathan Stark is a mobile and web application developer who the
+		   Wall Street Journal has called an expert on publishing desktop
+		   data to the web.</p>
+		<ul>
+			<li><a href="#services.html">Services</a></li>
+			<li><a href="#about.html">About</a></li>
+			<li><a href="#blog.html">Blog</a></li>
+		</ul>
+    </div>
+
+    <div id="options" class="panel" title="Options">
+		<ul id="optionsLoading">
+			<li><img src="images/loading.gif" width="20" /></li>
+		</ul>
+        <ul>
+			<li><a href="?shuffle" id="optionsShuffle"></a></li>
+			<li><a href="?repeatall" id="optionsRepeat"></a></li>
+			<li><a href="?lock" id="optionsLock"></a></li>
+			<li><a href="?minimize">Minimise Winamp</a></li>
+			<li><a href="?close">Close Winamp</a></li>
+			<li><a href="?restart">Restart Winamp</a></li>
+		</ul>
+
+		<h2>Advanced Commands</h2>
+        <ul>
+			<li><a href="?standby">Standby</a></li>
+			<li><a href="?shutdown">Shutdown</a></li>
+			<li><a href="?reboot">Reboot</a></li>
+			<li><a href="?fullscreen">Fullscreen</a></li>
+			<li><a href="?execute">Execute</a></li>
+		</ul>
+	</div>
+
+    <div id="search" class="panel" title="Search">
+		<ul>
+			<li><a href="#searchByQuery">Search by Query</a></li>
+			<li><a href="#searchByKeyword">Search by Keyword</a></li>
+			<li><a href="#searchBySong">Search by Artist + Title</a></li>
+		</ul>
+    </div>
+
+    <form id="searchByQuery" class="dialog" action="#searchResults">
+        <fieldset>
+            <h1>Search By Query</h1>
+            <!-- Fire the onSubmit event -->
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+
+            <label>Query:</label>
+            <input type="text" name="query" />
+        </fieldset>
+    </form>
+
+    <form id="searchByKeyword" class="dialog" action="#searchResults">
+        <fieldset>
+            <h1>Search By Keyword</h1>
+            <!-- Fire the onSubmit event -->
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+
+            <label>Key:</label>
+            <input type="text" name="key" />
+        </fieldset>
+    </form>
+
+    <div id="searchResults" class="panel" title="Search">
+		<h2 id="searchQuery">Search Results</h2>
+		<p>
+			Sort by <a href="#">Title</a> | <a href="#">Artist</a>
+		</p>
+		<ul id="searchList">
+			<li><img src="images/loading.gif" /></li>
+		</ul>
+    </div>
+
+    <form id="searchBySong" class="dialog" action="#searchResults">
+        <fieldset>
+            <h1>Music Search</h1>
+            <!-- Fire the onSubmit event -->
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+
+            <label>Artist:</label>
+            <input type="text" name="artist" />
+            <label>Song:</label>
+            <input type="text" name="song" />
+        </fieldset>
+    </form>
+</body>
+</html>
