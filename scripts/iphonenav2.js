@@ -1,11 +1,15 @@
 // Some basic string functions
-String.prototype.startsWith = function(str){
-	return (this.match("^"+str)==str);
-};
+String.implement({
+	startsWith: function(str){
+		return (this.match("^"+str)==str);
+	}
+});
 
-String.prototype.endsWith = function(str){
-	return (this.match(str+"$")==str);
-};
+String.implement({
+	endsWith: function(str){
+		return (this.match(str+"$")==str);
+	}
+});
 
 //Everything is wrapped in a function, so these ugly variables are hidden :)
 (function() {
