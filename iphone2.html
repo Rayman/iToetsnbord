@@ -56,7 +56,7 @@
 			<li><a href="#searchResults">Album: <span id="currentArtist"><img src="images/loading.gif" width="20" /></span></a></li>
 			<li><img id="currentAlbumArt" src="images/loading.gif" width="100" /></li>
 		</ul>
-		
+
 		<ul>
 			<li><a href="#search">Search</a></li>
 			<li><a id="getOptions" href="#options">Options</a></li>
@@ -128,7 +128,7 @@
         <fieldset>
             <h1>Search By Query</h1>
             <!-- Fire the onSubmit event -->
-            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent('form').fireEvent('submit',event)">Search</a>
 
             <label>Query:</label>
             <input type="text" name="query" />
@@ -139,7 +139,7 @@
         <fieldset>
             <h1>Search By Keyword</h1>
             <!-- Fire the onSubmit event -->
-            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent('form').fireEvent('submit',event)">Search</a>
 
             <label>Key:</label>
             <input type="text" name="key" />
@@ -160,7 +160,7 @@
         <fieldset>
             <h1>Music Search</h1>
             <!-- Fire the onSubmit event -->
-            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent('form').fireEvent('submit',event)">Search</a>
 
             <label>Artist:</label>
             <input type="text" name="artist" />

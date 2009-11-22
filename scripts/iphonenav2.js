@@ -11,144 +11,169 @@ String.implement({
 	}
 });
 
-//Everything is wrapped in a function, so these ugly variables are hidden :)
-(function() {
+HistoryManager = new new Class({
+	Implements: [Options, Events],
 
-//Constants for the page swiping
-var animateX = -20; //Percentage of the screen moved in one step
-var animateInterval = 24; //Time between two intervals of the animation in ms
+	options: {
+		observeDelay:	300,
+		hashPrefix:		"#_", //The pageId gets prefixed in the url by this
 
-//Usefull variables for page navigation
-var currentPage = null; //Hold the element of the current page
-var currentWidth = 0; //Hold the current width of the window
-var currentHash = location.hash; //Holds the current id of the page
-var hashPrefix = "#_"; //The pageId gets prefixed in the url by this
-var pageHistory = []; //Hold the history so that back/forward buttons work
+		animateX:			-20, //Percentage of the screen moved in one step
+		animateInterval:	24 //Time between two intervals of the animation in ms
+	},
 
-addEventListener("click", function(event)
-{
-    var link = event.target;
-    // Search the <a> tag
-    while (link && link.localName && link.localName.toLowerCase() != "a")
-        link = link.parentNode;
+	initialize: function(){
+		this.currentWidth = 0;
+		this.currentHash = location.hash;
+		this.pageHistory = [];
 
-    // Dont do anything with normal links
-    if (link && link.hash && link.hash != '' && link.hash != '#')
-    {
-		//Stop default action
-		event.preventDefault();
+		//Start the watch function
+		this.observe.periodical(this.options.observeDelay, this);
 
-		//Get the page, and when found, go to it
-		var page = document.getElementById(link.hash.substr(1));
+		//Start the clickwatcher
+		window.addEvent('click',this.onClick.bind(this));
+	},
+
+	// The function that checks the width and the location.hash for changes
+	observe: function() {
+
+		//If the width of the screen changes, fire this event
+		if (window.outerWidth != this.currentWidth)
+		{
+			this.currentWidth = window.outerWidth;
+			this.onWidthChanged(this.currentWidth);
+		}
+
+		//If back/forward buttons are used, the location.hash changes
+		if (location.hash != this.currentHash)
+		{
+			this.currentHash = location.hash;
+			this.onHashChanged(location.hash);
+		}
+	},
+
+	onWidthChanged: function(newWidth){
+		document.body.setAttribute("orient", newWidth == 320 ? "profile" : "landscape");
+	},
+
+	onHashChanged: function(newHash){
+		var pageId = newHash.substr(this.options.hashPrefix.length);
+		var page = this.tryGetPage(pageId);
 		if(page)
 		{
-			showPage(page);
-		}
-		else
-		{
-			alert('Page not found: '+link.hash);
-		}
-    }
-}, true);
-
-function checkOrientAndLocation()
-{
-    if (window.outerWidth != currentWidth)
-    {
-        currentWidth = window.outerWidth;
-        document.body.setAttribute("orient", currentWidth == 320 ? "profile" : "landscape");
-    }
-
-    //If back/forward buttons are used, the location.hash changes
-    if (location.hash != currentHash)
-    {
-		//Save current hash
-        currentHash = location.hash;
-        var pageId = currentHash.substr(hashPrefix.length);
-
-        //Try to get the page
-        var page = $(pageId);
-        if (page)
-        {
 			//Try to find that page in the history
-            var index = pageHistory.indexOf(pageId);
+            var index = this.pageHistory.indexOf(pageId);
             //If it is found, index != 1, thus backwards = true
             var backwards = index != -1;
             if (backwards)
-                pageHistory.splice(index, pageHistory.length); //Remove from the index to the end
+                this.pageHistory.splice(index, pageHistory.length); //Remove from the index to the end
 
-            showPage(page, backwards);
-        }
-        else
-        {
-			alert('Page not found: '+pageId);
+            this.showPage(page, backwards);
 		}
-    }
-}
+	},
 
-function showPage(page, backwards)
-{
-    // If classname == dialog means that it is a form
-    if (page.hasClass('dialog'))
-        showDialog(page);
-    else
-    {
-		//Change the location to the page that about to be shown
-        location.href = currentHash = hashPrefix + page.id;
+	onClick: function(event){
+		var link = event.target;
 
-        //Save the page in the history
-        pageHistory.push(page.id);
+		//Hide the form if it's clicked on it
+		if($(link).nodeName.toLowerCase()=='form')
+			this.removeAttribute("selected");
 
-        var fromPage = currentPage;
-        currentPage = page;
+		// Search the <a> tag
+		while (link && link.localName && link.localName.toLowerCase() != "a")
+			link = link.parentNode;
 
-        //Set the title
-        $('pageTitle').set('html', page.title || "");
+		// Dont do anything with normal links
+		if (link && link.hash && link.hash != '' && link.hash != '#')
+		{
+			//Stop default action
+			event.preventDefault();
 
-		//Hide the homebutton when page == home
-		var homeButton = $('homeButton');
-        homeButton.setStyle('display', ("#" + page.id) == homeButton.hash ? "none" : "inline");
+			var page = this.tryGetPage(link.hash.substring(1));
+			if(page)
+			{
+				this.showPage(page);
+			}
+		}
+	},
 
-        if (fromPage && fromPage != currentPage)
-            setTimeout(swipePage, 0, fromPage, page, backwards);
-    }
-}
+	goToPage: function(pageId){
+		var page = this.tryGetPage(pageId);
+		if(page)
+			this.showPage(page);
+	},
 
-function swipePage(fromPage, toPage, backwards)
-{
-	// position the toPage right next to the current page ???
-    toPage.setStyle('left', '100%');
+	showPage: function(page, backwards){
 
-    //Unhide it
-    toPage.setAttribute("selected", "true");
+		// If classname == dialog means that it is a form
+		if (page.hasClass('dialog'))
+			this.showDialog(page);
+		else
+		{
+			//Change the location to the page that about to be shown
+			location.href = this.currentHash = this.options.hashPrefix + page.id;
 
-    //Scroll to the top
-    scrollTo(0, 1);
+			//Save the page in the history
+			this.pageHistory.push(page.id);
 
-    var percent = 100;
-    var timer = function()
-    {
-        percent += animateX;
-        if (percent <= 0)
-        {
-            percent = 0;
-            fromPage.removeAttribute("selected"); //Hide the fromPage
-            $clear(timer); //Stop the timer
-        }
+			var fromPage = this.currentPage;
+			this.currentPage = page;
 
-        fromPage.setStyle('left', (backwards ? (100-percent) : (percent-100)) + "%");
-        toPage.setStyle('left', (backwards ? -percent : percent) + "%");
-    }.periodical(animateInterval);
-}
+			//Set the title
+			$('pageTitle').set('html', page.title || "");
 
-function showDialog(form)
-{
-	//Unhide the form
-    form.setAttribute("selected", "true");
+			//Hide the homebutton when page == home
+			var homeButton = $('homeButton');
+			homeButton.setStyle('display', ("#" + page.id) == homeButton.hash ? "none" : "inline");
 
-    //Remove the old query
-    form.getElements('input').set('value','');
-}
+			if (fromPage && fromPage != this.currentPage)
+				setTimeout(this.swipePage.bind(this), 0, fromPage, page, backwards);
+		}
+	},
+
+	showDialog: function(form)
+	{
+		//Unhide the form
+		form.setAttribute("selected", "true");
+
+		//Remove the old query
+		form.getElements('input').set('value','');
+	},
+
+	tryGetPage: function(pageId){
+		var page = document.id(pageId);
+		if(!page)
+			alert('Page not found: ' + pageId);
+		return page;
+	},
+
+	swipePage: function(fromPage, toPage, backwards)
+	{
+		// position the toPage right next to the current page ???
+		toPage.setStyle('left', '100%');
+
+		//Unhide it
+		toPage.setAttribute("selected", "true");
+
+		//Scroll to the top
+		scrollTo(0, 1);
+
+		var percent = 100;
+		var timer = function()
+		{
+			percent += this.options.animateX;
+			if (percent <= 0)
+			{
+				percent = 0;
+				fromPage.removeAttribute("selected"); //Hide the fromPage
+				$clear(timer); //Stop the timer
+			}
+
+			fromPage.setStyle('left', (backwards ? (100-percent) : (percent-100)) + "%");
+			toPage.setStyle('left', (backwards ? -percent : percent) + "%");
+		}.bind(this).periodical(this.options.animateInterval);
+	}
+});
 
 window.addEvent('domready', function() {
 
@@ -159,55 +184,35 @@ window.addEvent('domready', function() {
 
 	//Startpage is the first selected = true, pick the fist div when no elements are found
 	var startPage = list.length > 0 ? list[0] : $(document.body).getElement('div');
+
 	//Show the startpage
-	showPage(startPage);
+	HistoryManager.showPage(startPage);
 
-	//Add some time stuff
-    setInterval(checkOrientAndLocation, 300);
-    setTimeout(scrollTo, 0, 0, 1);
+	$$('[class=dialog]').addEvent('submit',function(event){
 
-	//Add some events to forms with class=dialog
-    $$('[class=dialog]').addEvents({
+		//Stop the submitting of the form
+		event.preventDefault();
 
-		//Add an onsubmit event handler to all forms that have class=dialog
-		'submit': function(event){
+		var form = $(event.target);
+		if(form.nodeName.toLowerCase()!='form')
+			form = form.getParent('form');
 
-			//Stop the submitting of the form
-			event.preventDefault();
+		// Deselect all inputs
+		form.getElements('input').each(function(item){
+			item.blur();
+		});
 
-			// Deselect all inputs
-			this.getElements('input').each(function(item){
-				item.blur();
-			});
+		//Hide the form
+		form.removeAttribute("selected");
 
-			//Hide the form
-			this.removeAttribute("selected");
-
-			//Check if the action is to a #id
-			var index = this.action.lastIndexOf("#");
-			if (index != -1)
-			{
-				//Get the submit location
-				var element = document.getElementById(this.action.substr(index+1));
-				if(element)
-				{
-					showPage(element);
-				}
-				else
-				{
-					alert('Page not found');
-				}
-			}
-
-		},
-
-		//Hide the form when an click event occurs
-		'click': function(event){
-			if (event.target == this)
-				this.removeAttribute("selected");
+		//Check if the action is to a #id
+		var index = form.action.lastIndexOf("#");
+		if (index != -1)
+		{
+			//Get the submit location
+			var page = this.tryGetPage(form.action.substr(index+1));
+			if(page)
+				HistoryManager.showPage(page);
 		}
-	});
+	}.bind(HistoryManager));
 });
-
-
-})(); //End of wrapper function
