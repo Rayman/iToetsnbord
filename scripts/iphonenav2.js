@@ -17,9 +17,11 @@ HistoryManager = new new Class({
 	options: {
 		observeDelay:	300,
 		hashPrefix:		"#_", //The pageId gets prefixed in the url by this
+		backButton: 	'', //This button is hidden when page.id == homepage.id
+		homePage:		'',
 
-		animateX:			-20, //Percentage of the screen moved in one step
-		animateInterval:	24 //Time between two intervals of the animation in ms
+		animateX:		-20, //Percentage of the screen moved in one step
+		animateInterval:24 //Time between two intervals of the animation in ms
 	},
 
 	initialize: function(){
@@ -63,10 +65,11 @@ HistoryManager = new new Class({
 		{
 			//Try to find that page in the history
             var index = this.pageHistory.indexOf(pageId);
-            //If it is found, index != 1, thus backwards = true
+            //If it is found, index != -1, thus backwards = true
             var backwards = index != -1;
+
             if (backwards)
-                this.pageHistory.splice(index, pageHistory.length); //Remove from the index to the end
+                this.pageHistory.splice(index, this.pageHistory.length); //Remove from the index to the end
 
             this.showPage(page, backwards);
 		}
@@ -122,9 +125,8 @@ HistoryManager = new new Class({
 			//Set the title
 			$('pageTitle').set('html', page.title || "");
 
-			//Hide the homebutton when page == home
-			var homeButton = $('homeButton');
-			homeButton.setStyle('display', ("#" + page.id) == homeButton.hash ? "none" : "inline");
+			//Hide the backButton when page == home
+			this.options.backButton.setStyle('display', page == this.options.homePage ? "none" : "inline");
 
 			if (fromPage && fromPage != this.currentPage)
 				setTimeout(this.swipePage.bind(this), 0, fromPage, page, backwards);
@@ -183,11 +185,18 @@ window.addEvent('domready', function() {
 	});
 
 	//Startpage is the first selected = true, pick the fist div when no elements are found
-	var startPage = list.length > 0 ? list[0] : $(document.body).getElement('div');
+	var homePage = list.length > 0 ? list[0] : $(document.body).getElement('div');
+
+	//Set some options
+	HistoryManager.setOptions({
+		homePage:	$('home'),
+		backButton:	$('backButton')
+	});
 
 	//Show the startpage
-	HistoryManager.showPage(startPage);
+	HistoryManager.showPage(homePage);
 
+	//Bind the events for form submitting
 	$$('[class=dialog]').addEvent('submit',function(event){
 
 		//Stop the submitting of the form
