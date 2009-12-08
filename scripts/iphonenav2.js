@@ -174,7 +174,7 @@ window.addEvent('domready', function() {
 	});
 
 	//Startpage is the first selected = true, pick the fist div when no elements are found
-	var homePage = list.length > 0 ? list[0] : $(document.body).getElement('div');
+	var startPage = list.length > 0 ? list[0] : $(document.body).getElement('div');
 
 	//Set some options
 	HistoryManager.setOptions({
@@ -183,7 +183,7 @@ window.addEvent('domready', function() {
 	});
 
 	//Show the startpage
-	HistoryManager.showPage(homePage);
+	HistoryManager.showPage(startPage);
 
 	//Bind the events for form submitting
 	$$('[class=dialog]').addEvent('submit',function(event){
