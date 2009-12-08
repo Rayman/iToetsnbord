@@ -18,10 +18,7 @@ HistoryManager = new new Class({
 		observeDelay:	300,
 		hashPrefix:		"#_", //The pageId gets prefixed in the url by this
 		backButton: 	'', //This button is hidden when page.id == homepage.id
-		homePage:		'',
-
-		animateX:		-20, //Percentage of the screen moved in one step
-		animateInterval:24 //Time between two intervals of the animation in ms
+		homePage:		''
 	},
 
 	initialize: function(){
