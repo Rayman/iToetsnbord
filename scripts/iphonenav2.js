@@ -60,19 +60,18 @@ HistoryManager = new new Class({
 
 	onHashChanged: function(newHash){
 		var pageId = newHash.substr(this.options.hashPrefix.length);
+
+		//Try to find that page in the history
+		var index = this.pageHistory.indexOf(pageId);
+		//If it is found, index != -1, thus backwards = true
+		var backwards = index != -1;
+
+		if (backwards)
+			this.pageHistory.splice(index, this.pageHistory.length); //Remove from the index to the end
+
 		var page = this.tryGetPage(pageId);
 		if(page)
-		{
-			//Try to find that page in the history
-            var index = this.pageHistory.indexOf(pageId);
-            //If it is found, index != -1, thus backwards = true
-            var backwards = index != -1;
-
-            if (backwards)
-                this.pageHistory.splice(index, this.pageHistory.length); //Remove from the index to the end
-
-            this.showPage(page, backwards);
-		}
+			this.showPage(page, backwards);
 	},
 
 	onClick: function(event){
@@ -92,11 +91,7 @@ HistoryManager = new new Class({
 			//Stop default action
 			event.preventDefault();
 
-			var page = this.tryGetPage(link.hash.substring(1));
-			if(page)
-			{
-				this.showPage(page);
-			}
+			this.goToPage(link.hash.substring(1));
 		}
 	},
 
@@ -218,10 +213,8 @@ window.addEvent('domready', function() {
 		var index = form.action.lastIndexOf("#");
 		if (index != -1)
 		{
-			//Get the submit location
-			var page = this.tryGetPage(form.action.substr(index+1));
-			if(page)
-				HistoryManager.showPage(page);
+			//Go to the submit location
+			HistoryManager.goToPage(form.action.substr(index+1));
 		}
 	}.bind(HistoryManager));
 });
