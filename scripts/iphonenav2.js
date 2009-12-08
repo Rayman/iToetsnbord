@@ -144,10 +144,15 @@ HistoryManager = new new Class({
 		return page;
 	},
 
+	timeoutID: null,
+
 	swipePage: function(fromPage, toPage, backwards)
 	{
-		// position the toPage right next to the current page ???
-		toPage.setStyle('left', '100%');
+		//Stop the other page from hiding
+		$clear(this.timeoutID);
+
+		// position the toPage right next to the current page
+		toPage.setStyle('left', backwards ? '-100%' : '100%');
 
 		//Unhide it
 		toPage.setAttribute("selected", "true");
@@ -155,20 +160,12 @@ HistoryManager = new new Class({
 		//Scroll to the top
 		scrollTo(0, 1);
 
-		var percent = 100;
-		var timer = function()
-		{
-			percent += this.options.animateX;
-			if (percent <= 0)
-			{
-				percent = 0;
-				fromPage.removeAttribute("selected"); //Hide the fromPage
-				$clear(timer); //Stop the timer
-			}
+		fromPage.setStyle('left', (backwards ? '100' : '-100') + "%");
+		toPage.setStyle('left', '0%');
 
-			fromPage.setStyle('left', (backwards ? (100-percent) : (percent-100)) + "%");
-			toPage.setStyle('left', (backwards ? -percent : percent) + "%");
-		}.bind(this).periodical(this.options.animateInterval);
+		this.timeoutID = function(){
+			fromPage.removeAttribute("selected"); //Hide the fromPage
+		}.delay(1000);
 	}
 });
 

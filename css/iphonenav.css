@@ -91,6 +91,8 @@ body > ul {
 /* Only when selected, display it */
 body > *[selected="true"] {
     display: block;
+    -webkit-transition: left 1s linear;
+    -moz-transition: left 1s linear;
 }
 
 /* These rules are for fullscreen lists */
