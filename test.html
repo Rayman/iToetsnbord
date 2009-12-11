@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>iPhone Navigation</title>
+<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+<style type="text/css" media="screen">@import "css/iphonenav.css";</style>
+<script type="application/x-javascript" src="scripts/mootools-1.2.4-core.js"></script>
+<script type="application/x-javascript" src="scripts/mootools-1.2.4.2-more.js"></script>
+<script type="application/x-javascript" src="scripts/iphonenav2.js"></script>
+</head>
+
+<body>
+    <h1 id="pageTitle"></h1>
+    <a id="backButton" class="button" href="javascript:void(0)" onclick="window.history.back()">Back</a>
+    <a class="button" href="#searchByKeyword">Search</a>
+
+	<div id="home" class="panel" title="Toets & Bord v3.3" selected="true">
+		<h2>Normal list</h2>
+		<ul>
+			<li>About</li>
+			<li>Blog</li>
+		</ul>
+		<h2>Link List:</h2>
+		<ul>
+			<li><a href="#test1">Full screen list</a></li>
+			<li><a href="#test2">Some stuff</a></li>
+			<li><a href="#test3">asdf</a></li>
+		</ul>
+		<h2>About</h2>
+		<p>Jonathan Stark is a web developer, speaker, and author. His
+		   consulting firm, Jonathan Stark Consulting, Inc., has attracted
+		   clients such as Staples, Turner Broadcasting, and the PGA Tour.
+		   ...
+		</p>
+		<p>Jonathan Stark is a mobile and web application developer who the
+		   Wall Street Journal has called an expert on publishing desktop
+		   data to the web.</p>
+		<ul>
+			<li><a href="#services.html">Services</a></li>
+			<li><a href="#about.html">About</a></li>
+			<li><a href="#blog.html">Blog</a></li>
+		</ul>
+    </div>
+    
+    <div id="test2" class="panel" title="TAsdfdfs">
+		ASDF
+    </div>
+
+    <form id="searchByKeyword" class="dialog" action="#searchResults">
+        <fieldset>
+            <h1>Search By Keyword</h1>
+            <!-- Fire the onSubmit event -->
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent('form').fireEvent('submit',event)">Search</a>
+
+            <label>Key:</label>
+            <input type="text" name="key" />
+        </fieldset>
+    </form>
+
+    <div id="searchResults" class="panel" title="Search">
+		<h2 id="searchQuery">Search Results</h2>
+		<p>
+			Sort by <a href="#">Title</a> | <a href="#">Artist</a>
+		</p>
+		<ul id="searchList">
+			<li><img src="images/loading.gif" /></li>
+		</ul>
+    </div>
+</body>
+</html>
