@@ -100,6 +100,11 @@ window.addEvent('domready', function() {
 	currentArtist.addEvent('click',function(){
 		searcher.search('ARTIST HAS "'+currentSongPlaying.artist+'"');
 	});
+	
+	//Listener for clicking at the info link
+	infoLink.addEvent('click',function(){
+		currentSongManager.update();
+	});
 
 	//Add listener for search form submit
 	$('searchBySong').addEvent('submit',function(e){
