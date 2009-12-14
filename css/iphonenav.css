@@ -7,7 +7,10 @@ body {
     background: #FFFFFF;
     color: #000000;
     overflow: hidden;
+    -webkit-user-select: none;
     -webkit-text-size-adjust: none;
+    /* -webkit-tap-highlight-color: rgba(0,0,0,0); */
+    -webkit-touch-callout: none;
 }
 
 /* The default title values */
@@ -37,6 +40,22 @@ body > h1 {
     color: #FFFFFF;
     background: url(../images/iPhoneToolbar.png) #6d84a2 repeat-x;
     border-bottom: 1px solid #2d3642;
+}
+
+li[selected], li:active, li:hover {
+    background-color: #194fdb !important;
+    background-image: url(../images/selection.png) !important;
+    background-repeat: no-repeat, repeat-x;
+    background-position: right center, left top;
+    color: #FFFFFF !important;
+}
+
+a:hover, a:active {
+	background-image: url(../images/listArrowSel.png);
+}
+
+a[selected="progress"] {
+    background-image: url(loading.gif), url(selection.png) !important;
 }
 
 .button {
