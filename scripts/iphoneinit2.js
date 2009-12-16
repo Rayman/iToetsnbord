@@ -32,8 +32,6 @@ window.addEvent('domready', function() {
 	currentSongManager = new SongManager({
 		baseUrl: 'json/getcurrent.html',
 		onUpdateStart: function(){
-			Log.log('update start');
-
 			$$(currentTitle,
 				currentArtist,
 				currentAlbum,
@@ -44,7 +42,7 @@ window.addEvent('domready', function() {
 			});
 		},
 		onUpdate: function(responseJSON){
-			Log.log('currentSongManager onupdate: ',responseJSON);
+			currentSongPlaying = responseJSON;
 
 			currentTitle.set('html',responseJSON.title);
 			currentArtist.set('html',responseJSON.artist);
@@ -100,7 +98,7 @@ window.addEvent('domready', function() {
 	currentArtist.addEvent('click',function(){
 		searcher.search('ARTIST HAS "'+currentSongPlaying.artist+'"');
 	});
-	
+
 	//Listener for clicking at the info link
 	infoLink.addEvent('click',function(){
 		currentSongManager.update();
