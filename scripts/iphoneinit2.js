@@ -71,11 +71,42 @@ window.addEvent('domready', function() {
 		});
 	});
 
+	//The filename for the song that's about to be played
+	var fileName = '';
+
+	//play/enqueue link
+	var playLink = new Element('ul');
+	new Element('li').grab(
+		new Element('a',{
+			'html': 'Play',
+			'href': '#home',
+			'events':{
+				'click': function(){
+					currentSongManager.update('?file='+fileName);
+
+				}
+			}
+		})
+	).inject(playLink);
+
+	new Element('li').grab(
+		new Element('a',{
+			'html': 'Enqueue',
+			'href': 'javascript:void(0)',
+			'events':{
+				'click': function(){
+					currentSongManager.update('?add='+fileName+'&playaddedifnotplaying');
+					playLink.dispose();
+				}
+			}
+		})
+	).inject(playLink);
+
 	//Init the searcher
 	searcher = new MusicSearcher({
 		//The baseurl for the request
 		baseUrl: 'json/getsearchresults.html?',
-	
+
 		//The url for the searches by query
 		urlSearchByQuery: 'query=',
 
@@ -88,7 +119,20 @@ window.addEvent('domready', function() {
 
 		//When the search request is complete
 		onSearchComplete: function(responseJSON, responseText){
-			Log.log('Searchcomplete: ',responseJSON);
+			var searchList = $('searchList').empty();
+			responseJSON.each(function(item){
+				new Element('a',{
+					'html': item.title,
+					'events':{
+						'click': function(){
+							fileName = item.filename;
+							playLink.inject(this);
+						}
+					}
+				}).inject(
+					new Element('li').inject(searchList)
+				);
+			});
 		}
 	});
 
