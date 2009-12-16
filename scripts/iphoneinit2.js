@@ -73,11 +73,14 @@ window.addEvent('domready', function() {
 
 	//Init the searcher
 	searcher = new MusicSearcher({
+		//The baseurl for the request
+		baseUrl: 'json/getsearchresults.html?',
+	
 		//The url for the searches by query
-		getSearchResultsUrl: 'json/getsearchresults.html?query=',
+		urlSearchByQuery: 'query=',
 
 		//The url for searches by keyword
-		getSearchByKeyUrl:   'json/getsearchresults.html?search_ml=',
+		urlSearchByKey:   'search_ml=',
 
 		onSearchStart: function(query){
 			Log.log('query: ',query);
@@ -91,12 +94,12 @@ window.addEvent('domready', function() {
 
 	//Add listener for album searching
 	currentAlbum.addEvent('click',function(){
-		searcher.search('ALBUM HAS "'+currentSongPlaying.album+'"');
+		searcher.searchByQuery('ALBUM HAS "'+currentSongPlaying.album+'"');
 	});
 
 	//Add listener for artist searching
 	currentArtist.addEvent('click',function(){
-		searcher.search('ARTIST HAS "'+currentSongPlaying.artist+'"');
+		searcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
 	});
 
 	//Listener for clicking at the info link

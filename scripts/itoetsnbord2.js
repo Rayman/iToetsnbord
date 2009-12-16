@@ -61,6 +61,8 @@ var MusicSearcher = new Class({
 		// onUpdateStart: $empty,
 		// onUpdate: $empty,
 		// baseUrl: ''
+		urlSearchByQuery: '',
+		urlSearchByKey:   ''
 	},
 
 	initialize: function(options) {
@@ -79,7 +81,7 @@ var MusicSearcher = new Class({
 	searchByQuery: function(query){
 		this.fireEvent('searchStart', query);
 		if(!$chk(query)) return false;
-		this.parent(query);
+		this.update(this.options.urlSearchByQuery+query);
 		return true;
 	},
 
@@ -87,7 +89,7 @@ var MusicSearcher = new Class({
 	searchByKey: function(key){
 		this.fireEvent('searchStart', 'Search for: ' + key);
 		if(!$chk(key)) return false;
-		this.parent(key);
+		this.update(this.options.urlSearchByKey+key);
 		return true;
 	}
 });
