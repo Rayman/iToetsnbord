@@ -45,13 +45,15 @@ body > h1 {
 li[selected], li:active, li:hover {
     background-color: #194fdb !important;
     background-image: url(../images/selection.png) !important;
-    background-repeat: no-repeat, repeat-x;
-    background-position: right center, left top;
+    background-repeat: repeat-x;
+    background-position: left top;
     color: #FFFFFF !important;
 }
 
 a:hover, a:active {
 	background-image: url(../images/listArrowSel.png);
+	background-repeat: no-repeat;
+	background-position: right center;
 }
 
 a[selected="progress"] {
