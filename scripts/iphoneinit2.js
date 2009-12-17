@@ -84,6 +84,10 @@ window.addEvent('domready', function() {
 				'click': function(){
 					currentSongManager.update('?file='+fileName);
 
+					//Dirty hack for removing the playlink from the DOM
+					(function(){
+						playLink.dispose();
+					}).delay(1);
 				}
 			}
 		})
@@ -96,7 +100,11 @@ window.addEvent('domready', function() {
 			'events':{
 				'click': function(){
 					currentSongManager.update('?add='+fileName+'&playaddedifnotplaying');
-					playLink.dispose();
+
+					//Dirty hack for removing the playlink from the DOM
+					(function(){
+						playLink.dispose();
+					}).delay(1);
 				}
 			}
 		})
