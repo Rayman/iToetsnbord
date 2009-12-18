@@ -76,7 +76,7 @@ HistoryManager = new new Class({
 
 		//Hide the form if it's clicked on it
 		if($(link).nodeName.toLowerCase()=='form')
-			this.removeAttribute("selected");
+			link.removeAttribute("selected");
 
 		// Search the <a> tag
 		while (link && link.localName && link.localName.toLowerCase() != "a")
