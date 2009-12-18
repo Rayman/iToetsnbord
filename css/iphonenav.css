@@ -50,7 +50,7 @@ li[selected], li:active, li:hover {
     color: #FFFFFF !important;
 }
 
-a:hover, a:active {
+li > a:hover, a:active {
 	background-image: url(../images/listArrowSel.png);
 	background-repeat: no-repeat;
 	background-position: right center;
