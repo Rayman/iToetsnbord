@@ -128,6 +128,16 @@ window.addEvent('domready', function() {
 		//When the search request is complete
 		onSearchComplete: function(responseJSON, responseText){
 			var searchList = $('searchList').empty();
+			
+			//When the response has no songs in it
+			if(!responseJSON || !responseJSON.length)
+			{
+				//Maybe the responseText has some info ?
+				new Element('li',{
+					html: 'No Results: ' + responseText
+				}).inject('searchList');
+				return;
+			}
 			responseJSON.each(function(item){
 				new Element('a',{
 					'html': item.title,
@@ -171,14 +181,14 @@ window.addEvent('domready', function() {
 		query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
 
 		//Query valid?
-		if(!searcher.search(query))
+		if(!searcher.searchByQuery(query))
 			searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
 	});
 
 	//Add listener for search by query
 	$('searchByQuery').addEvent('submit',function(e){
 		//query valid?
-		if(!searcher.search(this.getElement('input[name=query]').value.trim()))
+		if(!searcher.searchByQuery(this.getElement('input[name=query]').value.trim()))
 			searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
 	});
 
