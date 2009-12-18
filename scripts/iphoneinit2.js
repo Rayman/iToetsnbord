@@ -23,6 +23,8 @@ window.addEvent('domready', function() {
 	var optionsShuffle 	= $('optionsShuffle');
 	var optionsRepeat 	= $('optionsRepeat');
 	var optionsLock 	= $('optionsLock');
+	var optionsList 	= optionsShuffle.getParent('ul');
+	var optionsLoading  = $('optionsLoading');
 
 	var loadingImage = new Element('img',{
 		src: 'images/loading.gif'
@@ -32,10 +34,20 @@ window.addEvent('domready', function() {
 	currentSongManager = new SongManager({
 		baseUrl: 'json/getcurrent.html',
 		onUpdateStart: function(){
+
+			//Show loading, hide results
+			optionsLoading.show();
+			optionsList.hide();
+
+			//Empty all li's
 			$$(currentTitle,
 				currentArtist,
 				currentAlbum,
-				currentInfo
+				currentInfo,
+
+				optionsShuffle,
+				optionsRepeat,
+				optionsLock
 			).each(function(el){
 				el.empty();
 				loadingImage.clone().inject(el);
@@ -60,6 +72,13 @@ window.addEvent('domready', function() {
 				responseJSON.samplerate + "kHz " +
 				responseJSON.channels
 			);
+
+			optionsShuffle .set('html',responseJSON.shuffle);
+			optionsRepeat  .set('html',responseJSON.repeat);
+			optionsLock	   .set('html',responseJSON.lock);
+
+			optionsLoading.hide();
+			optionsList.show();
 		}
 	});
 
@@ -128,7 +147,7 @@ window.addEvent('domready', function() {
 		//When the search request is complete
 		onSearchComplete: function(responseJSON, responseText){
 			var searchList = $('searchList').empty();
-			
+
 			//When the response has no songs in it
 			if(!responseJSON || !responseJSON.length)
 			{
