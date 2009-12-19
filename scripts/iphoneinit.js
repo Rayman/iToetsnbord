@@ -10,141 +10,146 @@ var currentSongManager;
 var searcher;
 
 window.addEvent('domready', function() {
+	//Some vars
+	var currentTitle 	= $('currentTitle');
+	var currentArtist 	= $('currentArtist');
+	var artistLink 		= currentArtist.getParent();
+	var currentAlbum 	= $('currentAlbum');
+	var albumLink 		= currentAlbum.getParent();
+	var currentAlbumArt = $('currentAlbumArt');
+	var currentInfo 	= $('currentInfo');
+	var infoLink 	 	= currentInfo.getParent();
+
+	var optionsShuffle 	= $('optionsShuffle');
+	var optionsRepeat 	= $('optionsRepeat');
+	var optionsLock 	= $('optionsLock');
+	var optionsList 	= optionsShuffle.getParent('ul');
+	var optionsLoading  = $('optionsLoading');
+
+	var loadingImage = new Element('img',{
+		src: 'images/loading.gif'
+	});
 
 	//Init the song manager
 	currentSongManager = new SongManager({
-		getCurrentSongUrl: 'json/getcurrent.html',
+		baseUrl: 'json/getcurrent.html',
 		onUpdateStart: function(){
 
-			//Show the options' loading...
-			$('optionsLoading').setStyle('display', 'block');
+			//Show loading, hide results
+			optionsLoading.show();
+			optionsList.hide();
 
-			//Hide all current stuff
-			$('currentTitle').getParent().slide('hide');
+			//Empty all li's
+			$$(currentTitle,
+				currentArtist,
+				currentAlbum,
+				currentInfo,
 
-			//Show the current's loading...
-			$('currentLoading').setStyle('display', 'block');
-
-			//set the albumart to the loading image
-			$('currentAlbumArt').setProperty('src', 'images/loading.gif');
-
-			//Hide the options stuff
-			$('optionsShuffle').getParent().getParent().setStyle('display', 'none');
+				optionsShuffle,
+				optionsRepeat,
+				optionsLock
+			).each(function(el){
+				el.empty();
+				loadingImage.clone().inject(el);
+			});
 		},
 		onUpdate: function(responseJSON){
-
-			//Backup the reponse
 			currentSongPlaying = responseJSON;
 
-			//Set the title of the div
-			var title = $('currentTitle').set('html', "Title: " + responseJSON.title);
+			currentTitle.set('html',responseJSON.title);
+			currentArtist.set('html',responseJSON.artist);
+			currentAlbum.set('html',responseJSON.album);
+			var currentWidth = currentAlbumArt
+				.set('width')
+				.set('src',responseJSON.albumart)
+				.get('width');
+			if(currentWidth > 200)
+				currentAlbumArt.set('width',200);
 
-			//Set the current artist
-			$('currentArtist').set('html', "Artist: " + responseJSON.artist);
-
-			//Set the album, if there is no album, hide it
-			if(responseJSON.album=='')
-			{
-				//Hide the album li
-				$('currentAlbum').getParent().setStyle('display', 'none');
-			}
-			else
-			{
-				$('currentAlbum')
-				.set('html', "Album: " + responseJSON.album)
-				.getParent().setStyle('display', 'block');
-			}
-
-			//Set the 'info'
-			$('currentInfo').set(
-				'html',
-				"Info: " +
+			currentInfo.set('html',
 				responseJSON.length + ", " +
 				responseJSON.bitrate + "kbps, " +
 				responseJSON.samplerate + "kHz " +
 				responseJSON.channels
 			);
 
-			//If the albumart is not found, hide the ul, else display it
-			var albumArt = $('currentAlbumArt').setProperty('src', responseJSON.albumart);
-			albumArt.getParent().setStyle('display', responseJSON.albumart == 'images/question.png' ? 'none' : 'block');
+			optionsShuffle .set('html',responseJSON.shuffle);
+			optionsRepeat  .set('html',responseJSON.repeat);
+			optionsLock	   .set('html',responseJSON.lock);
 
-			//Set the html
-			$('optionsShuffle').set('html','Shuffle: '+responseJSON.shuffle);
-			$('optionsRepeat').set('html','Repeat: '+responseJSON.repeat);
-			$('optionsLock').set('html','Lock: '+responseJSON.lock);
-
-			//Display all options stuff
-			$('optionsShuffle').getParent().getParent().setStyle('display', 'block');
-
-			//Slide the current stuff into the view
-			//After that, fade the loading out, hide it and set opacity to 1
-			title.getParent().get('slide').slideIn().chain(function(){
-				$('currentLoading').hide();
-			});
+			optionsLoading.hide();
+			optionsList.show();
 		}
-	});
-
-	//When user clicks the link to currentSong, we do a quick request of the current song
-	$('getCurrent').addEvent('click', function(){
-		currentSongManager.update();
 	});
 
 	//When the play controls are clicked, get the html page and update the current song
 	$('playControls').getElements('a').each(function(el){
-		el.addEvent('click', function(event){
+			el.addEvent('click', function(event){
 			event.preventDefault();
-			$('currentLoading').show();
-			$('currentTitle').getParent().get('slide').start('out').chain(function(){
-				currentSongManager.update(el.get('href'));
-			});
+			currentSongManager.update(el.get('href'));
 		});
 	});
 
-	//Add listener for refreshing the current song
-	$('currentInfo').addEvent('click',function(){
-		$('currentLoading').show();
-		$('currentTitle').getParent().get('slide').start('out').chain(function(){
-			currentSongManager.update('?refresh');
-		});
-	});
-	
-	//Init the searchSorter
-	sorter = new SearchSorter();
+	//The filename for the song that's about to be played
+	var fileName = '';
+
+	//play/enqueue link
+	var playLink = new Element('ul');
+	new Element('li').grab(
+		new Element('a',{
+			'html': 'Play',
+			'href': '#home',
+			'events':{
+				'click': function(){
+					currentSongManager.update('?file='+fileName);
+
+					//Dirty hack for removing the playlink from the DOM
+					(function(){
+						playLink.dispose();
+					}).delay(1);
+				}
+			}
+		})
+	).inject(playLink);
+
+	new Element('li').grab(
+		new Element('a',{
+			'html': 'Enqueue',
+			'href': 'javascript:void(0)',
+			'events':{
+				'click': function(){
+					currentSongManager.update('?add='+fileName+'&playaddedifnotplaying');
+
+					//Dirty hack for removing the playlink from the DOM
+					(function(){
+						playLink.dispose();
+					}).delay(1);
+				}
+			}
+		})
+	).inject(playLink);
 
 	//Init the searcher
 	searcher = new MusicSearcher({
+		//The baseurl for the request
+		baseUrl: 'json/getsearchresults.html?',
+
 		//The url for the searches by query
-		getSearchResultsUrl: 'json/getsearchresults.html?query=',
+		urlSearchByQuery: 'query=',
+
 		//The url for searches by keyword
-		getSearchByKeyUrl:   'json/getsearchresults.html?search_ml=',
+		urlSearchByKey:   'search_ml=',
 
 		onSearchStart: function(query){
-			//Empty the old search
-			$('searchList').empty();
-
-			//Set the title
-			$('searchQuery').set('html','"'+query+'"');
-
-			// Make a loading image inside a list
-			// ul > li > img
-			new Element('img',{
-				src: 'images/loading.gif',
-				width: '24'
-			})
-			.inject(new Element('li')
-				.inject('searchList')
-			);
+			Log.log('query: ',query);
 		},
 
 		//When the search request is complete
 		onSearchComplete: function(responseJSON, responseText){
-
-			//Empty the list (it has a spinner)
-			$('searchList').empty();
+			var searchList = $('searchList').empty();
 
 			//When the response has no songs in it
-			if(responseJSON==null||responseJSON.length==null||responseJSON.length==0)
+			if(!responseJSON || !responseJSON.length)
 			{
 				//Maybe the responseText has some info ?
 				new Element('li',{
@@ -152,54 +157,39 @@ window.addEvent('domready', function() {
 				}).inject('searchList');
 				return;
 			}
-			
-			var todoItems = sorter.sortByArtist(responseJSON)
-
-			//When clicked on this link, it loads 30 more items in the list
-			//After that, it moves itself to the end of the list
-			//It as the todo-items in the element's storage space (el.store(key,value))
-			new Element('a',{
-				'href': 'javascript:void(0)',
-				'html': 'Load more...',
-				'events':{
-					'click': function(){
-						//Get the todo Items
-						var todo = this.retrieve('todoItems');
-						//Inject the first 30
-						todo.splice(0,30).each(function(item){
-							sorter.formatSearchResult(item).inject('searchList');
-						});
-
-						//Remove the link
-						var removedElement = this.getParent().dispose();
-						if(todo.length>0)
-						{
-							//And inject it back in
-							removedElement.inject('searchList');
-							//Store the todo items in the element's space :p
-							this.store('todoItems',todoItems);
+			responseJSON.each(function(item){
+				new Element('a',{
+					'html': item.title,
+					'events':{
+						'click': function(){
+							fileName = item.filename;
+							playLink.inject(this);
 						}
 					}
-				}
-			})
-			.inject(new Element('li').inject('searchList'))
-			.store('todoItems',responseJSON) //All items are todo items
-			.fireEvent('click'); //Load the first 30 NOW!
+				}).inject(
+					new Element('li').inject(searchList)
+				);
+			});
 		}
 	});
 
 	//Add listener for album searching
-	$('currentAlbum').addEvent('click',function(){
-		searcher.search('ALBUM HAS "'+currentSongPlaying.album+'"');
+	currentAlbum.addEvent('click',function(){
+		searcher.searchByQuery('ALBUM HAS "'+currentSongPlaying.album+'"');
 	});
 
 	//Add listener for artist searching
-	$('currentArtist').addEvent('click',function(){
-		searcher.search('ARTIST HAS "'+currentSongPlaying.artist+'"');
+	currentArtist.addEvent('click',function(){
+		searcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
+	});
+
+	//Listener for clicking at the info link
+	infoLink.addEvent('click',function(){
+		currentSongManager.update();
 	});
 
 	//Add listener for search form submit
-	$('searchForm').addEvent('submit',function(e){
+	$('searchBySong').addEvent('submit',function(e){
 		//Get the artist and song value
 		var artist = this.getElement('input[name=artist]').value.trim();
 		var song   = this.getElement('input[name=song]').value.trim();
@@ -210,14 +200,14 @@ window.addEvent('domready', function() {
 		query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
 
 		//Query valid?
-		if(!searcher.search(query))
+		if(!searcher.searchByQuery(query))
 			searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
 	});
 
 	//Add listener for search by query
 	$('searchByQuery').addEvent('submit',function(e){
 		//query valid?
-		if(!searcher.search(this.getElement('input[name=query]').value.trim()))
+		if(!searcher.searchByQuery(this.getElement('input[name=query]').value.trim()))
 			searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
 	});
 
@@ -240,6 +230,9 @@ window.addEvent('domready', function() {
 			currentSongManager.update(el.get('href'));
 		});
 	});
+
+	//UpDATE!!!
+	currentSongManager.update();
 });
 
 //End of file!

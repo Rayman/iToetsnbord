@@ -4,8 +4,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>iPhone Navigation</title>
-<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-touch-fullscreen" content="yes" />
+<link rel="apple-touch-startup-image" href="images/startup.png" />
+
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+
 <style type="text/css" media="screen">@import "css/iphonenav.css";</style>
+
 <script type="application/x-javascript" src="scripts/mootools-1.2.4-core.js"></script>
 <script type="application/x-javascript" src="scripts/mootools-1.2.4.2-more.js"></script>
 <script type="application/x-javascript" src="scripts/iphonenav.js"></script>
@@ -15,99 +23,63 @@
 
 <body>
     <h1 id="pageTitle"></h1>
-    <a id="homeButton" class="button" href="#home">Home</a>
-    <a class="button" href="#searchForm">Search</a>
+    <a id="backButton" class="button" href="javascript:void(0)" onclick="window.history.back()">Back</a>
+    <a class="button" href="#searchByKeyword">Search</a>
 
-    <ul id="home" title="Toets & Bord v3.2" selected="true">
-        <li><a id="getCurrent"	href="#current">Current Played File</a></li>
-        <li><a 					href="#search">Search</a></li>
-        <li><a id="getOptions" 	href="#options">Options</a></li>
-        <li><a					href="index.html">Normal Version</a></li>
-        <li><a href="#test">Test</a></li>
-    </ul>
-
-    <div id="current" class="panel" title="Current">
-    	<table id="playControls" width="100%">
+	<div id="home" class="panel" title="Toets & Bord v3.3" selected="true">
+		<table id="playControls" width="100%">
 			<tr>
 				<td>
 					<a href="?prev">
-						<img src="images/prev.gif" width="24" height="24" alt="jump to previous song" />
+						<img src="images/prev.gif" alt="jump to previous song" />
 					</a>
 				</td>
 				<td>
 					<a href="?play">
-						<img src="images/play.png" width="24" height="24" alt="start playback" />
+						<img src="images/play.png" alt="start playback" />
 					</a>
 				</td>
 				<td>
 					<a href="?stop">
-						<img src="images/stop.png" width="24" height="24" alt="stop playback" />
+						<img src="images/stop.png" alt="stop playback" />
 					</a>
 				</td>
 				<td>
 					<a href="?pause">
-						<img src="images/pause.png" width="24" height="24" alt="pause playback" />
+						<img src="images/pause.png" alt="pause playback" />
 					</a>
 				</td>
 				<td>
 					<a href="?next">
-						<img src="images/next.gif" width="24" height="24" alt="jump to next song" />
+						<img src="images/next.gif" alt="jump to next song" />
 					</a>
 				</td>
 			</tr>
 		</table>
 
-		<ul id="currentLoading" class="floatingLoading">
-			<li><img src="images/loading.gif" width="20" /></li>
-		</ul>
-
+		<h2>Current Song</h2>
         <ul>
-			<li id="currentTitle">Title: <img src="images/loading.gif" width="20" /></li>
-			<li><a href="#searchResults" id="currentArtist">Artist: <img src="images/loading.gif" width="20" /></a></li>
-			<li><a href="#searchResults" id="currentAlbum">Album: <img src="images/loading.gif" width="20" /></a></li>
-			<li><img id="currentAlbumArt" src="images/loading.gif" width="100" /></li>
-			<li><a href="javascript:void(0)" id="currentInfo">Info: <img src="images/loading.gif" width="20" /></a></li>
+			<li>Title: <span id="currentTitle"></span></li>
+			<li><a href="#searchResults">Artist: <span id="currentArtist"></span></a></li>
+			<li><a href="#searchResults">Album: <span id="currentAlbum"></span></a></li>
+			<li><img id="currentAlbumArt" src="images/loading.gif" style="max-width: 200px" /></li>
+			<li><a href="javascript:void(0)">Info: <span id="currentInfo"></span></a></li>
 		</ul>
 
-
-    </div>
-
-    <div id="test" class="panel" title="Belle & Sebastian">
-		<h2>Normal list</h2>
 		<ul>
-			<li>About</li>
-			<li>Blog</li>
+			<li><a href="#search">Search</a></li>
+			<li><a id="getOptions" href="#options">Options</a></li>
 		</ul>
-		<h2>Link List:</h2>
-		<ul>
-			<li><a href="#consulting-clinic.html">Consulting Clinic</a></li>
-			<li><a href="#on-call.html">On Call</a></li>
-			<li><a href="#development.html">Development</a></li>
-		</ul>
-		<h2>About</h2>
-		<p>Jonathan Stark is a web developer, speaker, and author. His
-		   consulting firm, Jonathan Stark Consulting, Inc., has attracted
-		   clients such as Staples, Turner Broadcasting, and the PGA Tour.
-		   ...
-		</p>
-		<p>Jonathan Stark is a mobile and web application developer who the
-		   Wall Street Journal has called an expert on publishing desktop
-		   data to the web.</p>
-		<ul>
-			<li><a href="#services.html">Services</a></li>
-			<li><a href="#about.html">About</a></li>
-			<li><a href="#blog.html">Blog</a></li>
-		</ul>
-    </div>
+	</div>
 
     <div id="options" class="panel" title="Options">
 		<ul id="optionsLoading">
 			<li><img src="images/loading.gif" width="20" /></li>
 		</ul>
         <ul>
-			<li><a href="?shuffle" id="optionsShuffle"></a></li>
-			<li><a href="?repeatall" id="optionsRepeat"></a></li>
-			<li><a href="?lock" id="optionsLock"></a></li>
+			<li><a href="?shuffle">Shuffle: <span id="optionsShuffle"></span></a></li>
+			<li><a href="?repeatall">Repeat: <span id="optionsRepeat"></span></a></li>
+			<li><a href="?lock">Lock: <span id="optionsLock"></span></a></li>
 			<li><a href="?minimize">Minimise Winamp</a></li>
 			<li><a href="?close">Close Winamp</a></li>
 			<li><a href="?restart">Restart Winamp</a></li>
@@ -123,19 +95,17 @@
 		</ul>
 	</div>
 
-    <div id="search" class="panel" title="Search">
-		<ul>
-			<li><a href="#searchByQuery">Search by Query</a></li>
-			<li><a href="#searchByKeyword">Search by Keyword</a></li>
-			<li>Other option</li>
-		</ul>
-    </div>
+    <ul id="search" title="Search">
+		<li><a href="#searchByQuery">Search by Query</a></li>
+		<li><a href="#searchByKeyword">Search by Keyword</a></li>
+		<li><a href="#searchBySong">Search by Artist + Title</a></li>
+    </ul>
 
     <form id="searchByQuery" class="dialog" action="#searchResults">
         <fieldset>
             <h1>Search By Query</h1>
             <!-- Fire the onSubmit event -->
-            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent('form').fireEvent('submit',event)">Search</a>
 
             <label>Query:</label>
             <input type="text" name="query" />
@@ -146,7 +116,7 @@
         <fieldset>
             <h1>Search By Keyword</h1>
             <!-- Fire the onSubmit event -->
-            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent('form').fireEvent('submit',event)">Search</a>
 
             <label>Key:</label>
             <input type="text" name="key" />
@@ -163,11 +133,11 @@
 		</ul>
     </div>
 
-    <form id="searchForm" class="dialog" action="#searchResults">
+    <form id="searchBySong" class="dialog" action="#searchResults">
         <fieldset>
             <h1>Music Search</h1>
             <!-- Fire the onSubmit event -->
-            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent().getParent().fireEvent('submit',event)">Search</a>
+            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent('form').fireEvent('submit',event)">Search</a>
 
             <label>Artist:</label>
             <input type="text" name="artist" />
