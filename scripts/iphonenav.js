@@ -11,7 +11,8 @@ String.implement({
 	}
 });
 
-HistoryManager = new new Class({
+var iPhoneNav = new Class({
+
 	Implements: [Options, Events],
 
 	options: {
@@ -21,7 +22,9 @@ HistoryManager = new new Class({
 		homePage:		''
 	},
 
-	initialize: function(){
+	initialize: function(options){
+		this.setOptions(options);
+
 		this.currentWidth = 0;
 		this.currentHash = location.hash;
 		this.pageHistory = [];
@@ -177,7 +180,7 @@ window.addEvent('domready', function() {
 	var startPage = list.length > 0 ? list[0] : $(document.body).getElement('div');
 
 	//Set some options
-	HistoryManager.setOptions({
+	var HistoryManager = new iPhoneNav({
 		homePage:	$('home'),
 		backButton:	$('backButton')
 	});

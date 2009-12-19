@@ -2,14 +2,14 @@
  * This file init's all the classes, and adds the event handlers
  */
 
-//Hold the JSON object with current song
-var currentSongPlaying = null;
-
-//Public vars
-var currentSongManager;
-var searcher;
-
 window.addEvent('domready', function() {
+	//Hold the JSON object with current song
+	var currentSongPlaying = null;
+
+	//Public vars
+	var currentSongManager;
+	var searcher;
+
 	//Some vars
 	var currentTitle 	= $('currentTitle');
 	var currentArtist 	= $('currentArtist');
@@ -25,6 +25,8 @@ window.addEvent('domready', function() {
 	var optionsLock 	= $('optionsLock');
 	var optionsList 	= optionsShuffle.getParent('ul');
 	var optionsLoading  = $('optionsLoading');
+
+	var searchList 		= $('searchList');
 
 	var loadingImage = new Element('img',{
 		src: 'images/loading.gif'
@@ -142,7 +144,7 @@ window.addEvent('domready', function() {
 
 		onSearchStart: function(query){
 			//Empty the old search
-			var searchList = $('searchList').empty();
+			searchList.empty();
 
 			//Set the title
 			$('searchQuery').set('html','"'+query+'"');
@@ -159,7 +161,7 @@ window.addEvent('domready', function() {
 
 		//When the search request is complete
 		onSearchComplete: function(responseJSON, responseText){
-			var searchList = $('searchList').empty();
+			searchList.empty();
 
 			//When the response has no songs in it
 			if(!responseJSON || !responseJSON.length)
@@ -167,7 +169,7 @@ window.addEvent('domready', function() {
 				//Maybe the responseText has some info ?
 				new Element('li',{
 					html: 'No Results: ' + responseText
-				}).inject('searchList');
+				}).inject(searchList);
 				return;
 			}
 			responseJSON.each(function(item){
