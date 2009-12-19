@@ -213,5 +213,5 @@ window.addEvent('domready', function() {
 			//Go to the submit location
 			HistoryManager.goToPage(form.action.substr(index+1));
 		}
-	}.bind(HistoryManager));
+	});
 });
