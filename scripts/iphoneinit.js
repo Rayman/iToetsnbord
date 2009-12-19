@@ -141,7 +141,20 @@ window.addEvent('domready', function() {
 		urlSearchByKey:   'search_ml=',
 
 		onSearchStart: function(query){
-			Log.log('query: ',query);
+			//Empty the old search
+			var searchList = $('searchList').empty();
+
+			//Set the title
+			$('searchQuery').set('html','"'+query+'"');
+
+			// Make a loading image inside a list
+			// ul > li > img
+			new Element('img',{
+				src: 'images/loading.gif'
+			})
+			.inject(new Element('li')
+				.inject(searchList)
+			);
 		},
 
 		//When the search request is complete
