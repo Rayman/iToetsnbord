@@ -19,6 +19,7 @@ window.addEvent('domready', function() {
   var currentAlbumArt = $('currentAlbumArt');
   var currentInfo     = $('currentInfo');
   var infoLink        = currentInfo.getParent();
+  var currentVolume   = $('currentVolume');
 
   var optionsShuffle  = $('optionsShuffle');
   var optionsRepeat   = $('optionsRepeat');
@@ -36,7 +37,7 @@ window.addEvent('domready', function() {
   currentSongManager = new SongManager({
     baseUrl: 'json/getcurrent.html',
     onUpdateStart: function(){
-    
+
       //Show loading, hide results
       optionsLoading.show();
       optionsList.hide();
@@ -47,6 +48,7 @@ window.addEvent('domready', function() {
         currentArtist,
         currentAlbum,
         currentInfo,
+        currentVolume,
 
         optionsShuffle,
         optionsRepeat,
@@ -63,7 +65,8 @@ window.addEvent('domready', function() {
       currentTitle.set('html',responseJSON.title);
       currentArtist.set('html',responseJSON.artist);
       currentAlbum.set('html',responseJSON.album);
-      
+      currentVolume.set('html',responseJSON.volume+'%');
+
       //The width of the image can only be smaller than 200 px
       var currentWidth = currentAlbumArt
         .set('width')
@@ -247,6 +250,22 @@ window.addEvent('domready', function() {
       event.preventDefault();
       currentSongManager.update(el.get('href'));
     });
+  });
+
+  //add listeners for volume
+  $('incVol').addEvent('click',function(){
+    if(0+currentSongPlaying.volume>90){
+      currentSongManager.update('?volume=100');
+    } else {
+      currentSongManager.update('?incvol=10');
+    }
+  });
+  $('decVol').addEvent('click',function(){
+    if(0+currentSongPlaying.volume<10){
+      currentSongManager.update('?volume=0');
+    } else {
+      currentSongManager.update('?decvol=10');
+    }
   });
 
   //UpDATE!!!
