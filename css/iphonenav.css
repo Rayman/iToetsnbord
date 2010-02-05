@@ -246,3 +246,13 @@ img {
 .small {
   font-size: 70%;
 }
+
+.knob, .knob:hover, .knob:active {
+  background-color: white !important;
+  background-image: none !important;
+  color: #black !important;
+  
+  text-align:center;
+  height: 60px;
+  padding: 0px;
+}

@@ -65,7 +65,7 @@ window.addEvent('domready', function() {
       currentTitle.set('html',responseJSON.title);
       currentArtist.set('html',responseJSON.artist);
       currentAlbum.set('html',responseJSON.album);
-      currentVolume.set('html',responseJSON.volume+'%');
+      //currentVolume.set('html',responseJSON.volume+'%');
 
       //The width of the image can only be smaller than 200 px
       var currentWidth = currentAlbumArt
@@ -253,7 +253,7 @@ window.addEvent('domready', function() {
   });
 
   //add listeners for volume
-  $('incVol').addEvent('click',function(){
+  /* $('incVol').addEvent('click',function(){
     if(0+currentSongPlaying.volume>90){
       currentSongManager.update('?volume=100');
     } else {
@@ -266,10 +266,17 @@ window.addEvent('domready', function() {
     } else {
       currentSongManager.update('?decvol=10');
     }
-  });
+  });*/
 
   //UpDATE!!!
   currentSongManager.update();
+
+  var asdf = $('asdf');
+
+  asdf.addEvent('mousedown', startDrag);
+  asdf.addEvent('touchstart', startDrag);
+  //asdf.addEvent('mousedown', startDrag);
+
 });
 
 //End of file!
