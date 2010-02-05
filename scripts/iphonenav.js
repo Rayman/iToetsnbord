@@ -172,7 +172,7 @@ var iPhoneNav = new Class({
 window.addEvent('domready', function() {
 
 	// Get all elements with selected = true
-	list = $(document.body).getChildren().filter(function(el){
+	var list = $(document.body).getChildren().filter(function(el){
 		return el.getAttribute('selected')
 	});
 
