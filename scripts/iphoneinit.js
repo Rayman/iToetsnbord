@@ -271,11 +271,57 @@ window.addEvent('domready', function() {
   //UpDATE!!!
   currentSongManager.update();
 
-  var asdf = $('asdf');
+  //The volume slider
+  var knob = $('knob');
+  var handle = $('handle');
+  var mySlider = new Slider(handle, knob,{
+    range: [0, 100],
+    snap: true,
+    onChange: function(pos){
+      this.knob.set('html',pos+"%");
+    },
+    onComplete: function(){
+      //set volume
+    }
+  });
 
-  asdf.addEvent('mousedown', startDrag);
-  asdf.addEvent('touchstart', startDrag);
+  mySlider.knob.addEvent('touchstart', function(e){
+    //detach the mousedown event handler
+    mySlider.drag.detach();
+
+    //disable scrolling
+    e.preventDefault();
+
+    var touchEnd = function () {
+			this.removeEvent('touchmove', moveDrag);
+			this.removeEvent('touchend', touchEnd);
+			mySlider.drag.cancel(true);
+		}
+
+		this.addEvent('touchmove', moveDrag);
+		this.addEvent('touchend', touchEnd);
+
+		//get x and y of touch
+		e.page = getCoors(e);
+		//start the drag
+    mySlider.drag.start.bind(mySlider.drag)(e);
+
+    function moveDrag(e){
+      e.page = getCoors(e);
+      mySlider.drag.drag.bind(mySlider.drag)(e);
+    }
+
+    function getCoors(e){
+      return {
+        x: e.event.touches[0].clientX,
+        y: e.event.touches[0].clientY
+      };
+    }
+  });
+
+
   //asdf.addEvent('mousedown', startDrag);
+  //asdf.addEvent('touchstart', startDrag);
 
 });
 
