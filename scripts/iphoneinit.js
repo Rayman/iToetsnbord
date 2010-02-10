@@ -271,10 +271,60 @@ window.addEvent('domready', function() {
   //UpDATE!!!
   currentSongManager.update();
 
+  var iPhoneSlider = new Class({
+
+    Extends: Slider,
+
+    Binds: Slider.prototype.Binds.extend(['onTouchStart', 'onTouchEnd', 'onTouchMove']),
+    //Binds: ['onTouchStart', 'onTouchEnd', 'onTouchMove'],
+    //doens't work, i filled a bug
+
+    initialize: function(element, knob, options){
+      this.parent.run(arguments, this);
+      this.knob.addEvent('touchstart', this.onTouchStart);
+    },
+
+    onTouchStart: function(e){
+      //from now on, only the ontouchstart is needed
+      this.drag.detach();
+
+      //disable scrolling
+      e.preventDefault();
+
+      this.knob.addEvent('touchmove', this.onTouchMove);
+      this.knob.addEvent('touchend', this.onTouchEnd);
+
+      //get x and y of touch
+      e.page = this.getCoors(e);
+
+      //start the drag
+      this.drag.start.run(e, this.drag);
+    },
+
+    onTouchEnd: function (){
+      this.knob.removeEvent('touchmove', this.onTouchMove);
+      this.knob.removeEvent('touchend', this.onTouchEnd);
+      this.drag.cancel(true);
+    },
+
+    onTouchMove: function(e){
+      e.page = this.getCoors(e);
+      this.drag.drag.run(e, this.drag);
+    },
+
+    getCoors: function(e){
+      return {
+        x: e.event.touches[0].clientX,
+        y: e.event.touches[0].clientY
+      };
+    }
+  });
+
   //The volume slider
   var knob = $('knob');
   var handle = $('handle');
-  var mySlider = new Slider(handle, knob,{
+
+  var mySlider = new iPhoneSlider(handle, knob,{
     range: [0, 100],
     snap: true,
     onChange: function(pos){
@@ -284,45 +334,6 @@ window.addEvent('domready', function() {
       //set volume
     }
   });
-
-  mySlider.knob.addEvent('touchstart', function(e){
-    //detach the mousedown event handler
-    mySlider.drag.detach();
-
-    //disable scrolling
-    e.preventDefault();
-
-    var touchEnd = function () {
-			this.removeEvent('touchmove', moveDrag);
-			this.removeEvent('touchend', touchEnd);
-			mySlider.drag.cancel(true);
-		}
-
-		this.addEvent('touchmove', moveDrag);
-		this.addEvent('touchend', touchEnd);
-
-		//get x and y of touch
-		e.page = getCoors(e);
-		//start the drag
-    mySlider.drag.start.bind(mySlider.drag)(e);
-
-    function moveDrag(e){
-      e.page = getCoors(e);
-      mySlider.drag.drag.bind(mySlider.drag)(e);
-    }
-
-    function getCoors(e){
-      return {
-        x: e.event.touches[0].clientX,
-        y: e.event.touches[0].clientY
-      };
-    }
-  });
-
-
-  //asdf.addEvent('mousedown', startDrag);
-  //asdf.addEvent('touchstart', startDrag);
-
 });
 
 //End of file!
