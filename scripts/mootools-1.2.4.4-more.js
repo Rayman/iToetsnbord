@@ -23,8 +23,8 @@ provides: [MooTools.More]
 */
 
 MooTools.More = {
-	'version': '1.2.4.2',
-	'build': 'bd5a93c0913cce25917c48cbdacde568e15e02ef'
+	'version': '1.2.4.4',
+	'build': '6f6057dc645fdb7547689183b2311063bd653ddf'
 };
 
 /*
@@ -252,15 +252,15 @@ Element.implement({
 	hide: function(){
 		var d;
 		try {
-			// IE fails here if the element is not in the dom
-			if ((d = this.getStyle('display')) == 'none') d = null;
+			//IE fails here if the element is not in the dom
+			d = this.getStyle('display');
 		} catch(e){}
-		
-		return this.store('originalDisplay', d || 'block').setStyle('display', 'none');
+		return this.store('originalDisplay', d || '').setStyle('display', 'none');
 	},
 
 	show: function(display){
-		return this.setStyle('display', display || this.retrieve('originalDisplay') || 'block');
+		display = display || this.retrieve('originalDisplay') || 'block';
+		return this.setStyle('display', (display == 'none') ? 'block' : display);
 	},
 
 	swapClass: function(remove, add){
