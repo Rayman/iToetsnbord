@@ -163,3 +163,52 @@ function startDrag(e) {
 		return coors;
 	}
 }
+
+var iPhoneSlider = new Class({
+
+  Extends: Slider,
+
+  Binds: Slider.prototype.Binds.extend(['onTouchStart', 'onTouchEnd', 'onTouchMove']),
+  //Binds: ['onTouchStart', 'onTouchEnd', 'onTouchMove'],
+  //doens't work, i filled a bug
+
+  initialize: function(element, knob, options){
+    this.parent.run(arguments, this);
+    this.knob.addEvent('touchstart', this.onTouchStart);
+  },
+
+  onTouchStart: function(e){
+    //from now on, only the ontouchstart is needed
+    this.drag.detach();
+
+    //disable scrolling
+    e.preventDefault();
+
+    this.knob.addEvent('touchmove', this.onTouchMove);
+    this.knob.addEvent('touchend', this.onTouchEnd);
+
+    //get x and y of touch
+    e.page = this.getCoors(e);
+
+    //start the drag
+    this.drag.start.run(e, this.drag);
+  },
+
+  onTouchEnd: function (){
+    this.knob.removeEvent('touchmove', this.onTouchMove);
+    this.knob.removeEvent('touchend', this.onTouchEnd);
+    this.drag.stop(true);
+  },
+
+  onTouchMove: function(e){
+    e.page = this.getCoors(e);
+    this.drag.drag.run(e, this.drag);
+  },
+
+  getCoors: function(e){
+    return {
+      x: e.event.touches[0].clientX,
+      y: e.event.touches[0].clientY
+    };
+  }
+});

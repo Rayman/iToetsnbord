@@ -33,6 +33,21 @@ window.addEvent('domready', function() {
     src: 'images/loading.gif'
   });
 
+  //The volume slider
+  var knob = $('knob');
+  var handle = $('handle');
+
+  var mySlider = new iPhoneSlider(handle, knob,{
+    range: [0, 100],
+    snap: true,
+    onChange: function(pos){
+      this.knob.set('html', pos+"%");
+    },
+    onComplete: function(val){
+      currentSongManager.update('?volume=' + val);
+    }
+  });
+
   //Init the song manager
   currentSongManager = new SongManager({
     baseUrl: 'json/getcurrent.html',
@@ -65,7 +80,7 @@ window.addEvent('domready', function() {
       currentTitle.set('html',responseJSON.title);
       currentArtist.set('html',responseJSON.artist);
       currentAlbum.set('html',responseJSON.album);
-      //currentVolume.set('html',responseJSON.volume+'%');
+      mySlider.set(responseJSON.volume);
 
       //The width of the image can only be smaller than 200 px
       var currentWidth = currentAlbumArt
@@ -252,88 +267,8 @@ window.addEvent('domready', function() {
     });
   });
 
-  //add listeners for volume
-  /* $('incVol').addEvent('click',function(){
-    if(0+currentSongPlaying.volume>90){
-      currentSongManager.update('?volume=100');
-    } else {
-      currentSongManager.update('?incvol=10');
-    }
-  });
-  $('decVol').addEvent('click',function(){
-    if(0+currentSongPlaying.volume<10){
-      currentSongManager.update('?volume=0');
-    } else {
-      currentSongManager.update('?decvol=10');
-    }
-  });*/
-
   //UpDATE!!!
   currentSongManager.update();
-
-  var iPhoneSlider = new Class({
-
-    Extends: Slider,
-
-    Binds: Slider.prototype.Binds.extend(['onTouchStart', 'onTouchEnd', 'onTouchMove']),
-    //Binds: ['onTouchStart', 'onTouchEnd', 'onTouchMove'],
-    //doens't work, i filled a bug
-
-    initialize: function(element, knob, options){
-      this.parent.run(arguments, this);
-      this.knob.addEvent('touchstart', this.onTouchStart);
-    },
-
-    onTouchStart: function(e){
-      //from now on, only the ontouchstart is needed
-      this.drag.detach();
-
-      //disable scrolling
-      e.preventDefault();
-
-      this.knob.addEvent('touchmove', this.onTouchMove);
-      this.knob.addEvent('touchend', this.onTouchEnd);
-
-      //get x and y of touch
-      e.page = this.getCoors(e);
-
-      //start the drag
-      this.drag.start.run(e, this.drag);
-    },
-
-    onTouchEnd: function (){
-      this.knob.removeEvent('touchmove', this.onTouchMove);
-      this.knob.removeEvent('touchend', this.onTouchEnd);
-      this.drag.cancel(true);
-    },
-
-    onTouchMove: function(e){
-      e.page = this.getCoors(e);
-      this.drag.drag.run(e, this.drag);
-    },
-
-    getCoors: function(e){
-      return {
-        x: e.event.touches[0].clientX,
-        y: e.event.touches[0].clientY
-      };
-    }
-  });
-
-  //The volume slider
-  var knob = $('knob');
-  var handle = $('handle');
-
-  var mySlider = new iPhoneSlider(handle, knob,{
-    range: [0, 100],
-    snap: true,
-    onChange: function(pos){
-      this.knob.set('html',pos+"%");
-    },
-    onComplete: function(){
-      //set volume
-    }
-  });
 });
 
 //End of file!
