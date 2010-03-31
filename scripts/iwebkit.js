@@ -16,7 +16,6 @@ function hideURLbar() {
 	window.scrollTo(0, 0.9);
 }
 
-
 window.onload = function () {
 	fullscreen();
 	hideURLbar();
