@@ -1,3 +1,7 @@
+$ = function(id){
+  return document.getElementById(id);
+}
+
 //The log is from mootools more
 //MooTools More, <http://mootools.net/more>. Copyright (c) 2006-2009 Aaron Newton <http://clientcide.com/>, Valerio Proietti <http://mad4milk.net> & the MooTools team <http://mootools.net/developers>, MIT Style License.
 var log = function(){
@@ -34,20 +38,58 @@ Function.prototype.bind = function(obj){
   };
 };
 
+Array.prototype.forEach = function(fn, bind){
+  for (var i = 0, l = this.length; i < l; i++) fn.call(bind, this[i], i, this);
+};
+
 function $empty(){};
 
+String.prototype.contains = function(string, separator){
+  return (separator) ? (separator + this + separator).indexOf(separator + string + separator) > -1 : this.indexOf(string) > -1;
+};
+
+function hasClass(element, className){
+  return element.className.contains(className, ' ');
+};
+
 function Class(obj){
-  var klass = obj && obj.initialize ? obj.initialize : $empty;
-  klass.prototype = obj;
+  if(!obj) return $empty;
+  var klass = obj.initialize ? obj.initialize : $empty;
+  var impl = obj.Implements || [];
+  impl.forEach(function(el){    
+    $extend(klass.prototype,new el);
+  });
+  log(klass);
+  $extend(klass.prototype,obj);
   return klass;
 };
+
+var Options = new Class({
+
+	setOptions: function(options){
+		$extend(this.options, options);
+	}
+
+});
+
+function getChildren(element){
+  var el = element['firstChild'];
+	var elements = [];
+	while (el){
+		if (el.nodeType == 1){
+			elements.push(el);
+		}
+		el = el['nextSibling'];
+	}
+	return elements;
+};	
 
 var Request = new Class({
 
   initialize: function(options){
     log(this);
     this.xhr = new this.request();
-    this.options = $extend(this.options, options);
+    $extend(this.options, options);
   },
   
   options: {
