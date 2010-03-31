@@ -57,7 +57,7 @@ li > a:hover, a:active {
 }
 
 a[selected="progress"] {
-  background-image: url(loading.gif), url(selection.png) !important;
+  background-image: url(../images/loading.gif), url(../images/selection.png) !important;
 }
 
 .button {
@@ -236,11 +236,6 @@ body > div ul a {
 
 img {
   border: 0px solid;
-}
-
-.floatingLoading {
-  position: absolute;
-  width: 94%;
 }
 
 .small {
