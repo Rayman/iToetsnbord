@@ -7,6 +7,7 @@ body {
 	font-family: helvetica,sans-serif;
 	background: url("../images/background.png") repeat;
 	-webkit-touch-callout: none;
+	-webkit-user-select: none;
 }
 .center {
 	margin: auto;
