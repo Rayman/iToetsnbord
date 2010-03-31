@@ -1,6 +1,12 @@
+/*global Class: false, Options: false, Events: false, Request: false, Element: false, Slider: false */
+
+/*jslint white: true, browser: true, devel: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, strict: true, newcap: true, immed: true, indent: 2 */
+
+"use strict";
+
 var DataManager = new Class({
 
-	Implements: [Options,Events],
+	Implements: [Options, Events],
 
 	options: {
 		// onUpdateStart: $empty,
@@ -8,24 +14,24 @@ var DataManager = new Class({
 		baseUrl: ''
 	},
 
-	initialize: function(options) {
+	initialize: function (options) {
 		//set options
 		this.setOptions(options);
 
 		//The request instance
 		this.xhr = new Request.JSON({
 			method: "get",
-			onSuccess: function(responseJSON, responseText){
+			onSuccess: function (responseJSON, responseText) {
 				this.fireEvent('update', [responseJSON, responseText]);
 			}.bind(this),
-			onFailure: function(){
+			onFailure: function () {
 				alert('Error getting xhr request');
 			}
 		});
 	},
 
 	//Get the url
-	update: function(data){
+	update: function (data) {
 		this.xhr.send({
 			url: data ? this.options.baseUrl + data : this.options.baseUrl
 		});
@@ -43,12 +49,12 @@ var SongManager = new Class({
 		// baseUrl: ''
 	},
 
-	initialize: function(options) {
+	initialize: function (options) {
 		this.parent(options);
 	},
 
 	//Get the current song with an ajax request and fire the update event
-	update: function(data){
+	update: function (data) {
 		this.parent(data);
 	}
 });
@@ -65,31 +71,35 @@ var MusicSearcher = new Class({
 		urlSearchByKey:   ''
 	},
 
-	initialize: function(options) {
+	initialize: function (options) {
 		//set options
 		this.parent(options);
 
 		//Set some options on the request instance
 		this.xhr.setOptions({
-			onSuccess: function(responseJSON, responseText){
+			onSuccess: function (responseJSON, responseText) {
 				this.fireEvent('searchComplete', [responseJSON, responseText]);
 			}.bind(this)
 		});
 	},
 
 	//Query the media library with ajax request and fire the event
-	searchByQuery: function(query){
+	searchByQuery: function (query) {
 		this.fireEvent('searchStart', query);
-		if(!$chk(query)) return false;
-		this.update(this.options.urlSearchByQuery+query);
+		if (!query) {
+      return false;
+    }
+		this.update(this.options.urlSearchByQuery + query);
 		return true;
 	},
 
 	//Search in the media library for this key
-	searchByKey: function(key){
+	searchByKey: function (key) {
 		this.fireEvent('searchStart', 'Search for: ' + key);
-		if(!$chk(key)) return false;
-		this.update(this.options.urlSearchByKey+key);
+		if (!key) {
+      return false;
+    }
+		this.update(this.options.urlSearchByKey + key);
 		return true;
 	}
 });
@@ -99,69 +109,70 @@ Element.NativeEvents.touchstart = 2;
 Element.NativeEvents.touchmove = 2;
 Element.NativeEvents.touchend = 2;
 
-//For the volume slider
+//For the volume slider    
 function startDrag(e) {
+  
+  var that, origin, pos;
 
-	if (e.type === 'touchstart') {
-		this.removeEvent('mousedown', startDrag);
+  function getCoors(e) {
+    var coors = [];
 
-		var touchEnd = function () {
-			this.removeEvent('touchmove', moveDrag);
-			this.removeEvent('touchend', touchEnd);
-		}
+    //for iPhone
+    var touches = e.touches || e.event.touches;
+    if (touches && touches.length) { // iPhone
+      var thisTouch;
+      for (var i = 0; i < touches.length; i += 1) {
+        if (touches[i].target === that || touches[i].target.parentNode === that) { //sometimes, target is a textnode,
+          thisTouch = touches[i];
+          break;
+        }
+      }
 
-		this.addEvent('touchmove', moveDrag);
-		this.addEvent('touchend', touchEnd);
+      coors[0] = thisTouch.clientX;
+      coors[1] = thisTouch.clientY;
+    } else { // all others
+      coors[0] = e.page.x;
+      coors[1] = e.page.y;
+    }
+    return coors;
+  }
+  
+  function moveDrag(e) {
+    var currentPos = getCoors(e);
+    var deltaX = currentPos[0] - origin[0];
+    //var deltaY = currentPos[1] - origin[1];
 
-	} else {
+    that.setStyle('left', (pos[0] + deltaX) + 'px');
+    //that.setStyle('top', (pos[1] + deltaY) + 'px'); // no y move is wanted
+  }
 
-		var onMouseUp = function () {
-			document.removeEvent('mousemove', moveDrag);
-			document.removeEvent('mouseup', onMouseUp);
-		};
+  if (e.type === 'touchstart') {
+    this.removeEvent('mousedown', startDrag);
 
-		document.addEvent('mousemove', moveDrag);
-		document.addEvent('mouseup', onMouseUp);
-	}
+    var touchEnd = function () {
+      this.removeEvent('touchmove', moveDrag);
+      this.removeEvent('touchend', touchEnd);
+    };
 
-	var pos = [this.offsetLeft,this.offsetTop];
-	var that = this;
+    this.addEvent('touchmove', moveDrag);
+    this.addEvent('touchend', touchEnd);
 
-	var origin = getCoors(e);
+  } else {
+
+    var onMouseUp = function () {
+      document.removeEvent('mousemove', moveDrag);
+      document.removeEvent('mouseup', onMouseUp);
+    };
+
+    document.addEvent('mousemove', moveDrag);
+    document.addEvent('mouseup', onMouseUp);
+  }
+
+  pos = [this.offsetLeft, this.offsetTop];
+  that = this;
+  origin = getCoors(e);
 
   e.preventDefault(); // cancels scrolling on iphone
-
-	function moveDrag (e) {
-		var currentPos = getCoors(e);
-		var deltaX = currentPos[0] - origin[0];
-		//var deltaY = currentPos[1] - origin[1];
-
-		that.setStyle('left', (pos[0] + deltaX) + 'px');
-		//that.setStyle('top', (pos[1] + deltaY) + 'px'); // no y move is wanted
-	}
-
-	function getCoors(e) {
-		var coors = [];
-
-		//for iPhone
-		var touches = e.touches || e.event.touches;
-		if (touches && touches.length) { 	// iPhone
-			var thisTouch;
-			for (var i=0;i<touches.length;i+=1) {
-				if (touches[i].target === that || touches[i].target.parentNode === that){ //sometimes, target is a textnode,
-					thisTouch = touches[i];
-					break;
-				}
-			}
-
-			coors[0] = thisTouch.clientX;
-			coors[1] = thisTouch.clientY;
-		} else { // all others
-			coors[0] = e.page.x;
-			coors[1] = e.page.y;
-		}
-		return coors;
-	}
 }
 
 var iPhoneSlider = new Class({
@@ -172,12 +183,12 @@ var iPhoneSlider = new Class({
   //Binds: ['onTouchStart', 'onTouchEnd', 'onTouchMove'],
   //doens't work, i filled a bug
 
-  initialize: function(element, knob, options){
+  initialize: function (element, knob, options) {
     this.parent.run(arguments, this);
     this.knob.addEvent('touchstart', this.onTouchStart);
   },
 
-  onTouchStart: function(e){
+  onTouchStart: function (e) {
     //from now on, only the ontouchstart is needed
     this.drag.detach();
 
@@ -194,18 +205,18 @@ var iPhoneSlider = new Class({
     this.drag.start.run(e, this.drag);
   },
 
-  onTouchEnd: function (){
+  onTouchEnd: function () {
     this.knob.removeEvent('touchmove', this.onTouchMove);
     this.knob.removeEvent('touchend', this.onTouchEnd);
     this.drag.stop(true);
   },
 
-  onTouchMove: function(e){
+  onTouchMove: function (e) {
     e.page = this.getCoors(e);
     this.drag.drag.run(e, this.drag);
   },
 
-  getCoors: function(e){
+  getCoors: function (e) {
     return {
       x: e.event.touches[0].clientX,
       y: e.event.touches[0].clientY

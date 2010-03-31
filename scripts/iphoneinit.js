@@ -1,8 +1,12 @@
 /*
  * This file init's all the classes, and adds the event handlers
  */
+ 
+ /*global $: false, $$: false, window: false, Element: false, iPhoneSlider: false, SongManager: false */
+ 
+"use strict";
 
-window.addEvent('domready', function() {
+window.addEvent('domready', function () {
   //Hold the JSON object with current song
   var currentSongPlaying = null;
 
@@ -29,7 +33,7 @@ window.addEvent('domready', function() {
 
   var searchList      = $('searchList');
 
-  var loadingImage = new Element('img',{
+  var loadingImage = new Element('img', {
     src: 'images/loading.gif'
   });
 
@@ -37,13 +41,13 @@ window.addEvent('domready', function() {
   var knob = $('knob');
   var handle = $('handle');
 
-  var mySlider = new iPhoneSlider(handle, knob,{
+  var mySlider = new iPhoneSlider(handle, knob, {
     range: [0, 100],
     snap: true,
-    onChange: function(pos){
-      this.knob.set('html', pos+"%");
+    onChange: function (pos) {
+      this.knob.set('html', pos + "%");
     },
-    onComplete: function(val){
+    onComplete: function (val) {
       currentSongManager.update('?volume=' + val);
     }
   });
@@ -51,7 +55,7 @@ window.addEvent('domready', function() {
   //Init the song manager
   currentSongManager = new SongManager({
     baseUrl: 'json/getcurrent.html',
-    onUpdateStart: function(){
+    onUpdateStart: function () {
 
       //Show loading, hide results
       optionsLoading.show();
@@ -68,12 +72,12 @@ window.addEvent('domready', function() {
         optionsShuffle,
         optionsRepeat,
         optionsLock
-      ).each(function(el){
+      ).each(function (el) {
         el.empty();
         loadingImage.clone().inject(el);
       });
     },
-    onUpdate: function(responseJSON){
+    onUpdate: function (responseJSON) {
       //back the current song up, so it can be used again
       currentSongPlaying = responseJSON;
 
@@ -87,7 +91,7 @@ window.addEvent('domready', function() {
         .set('width')
         .set('src',responseJSON.albumart)
         .get('width');
-      if(currentWidth > 200)
+      if (currentWidth > 200)
         currentAlbumArt.set('width',200);
 
       currentInfo.set('html',
@@ -107,8 +111,8 @@ window.addEvent('domready', function() {
   });
 
   //When the play controls are clicked, get the html page and update the current song
-  $('playControls').getElements('a').each(function(el){
-    el.addEvent('click', function(event){
+  $('playControls').getElements('a').each(function (el) {
+    el.addEvent('click', function (event) {
       event.preventDefault();
       currentSongManager.update(el.get('href'));
     });
@@ -124,11 +128,11 @@ window.addEvent('domready', function() {
       html: 'Play',
       href: '#home',
       events:{
-        click: function(){
+        click: function () {
           currentSongManager.update('?file='+fileName);
 
           //Dirty hack for removing the playlink from the DOM
-          (function(){
+          (function () {
             playLink.dispose();
           }).delay(1);
         }
@@ -141,11 +145,11 @@ window.addEvent('domready', function() {
       html: 'Enqueue',
       href: 'javascript:void(0)',
       events:{
-        click: function(){
+        click: function () {
           currentSongManager.update('?add='+fileName+'&playaddedifnotplaying');
 
           //Dirty hack for removing the playlink from the DOM
-          (function(){
+          (function () {
             playLink.dispose();
           }).delay(1);
         }
@@ -164,7 +168,7 @@ window.addEvent('domready', function() {
     //The url for searches by keyword
     urlSearchByKey:   'search_ml=',
 
-    onSearchStart: function(query){
+    onSearchStart: function (query) {
       //Empty the old search
       searchList.empty();
 
@@ -182,22 +186,22 @@ window.addEvent('domready', function() {
     },
 
     //When the search request is complete
-    onSearchComplete: function(responseJSON, responseText){
+    onSearchComplete: function (responseJSON, responseText) {
       searchList.empty();
 
       //When the response has no songs in it
-      if(!responseJSON || !responseJSON.length){
+      if (!responseJSON || !responseJSON.length) {
         //Maybe the responseText has some info ?
         new Element('li',{
           html: 'No Results: ' + responseText
         }).inject(searchList);
         return;
       }
-      responseJSON.each(function(item){
+      responseJSON.each(function (item) {
         new Element('a',{
           html: item.title,
           events:{
-            click: function(){
+            click: function () {
               fileName = item.filename;
               playLink.inject(this);
             }
@@ -210,22 +214,22 @@ window.addEvent('domready', function() {
   });
 
   //Add listener for album searching
-  currentAlbum.addEvent('click',function(){
+  currentAlbum.addEvent('click',function () {
     searcher.searchByQuery('ALBUM HAS "'+currentSongPlaying.album+'"');
   });
 
   //Add listener for artist searching
-  currentArtist.addEvent('click',function(){
+  currentArtist.addEvent('click',function () {
     searcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
   });
 
   //Listener for clicking at the info link
-  infoLink.addEvent('click',function(){
+  infoLink.addEvent('click',function () {
     currentSongManager.update();
   });
 
   //Add listener for search form submit
-  $('searchBySong').addEvent('submit',function(e){
+  $('searchBySong').addEvent('submit',function (e) {
     //Get the artist and song value
     var artist = this.getElement('input[name=artist]').value.trim();
     var song   = this.getElement('input[name=song]').value.trim();
@@ -236,32 +240,32 @@ window.addEvent('domready', function() {
     query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
 
     //Query valid?
-    if(!searcher.searchByQuery(query))
+    if (!searcher.searchByQuery(query))
       searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
   });
 
   //Add listener for search by query
-  $('searchByQuery').addEvent('submit',function(e){
+  $('searchByQuery').addEvent('submit',function (e) {
     //query valid?
-    if(!searcher.searchByQuery(this.getElement('input[name=query]').value.trim()))
+    if (!searcher.searchByQuery(this.getElement('input[name=query]').value.trim()))
       searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
   });
 
   //Add listener for search by keyword
-  $('searchByKeyword').addEvent('submit',function(e){
+  $('searchByKeyword').addEvent('submit',function (e) {
     //query valid?
-    if(!searcher.searchByKey(this.getElement('input[name=key]').value.trim()))
+    if (!searcher.searchByKey(this.getElement('input[name=key]').value.trim()))
       searcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
   });
 
   //When user clicks the link to options, we do a quick request of the variables
-  $('getOptions').addEvent('click', function(){
+  $('getOptions').addEvent('click', function () {
     currentSongManager.update();
   });
 
   //Listener for options
-  $('options').getElements('a').each(function(el){
-    el.addEvent('click', function(event){
+  $('options').getElements('a').each(function (el) {
+    el.addEvent('click', function (event) {
       event.preventDefault();
       currentSongManager.update(el.get('href'));
     });

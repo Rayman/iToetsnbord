@@ -1,13 +1,19 @@
+/*global Class: false, Options: false, Events: false, window: false, $: false, $$: false, $clear: false */
+
+/*jslint white: true, browser: true, devel: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, strict: true, immed: true, indent: 2, newcap: false */
+
+"use strict";
+
 // Some basic string functions
 String.implement({
-	startsWith: function(str){
-		return (this.match("^"+str)==str);
+	startsWith: function (str) {
+		return (this.match("^" + str) === str);
 	}
 });
 
 String.implement({
-	endsWith: function(str){
-		return (this.match(str+"$")==str);
+	endsWith: function (str) {
+		return (this.match(str + "$") === str);
 	}
 });
 
@@ -17,12 +23,12 @@ var iPhoneNav = new Class({
 
 	options: {
 		observeDelay:	300,
-		hashPrefix:		"#_", //The pageId gets prefixed in the url by this
-		backButton: 	'', //This button is hidden when page.id == homepage.id
-		homePage:		''
+		hashPrefix:   "#_", //The pageId gets prefixed in the url by this
+		backButton:   '', //This button is hidden when page.id == homepage.id
+		homePage:     ''
 	},
 
-	initialize: function(options){
+	initialize: function (options) {
 		this.setOptions(options);
 
 		this.currentWidth = 0;
@@ -33,60 +39,64 @@ var iPhoneNav = new Class({
 		this.observe.periodical(this.options.observeDelay, this);
 
 		//Start the clickwatcher
-		window.addEvent('click',this.onClick.bind(this));
+		window.addEvent('click', this.onClick.bind(this));
 	},
 
 	// The function that checks the width and the location.hash for changes
-	observe: function() {
+	observe: function () {
 
 		//If the width of the screen changes, fire this event
-		if (window.outerWidth != this.currentWidth)
+		if (window.outerWidth !== this.currentWidth)
 		{
 			this.currentWidth = window.outerWidth;
 			this.onWidthChanged(this.currentWidth);
 		}
 
 		//If back/forward buttons are used, the location.hash changes
-		if (location.hash != this.currentHash)
+		if (location.hash !== this.currentHash)
 		{
 			this.currentHash = location.hash;
 			this.onHashChanged(location.hash);
 		}
 	},
 
-	onWidthChanged: function(newWidth){
-		document.body.setAttribute("orient", newWidth == 320 ? "profile" : "landscape");
+	onWidthChanged: function (newWidth) {
+		document.body.setAttribute("orient", newWidth === 320 ? "profile" : "landscape");
 	},
 
-	onHashChanged: function(newHash){
+	onHashChanged: function (newHash) {
 		var pageId = newHash.substr(this.options.hashPrefix.length);
 
 		//Try to find that page in the history
 		var index = this.pageHistory.indexOf(pageId);
 		//If it is found, index != -1, thus backwards = true
-		var backwards = index != -1;
+		var backwards = index !== -1;
 
-		if (backwards)
+		if (backwards) {
 			this.pageHistory.splice(index, this.pageHistory.length); //Remove from the index to the end
+		}
 
 		var page = this.tryGetPage(pageId);
-		if(page)
+		if (page) {
 			this.showPage(page, backwards);
+		}
 	},
 
-	onClick: function(event){
+	onClick: function (event) {
 		var link = event.target;
 
 		//Hide the form if it's clicked on it
-		if($(link).nodeName.toLowerCase()=='form')
+		if ($(link).nodeName.toLowerCase() === 'form') {
 			link.removeAttribute("selected");
+		}
 
 		// Search the <a> tag
-		while (link && link.localName && link.localName.toLowerCase() != "a")
+		while (link && link.localName && link.localName.toLowerCase() !== "a") {
 			link = link.parentNode;
+		}
 
 		// Dont do anything with normal links
-		if (link && link.hash && link.hash != '' && link.hash != '#')
+		if (link && link.hash && link.hash !== '' && link.hash !== '#')
 		{
 			//Stop default action
 			event.preventDefault();
@@ -95,19 +105,19 @@ var iPhoneNav = new Class({
 		}
 	},
 
-	goToPage: function(pageId){
+	goToPage: function (pageId) {
 		var page = this.tryGetPage(pageId);
-		if(page)
+		if (page) {
 			this.showPage(page);
+		}
 	},
 
-	showPage: function(page, backwards){
+	showPage: function (page, backwards) {
 
 		// If classname == dialog means that it is a form
-		if (page.hasClass('dialog'))
+		if (page.hasClass('dialog')) {
 			this.showDialog(page);
-		else
-		{
+		} else {
 			//Change the location to the page that about to be shown
 			location.href = this.currentHash = this.options.hashPrefix + page.id;
 
@@ -120,33 +130,35 @@ var iPhoneNav = new Class({
 			//Set the title
 			$('pageTitle').set('html', page.title || "");
 
-			//Hide the backButton when page == home
-			this.options.backButton.setStyle('display', page == this.options.homePage ? "none" : "inline");
+			//Hide the backButton when page === home
+			this.options.backButton.setStyle('display', page === this.options.homePage ? "none" : "inline");
 
-			if (fromPage && fromPage != this.currentPage)
+			if (fromPage && fromPage !== this.currentPage) {
 				setTimeout(this.swipePage.bind(this), 0, fromPage, page, backwards);
+			}
 		}
 	},
 
-	showDialog: function(form)
+	showDialog: function (form)
 	{
 		//Unhide the form
 		form.setAttribute("selected", "true");
 
 		//Remove the old query
-		form.getElements('input').set('value','');
+		form.getElements('input').set('value', '');
 	},
 
-	tryGetPage: function(pageId){
+	tryGetPage: function (pageId) {
 		var page = document.id(pageId);
-		if(!page)
+		if (!page) {
 			alert('Page not found: ' + pageId);
+		}
 		return page;
 	},
 
 	timeoutID: null,
 
-	swipePage: function(fromPage, toPage, backwards)
+	swipePage: function (fromPage, toPage, backwards)
 	{
 		//Stop the other page from hiding
 		$clear(this.timeoutID);
@@ -163,17 +175,17 @@ var iPhoneNav = new Class({
 		fromPage.setStyle('left', (backwards ? '100' : '-100') + "%");
 		toPage.setStyle('left', '0%');
 
-		this.timeoutID = function(){
+		this.timeoutID = function () {
 			fromPage.removeAttribute("selected"); //Hide the fromPage
 		}.delay(1000);
 	}
 });
 
-window.addEvent('domready', function() {
+window.addEvent('domready', function () {
 
 	// Get all elements with selected = true
-	var list = $(document.body).getChildren().filter(function(el){
-		return el.getAttribute('selected')
+	var list = $(document.body).getChildren().filter(function (el) {
+		return el.getAttribute('selected');
 	});
 
 	//Startpage is the first selected = true, pick the fist div when no elements are found
@@ -189,17 +201,18 @@ window.addEvent('domready', function() {
 	HistoryManager.showPage(startPage);
 
 	//Bind the events for form submitting
-	$$('[class=dialog]').addEvent('submit',function(event){
+	$$('[class=dialog]').addEvent('submit', function (event) {
 
 		//Stop the submitting of the form
 		event.preventDefault();
 
 		var form = $(event.target);
-		if(form.nodeName.toLowerCase()!='form')
+		if (form.nodeName.toLowerCase() !== 'form') {
 			form = form.getParent('form');
+		}
 
 		// Deselect all inputs
-		form.getElements('input').each(function(item){
+		form.getElements('input').each(function (item) {
 			item.blur();
 		});
 
@@ -208,10 +221,10 @@ window.addEvent('domready', function() {
 
 		//Check if the action is to a #id
 		var index = form.action.lastIndexOf("#");
-		if (index != -1)
+		if (index !== -1)
 		{
 			//Go to the submit location
-			HistoryManager.goToPage(form.action.substr(index+1));
+			HistoryManager.goToPage(form.action.substr(index + 1));
 		}
 	});
 });
