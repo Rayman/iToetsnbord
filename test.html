@@ -1,72 +1,107 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<title>iPhone Navigation</title>
-<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-<style type="text/css" media="screen">@import "css/iphonenav.css";</style>
-<script type="application/x-javascript" src="scripts/mootools-1.2.4-core.js"></script>
-<script type="application/x-javascript" src="scripts/mootools-1.2.4.2-more.js"></script>
-<script type="application/x-javascript" src="scripts/iphonenav2.js"></script>
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="index,follow" name="robots" />
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" />
+<link href="pics/homescreen.gif" rel="apple-touch-icon" />
+<meta content="minimum-scale=1.0, width=device-width, maximum-scale=0.6667, user-scalable=no" name="viewport" />
+<link href="css/iwebkit.css" rel="stylesheet" media="screen" type="text/css" />
+<script src="scripts/iwebkit.js" type="text/javascript"></script>
+<title>iWebKit Demo
+</title>
+<link href="pics/startup.png" rel="apple-touch-startup-image" />
+<meta content="iPod,iPhone,Webkit,iWebkit,Website,Create,mobile,Tutorial,free" name="keywords" />
+<meta content="Try out all the new features of iWebKit 5 with a simple touch of a finger and a smooth screen rotation!" name="description" />
 </head>
 
 <body>
-    <h1 id="pageTitle"></h1>
-    <a id="backButton" class="button" href="javascript:void(0)" onclick="window.history.back()">Back</a>
-    <a class="button" href="#searchByKeyword">Search</a>
+<div id="topbar" class="black"> 
+	<div id="blueleftbutton">
+    <a href="iphone.html">Home</a>
+  </div> 
+	<div id="rightbutton">
+    <a href="#search">Search</a>
+  </div>
+</div>
 
-	<div id="home" class="panel" title="Toets & Bord v3.3" selected="true">
-		<h2>Normal list</h2>
-		<ul>
-			<li>About</li>
-			<li>Blog</li>
-		</ul>
-		<h2>Link List:</h2>
-		<ul>
-			<li><a href="#test1">Full screen list</a></li>
-			<li><a href="#test2">Some stuff</a></li>
-			<li><a href="#test3">asdf</a></li>
-		</ul>
-		<h2>About</h2>
-		<p>Jonathan Stark is a web developer, speaker, and author. His
-		   consulting firm, Jonathan Stark Consulting, Inc., has attracted
-		   clients such as Staples, Turner Broadcasting, and the PGA Tour.
-		   ...
-		</p>
-		<p>Jonathan Stark is a mobile and web application developer who the
-		   Wall Street Journal has called an expert on publishing desktop
-		   data to the web.</p>
-		<ul>
-			<li><a href="#services.html">Services</a></li>
-			<li><a href="#about.html">About</a></li>
-			<li><a href="#blog.html">Blog</a></li>
-		</ul>
-    </div>
-    
-    <div id="test2" class="panel" title="TAsdfdfs">
-		ASDF
-    </div>
+<div class="searchbox" style="display: none"> 
+	<form action="" method="get"> 
+		<fieldset><input id="search" placeholder="search" type="text" /> 
+		<input id="submit" type="hidden" /></fieldset> 
+	</form> 
+</div>
 
-    <form id="searchByKeyword" class="dialog" action="#searchResults">
-        <fieldset>
-            <h1>Search By Keyword</h1>
-            <!-- Fire the onSubmit event -->
-            <a class="button toolButton goButton" href="javascript:void(0)" onclick="$(this).getParent('form').fireEvent('submit',event)">Search</a>
+<div class="content selected">
+  <table id="playControls" width="100%" style="text-align:center"> 
+    <tr> 
+      <td> 
+        <a href="?prev"> 
+          <img src="images/prev.gif" alt="jump to previous song" /> 
+        </a> 
+      </td> 
+      <td> 
+        <a href="?play"> 
+          <img src="images/play.png" alt="start playback" /> 
+        </a> 
+      </td> 
+      <td> 
+        <a href="?stop"> 
+          <img src="images/stop.png" alt="stop playback" /> 
+        </a> 
+      </td> 
+      <td> 
+        <a href="?pause"> 
+          <img src="images/pause.png" alt="pause playback" /> 
+        </a> 
+      </td> 
+      <td> 
+        <a href="?next"> 
+          <img src="images/next.gif" alt="jump to next song" /> 
+        </a> 
+      </td> 
+    </tr> 
+  </table>
+  
+  <span class="graytitle">Current Song</span>
+	<ul class="pageitem">
+    <li class="store">
+      <a class="noeffect" href="javascript:;">
+        <span class="image" style="background-image: url('http://192.168.2.4/16+-+Voodoo+Child+(Slight+Return).mp3.png?cache')"></span>
+        <span class="comment">Red Hot Chili Peppers</span>
+        <span class="name">Blood Sugar Sex Magik</span>
+        <span class="stars5"></span>
+        <span class="starcomment">151 Ratings</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+		<li class="menu">
+      <span class="name">Info:</span><span class="comment">05:13, 224kbps, 44kHz stereo</span>
+    </li>
+	</ul>
+	
+	<ul class="pageitem">
+    <li class="menu">
+      <span class="name">Search</span><span class="arrow"></span>
+    </li>
+    <li class="menu">
+      <span class="name">Options</span><span class="arrow"></span>
+    </li>
+	</ul>
+	
+  <span class="graytitle">Volume</span>
+  <ul class="pageitem">
+    <li class="handle" id="volumehandle">
+      <span class="knob" id="volumeknob">Drag</span> 
+    </li> 
+  </ul> 
+</div>
 
-            <label>Key:</label>
-            <input type="text" name="key" />
-        </fieldset>
-    </form>
+<div id="footer">
+  Powered by <a class="noeffect" href="http://iwebkit.net">iWebKit</a>, <a class="noeffect" href="http://www.thasler.org">BrowseAmp</a> and Rayman
+</div>
 
-    <div id="searchResults" class="panel" title="Search">
-		<h2 id="searchQuery">Search Results</h2>
-		<p>
-			Sort by <a href="#">Title</a> | <a href="#">Artist</a>
-		</p>
-		<ul id="searchList">
-			<li><img src="images/loading.gif" /></li>
-		</ul>
-    </div>
 </body>
+
 </html>
