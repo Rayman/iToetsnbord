@@ -29,17 +29,18 @@ document.addEventListener('click', function(){
 window.addEventListener('load', function () {
 
   // Get all elements with class selected
-	var list = document.getElementsByClassName('selected');	
+	var list = document.getElementsByClassName('selected');
 	if(list.length !== 1) alert('Error, no startpage or too many startpages');
 	//Startpage is the first selected = true
 	var startPage = list[0];
 
   var	observeDelay  = 300,
-      backButton    = 	$('backButton'), //This button is hidden when page.id == homepage.id
+      backButton    = $('leftnav'), //This button is hidden when page.id == homepage.id
+      homeButton    = $('blueleftbutton'),
       homePage      = startPage,
       pageHistory   = [],
       currentPage;
-      
+
   showPage(startPage);
 
 	//Bind the events for form submitting
@@ -77,7 +78,7 @@ window.addEventListener('load', function () {
   //Start the clickwatcher
   window.addEventListener('click', onClick);
 
-  function 	onClick(event) {
+  function onClick(event) {
     var link = event.target;
 
     //Hide the form if it's clicked on it
@@ -127,7 +128,13 @@ window.addEventListener('load', function () {
       $('title').innerHTML = page.title || "";
 
       //Hide the backButton when page === home
-      backButton.style.display = page === homePage ? "none" : "inline";
+      if(page === homePage) {
+        backButton.style.display =  "none";
+        homeButton.style.display = "inline";
+      } else {
+        backButton.style.display =  "inline";
+        homeButton.style.display = "none";
+      }
 
       if (fromPage && fromPage !== currentPage) {
         setTimeout(swipePage, 0, fromPage, page, backwards);
@@ -158,7 +165,7 @@ window.addEventListener('load', function () {
     clearTimeout(timeoutID);
 
     // position the toPage right next to the current page
-    toPage.style.left = backwards ? '-100%' : '100%';
+    toPage.style.webkitTransform = 'translate(' + (backwards ? '-100' : '100') + '%)';
 
     //Unhide it
     addClass(toPage, 'selected');
@@ -166,8 +173,8 @@ window.addEventListener('load', function () {
     //Scroll to the top
     scrollTo(0, 1);
 
-    fromPage.style.left = (backwards ? '100' : '-100') + "%";
-    toPage.style.left = '0%';
+    fromPage.style.webkitTransform = 'translate(' + (backwards ? '100' : '-100') + '%)';
+    toPage.style.webkitTransform = 'translate(0px)';
 
     timeoutID = setTimeout(function () {
       removeClass(fromPage, 'selected'); //Hide the fromPage
