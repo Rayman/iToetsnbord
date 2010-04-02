@@ -52,6 +52,10 @@ String.prototype.contains = function(string, separator){
   return (separator) ? (separator + this + separator).indexOf(separator + string + separator) > -1 : this.indexOf(string) > -1;
 };
 
+String.prototype.trim = function(){
+		return this.replace(/^\s+|\s+$/g, '');
+};
+
 function hasClass(element, className){
   return element.className.contains(className, ' ');
 };
@@ -72,7 +76,7 @@ function Class(obj){
   if(!obj) return $empty;
   var klass = obj.initialize ? obj.initialize : $empty;
   var impl = obj.Implements || [];
-  impl.forEach(function(el){    
+  impl.forEach(function(el){
     $extend(klass.prototype,new el);
   });
   $extend(klass.prototype,obj);
@@ -97,7 +101,7 @@ function getChildren(element){
 		el = el['nextSibling'];
 	}
 	return elements;
-};	
+};
 
 var Request = new Class({
 
@@ -105,7 +109,7 @@ var Request = new Class({
     this.xhr = new this.request();
     $extend(this.options, options);
   },
-  
+
   options: {
     onSuccess: $empty,
     onFailure: $empty,
@@ -121,7 +125,7 @@ var Request = new Class({
       return new ActiveXObject('Microsoft.XMLHTTP');
     });
   },
-  
+
   get: function(url){
     this.xhr.open('GET', url || this.options.url, true);
     this.xhr.onreadystatechange = function(){
