@@ -229,7 +229,7 @@ a:hover .arrow {
 }
 .content {
 	width: 100%;
-	position: relative;
+	position: absolute;
 	min-height: 250px;
 	margin-top: 10px;
 	height: auto;
