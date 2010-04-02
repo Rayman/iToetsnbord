@@ -13,7 +13,7 @@
 } */
 
 function hideURLbar() {
-	window.scrollTo(0, 0.9);
+	window.scrollTo(0, 1);
 }
 
 window.onload = function () {
@@ -34,12 +34,13 @@ window.addEventListener('load', function () {
 	//Startpage is the first selected = true
 	var startPage = list[0];
 
-  var	observeDelay  = 300,
+  var	observeDelay  = 100,
       backButton    = $('leftnav'), //This button is hidden when page.id == homepage.id
       homeButton    = $('blueleftbutton'),
       homePage      = startPage,
       pageHistory   = [],
-      currentPage;
+      currentPage,
+      currentHash;
 
   showPage(startPage);
 
@@ -77,6 +78,33 @@ window.addEventListener('load', function () {
 
   //Start the clickwatcher
   window.addEventListener('click', onClick);
+  
+  setInterval(checkHash, observeDelay);
+  
+  function checkHash(){
+    if(currentHash != location.hash) {
+      currentHash = location.hash;
+      onHashChanged(location.hash);
+    }
+  };
+  
+  function onHashChanged(newHash) {
+		var pageId = newHash.substr(1); //strip the #
+
+		//Try to find that page in the history
+		var index = pageHistory.indexOf(pageId);
+		//If it is found, index != -1, thus backwards = true
+		var backwards = index !== -1;
+
+		if (backwards) {
+			pageHistory.splice(index, pageHistory.length); //Remove from the index to the end
+		}
+
+		var page = tryGetPage(pageId);
+		if (page) {
+			showPage(page, backwards);
+		}
+	}
 
   function onClick(event) {
     var link = event.target;
