@@ -29,10 +29,12 @@
   </div>
 </div>
 
-<div class="searchbox" style="display: none">
+<div id="searchByKey" class="searchbox" style="display: none">
 	<form action="" method="get">
-		<fieldset><input id="search" placeholder="search" type="text" />
-		<input id="submit" type="hidden" /></fieldset>
+		<fieldset>
+      <input id="searchInput" placeholder="search" type="text" />
+      <input id="submit" type="hidden" />
+    </fieldset>
 	</form>
 </div>
 
@@ -70,7 +72,7 @@
   <span class="graytitle">Current Song</span>
 	<ul class="pageitem">
     <li class="store">
-      <a class="noeffect" href="javascript:;">
+      <a href="javascript:;">
         <span class="image" style="background-image: url('http://192.168.2.4/16+-+Voodoo+Child+(Slight+Return).mp3.png?cache')"></span>
         <span class="comment">Red Hot Chili Peppers</span>
         <span class="name">Blood Sugar Sex Magik</span>
@@ -80,13 +82,17 @@
       </a>
     </li>
 		<li class="menu">
-      <span class="name">Info:</span><span class="comment">05:13, 224kbps, 44kHz stereo</span>
+      <a href="javascript:;">
+        <span class="name">Info:</span>
+        <span id="songInfo" class="comment">05:13, 224kbps, 44kHz stereo</span>
+        <span class="arrow"></span>
+      </a>
     </li>
 	</ul>
 
 	<ul class="pageitem">
     <li class="menu">
-      <a href="#search" class="name">Search</a><span class="arrow"></span>
+      <a href="#searchByKey" class="name">Search</a><span class="arrow"></span>
     </li>
     <li class="menu">
       <a href="#options" class="name">Options</a><span class="arrow"></span>
@@ -99,6 +105,10 @@
       <span class="knob" id="volumeknob">Drag</span>
     </li>
   </ul>
+  
+  <div id="footer">
+    Powered by <a class="noeffect" href="http://iwebkit.net">iWebKit</a>, <a class="noeffect" href="http://www.thasler.org">BrowseAmp</a> and Rayman
+  </div>
 </div>
 
 <div id="options" class="content" title="Options">
@@ -130,10 +140,6 @@
     <li class="menu"><a class="name" href="?fullscreen">Fullscreen<span class="arrow"></span></a></li>
     <li class="menu"><a class="name" href="?execute">Execute<span class="arrow"></span></a></li>
   </ul>
-</div>
-
-<div id="footer">
-  Powered by <a class="noeffect" href="http://iwebkit.net">iWebKit</a>, <a class="noeffect" href="http://www.thasler.org">BrowseAmp</a> and Rayman
 </div>
 
 </body>
