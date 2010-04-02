@@ -42,6 +42,10 @@ Array.prototype.forEach = function(fn, bind){
   for (var i = 0, l = this.length; i < l; i++) fn.call(bind, this[i], i, this);
 };
 
+String.prototype.clean = function(){
+  return this.replace(/\s+/g, ' ').trim();
+}
+
 function $empty(){};
 
 String.prototype.contains = function(string, separator){
@@ -52,6 +56,18 @@ function hasClass(element, className){
   return element.className.contains(className, ' ');
 };
 
+function addClass(element, className){
+  if (!hasClass(element, className)) element.className = (element.className + ' ' + className).clean();
+}
+
+function removeClass(element, className){
+  element.className = element.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1');
+}
+
+function toggleClass(element, className){
+  return hasClass(element, className) ? removeClass(element, className) : addClass(element, className);
+}
+
 function Class(obj){
   if(!obj) return $empty;
   var klass = obj.initialize ? obj.initialize : $empty;
@@ -59,7 +75,6 @@ function Class(obj){
   impl.forEach(function(el){    
     $extend(klass.prototype,new el);
   });
-  log(klass);
   $extend(klass.prototype,obj);
   return klass;
 };
@@ -87,7 +102,6 @@ function getChildren(element){
 var Request = new Class({
 
   initialize: function(options){
-    log(this);
     this.xhr = new this.request();
     $extend(this.options, options);
   },
