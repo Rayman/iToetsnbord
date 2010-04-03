@@ -1,114 +1,117 @@
 /*
  * This file init's all the classes, and adds the event handlers
  */
- 
+
  /*global $: false, $$: false, window: false, Element: false, iPhoneSlider: false, SongManager: false */
- 
+
 "use strict";
 
-window.addEvent('domready', function () {
+window.addEventListener('load', function () {
   //Hold the JSON object with current song
   var currentSongPlaying = null;
-
-  //Public vars
-  var currentSongManager;
-  var searcher;
 
   //Some vars
   var currentTitle    = $('currentTitle');
   var currentArtist   = $('currentArtist');
-  var artistLink      = currentArtist.getParent();
   var currentAlbum    = $('currentAlbum');
-  var albumLink       = currentAlbum.getParent();
   var currentAlbumArt = $('currentAlbumArt');
   var currentInfo     = $('currentInfo');
-  var infoLink        = currentInfo.getParent();
-  var currentVolume   = $('currentVolume');
+  var infoLink        = $('infoLink');
+  // var currentVolume   = $('currentVolume');
+
+  var artistLink      = $('artistLink');
+  var albumLink       = $('albumLink');
 
   var optionsShuffle  = $('optionsShuffle');
   var optionsRepeat   = $('optionsRepeat');
   var optionsLock     = $('optionsLock');
-  var optionsList     = optionsShuffle.getParent('ul');
+  var optionsList     = $('optionsList');
   var optionsLoading  = $('optionsLoading');
 
   var searchList      = $('searchList');
 
-  var loadingImage = new Element('img', {
-    src: 'images/loading.gif'
-  });
+  function getLoadingImage(){
+    var img = document.createElement('img');
+    img.src = 'images/loading.gif';
+    return img;
+  }
 
-  //The volume slider
+  var loadingImage = getLoadingImage();
+
+/*  //The volume slider
   var knob = $('knob');
-  var handle = $('handle');
-
-  var mySlider = new iPhoneSlider(handle, knob, {
-    range: [0, 100],
-    snap: true,
-    onChange: function (pos) {
-      this.knob.set('html', pos + "%");
-    },
-    onComplete: function (val) {
-      currentSongManager.update('?volume=' + val);
-    }
-  });
+  var handle = $('handle');*/
 
   //Init the song manager
-  currentSongManager = new SongManager({
+  currentSongManager = {
+
     baseUrl: 'json/getcurrent.html',
-    onUpdateStart: function () {
+
+    initialize: function () {
+      //The request instance
+      this.xhr = new Request({
+        method: "get",
+        onSuccess: this.onSuccess,
+        onFailure: function () {
+          alert('Error getting xhr request');
+        }
+      });
+    },
+
+    //Get the url
+    update: function (data) {
+      this.xhr.get(data ? this.baseUrl + data : this.baseUrl);
 
       //Show loading, hide results
-      optionsLoading.show();
-      optionsList.hide();
+      optionsLoading.style.display = "";
+      optionsList.style.display = "none";
 
       //Empty all li's
-      $$(
+      $each([
         currentTitle,
         currentArtist,
         currentAlbum,
         currentInfo,
-        currentVolume,
+        //currentVolume,
 
         optionsShuffle,
         optionsRepeat,
         optionsLock
-      ).each(function (el) {
-        el.empty();
-        loadingImage.clone().inject(el);
+      ], function (el) {
+        empty(el);
+        el.appendChild(getLoadingImage());
       });
     },
-    onUpdate: function (responseJSON) {
+
+    onSuccess: function (responseText) {
+      var responseJSON = JSON.parse(responseText);
+
       //back the current song up, so it can be used again
       currentSongPlaying = responseJSON;
 
-      currentTitle.set('html',responseJSON.title);
-      currentArtist.set('html',responseJSON.artist);
-      currentAlbum.set('html',responseJSON.album);
-      mySlider.set(responseJSON.volume);
+      currentTitle.innerHTML = responseJSON.title;
+      currentArtist.innerHTML = responseJSON.artist;
+      currentAlbum.innerHTML = responseJSON.album;
+      //mySlider.set(responseJSON.volume);
 
-      //The width of the image can only be smaller than 200 px
-      var currentWidth = currentAlbumArt
-        .set('width')
-        .set('src',responseJSON.albumart)
-        .get('width');
-      if (currentWidth > 200)
-        currentAlbumArt.set('width',200);
-
-      currentInfo.set('html',
+      currentInfo.innerHTML =
         responseJSON.length + ", " +
         responseJSON.bitrate + "kbps, " +
         responseJSON.samplerate + "kHz " +
-        responseJSON.channels
-      );
+        responseJSON.channels;
 
-      optionsShuffle.set('html',responseJSON.shuffle);
-      optionsRepeat.set('html',responseJSON.repeat);
-      optionsLock.set('html',responseJSON.lock);
+      optionsShuffle.innerHTML = responseJSON.shuffle;
+      optionsRepeat.innerHTML = responseJSON.repeat;
+      optionsLock.innerHTML = responseJSON.lock;
 
-      optionsLoading.hide();
-      optionsList.show();
+      optionsLoading.style.display = 'none';
+      optionsList.style.display = '';
     }
-  });
+  };
+
+  currentSongManager.initialize();
+
+  /*
 
   //When the play controls are clicked, get the html page and update the current song
   $('playControls').getElements('a').each(function (el) {
@@ -273,6 +276,8 @@ window.addEvent('domready', function () {
 
   //UpDATE!!!
   currentSongManager.update();
-});
+
+  */
+}, false);
 
 //End of file!

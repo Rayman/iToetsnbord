@@ -15,6 +15,7 @@
 
   <script src="scripts/framework.js" type="text/javascript"></script>
   <script src="scripts/iwebkit.js" type="text/javascript"></script>
+  <script src="scripts/iphoneinit.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -81,19 +82,25 @@
   <span class="graytitle">Current Song</span>
 	<ul class="pageitem">
     <li class="store">
-      <a href="javascript:;">
-        <span class="image" style="background-image: url('http://192.168.2.4/16+-+Voodoo+Child+(Slight+Return).mp3.png?cache')"></span>
-        <span class="comment">Red Hot Chili Peppers</span>
-        <span class="name">Blood Sugar Sex Magik</span>
-        <span class="stars5"></span>
-        <span class="starcomment">151 Ratings</span>
+      <a href="#findMore">
+        <span class="image" id="currentAlbumArt" style="background-image: url('http://192.168.2.4/16+-+Voodoo+Child+(Slight+Return).mp3.png?cache')"></span>
+        <span class="comment" id="currentArtist">Red Hot Chili Peppers</span>
+        <span class="name" id="currentTitle">Blood Sugar Sex Magi a b c</span>
+        <span class="stars5" id="rating"></span>
+        <span class="starcomment" id="plays">151 plays</span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="#searchResults">
+        <span class="name">Album:</span>
+        <span id="currentAlbum" class="comment">Asdf etc.</span>
         <span class="arrow"></span>
       </a>
     </li>
 		<li class="menu">
-      <a href="javascript:;">
+      <a href="javascript:void(0)" id="infoLink">
         <span class="name">Info:</span>
-        <span id="songInfo" class="comment">05:13, 224kbps, 44kHz stereo</span>
+        <span id="currentInfo" class="comment">05:13, 224kbps, 44kHz stereo</span>
         <span class="arrow"></span>
       </a>
     </li>
@@ -137,22 +144,80 @@
     </li>
   </ul>
 
-  <ul class="pageitem">
-    <li class="menu"><a class="name" href="?shuffle">Shuffle: <span id="optionsShuffle"></span><span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?repeatall">Repeat: <span id="optionsRepeat"></span><span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?lock">Lock: <span id="optionsLock"></span><span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?minimize">Minimise Winamp<span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?close">Close Winamp<span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?restart">Restart Winamp<span class="arrow"></span></a></li>
+  <ul class="pageitem" id="optionsList">
+    <li class="menu">
+      <a href="?shuffle">
+        <span class="name">Shuffle:</span>
+        <span id="optionsShuffle"></span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?repeatall">
+        <span class="name">Repeat:</span>
+        <span id="optionsRepeat"></span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?lock">
+        <span class="name">Lock:</span>
+        <span id="optionsLock"></span>
+        <span class="arrow">
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?minimize">
+        <span class="name">Minimise Winamp</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?close">
+        <span class="name">Close Winamp</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?restart">
+        <span class="name">Restart Winamp</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
   </ul>
 
   <span class="graytitle">Advanced Commands</span>
   <ul class="pageitem">
-    <li class="menu"><a class="name" href="?standby">Standby<span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?shutdown">Shutdown<span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?reboot">Reboot<span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?fullscreen">Fullscreen<span class="arrow"></span></a></li>
-    <li class="menu"><a class="name" href="?execute">Execute<span class="arrow"></span></a></li>
+    <li class="menu">
+      <a href="?standby">
+        <span class="name">Standby</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?shutdown">
+        <span class="name">Shutdown</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?reboot">
+        <span class="name">Reboot</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?fullscreen">
+        <span class="name">Fullscreen</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="?execute">
+        <span class="name">Execute</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
   </ul>
 </div>
 
@@ -181,6 +246,24 @@
       <span class="name">
         <img alt="list" src="images/loading.gif" />
       </span>
+    </li>
+  </ul>
+</div>
+
+<div id="findMore" class="content" title="Find More">
+  <span class="graytitle">Find More Music</span>
+  <ul id="searchList" class="pageitem">
+    <li class="menu">
+      <a href="#searchResults" id="artistLink">
+        <span class="name">From this Artist</span>
+        <span class="arrow"></span>
+      </a>
+    </li>
+    <li class="menu">
+      <a href="#searchResults" id="albumLink">
+        <span class="name">From this Album</span>
+        <span class="arrow"></span>
+      </a>
     </li>
   </ul>
 </div>
