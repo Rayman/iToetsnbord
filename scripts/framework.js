@@ -48,8 +48,18 @@ function $type(obj){
 		if (obj.callee) return 'arguments';
 		else if (obj.item) return 'collection';
 	}
-	
+
 	return typeof obj;
+};
+
+//Make array
+function $A(iterable){
+	if (iterable.item){
+		var l = iterable.length, array = new Array(l);
+		while (l--) array[l] = iterable[l];
+		return array;
+	}
+	return Array.prototype.slice.call(iterable);
 };
 
 Function.prototype.bind = function(obj){
@@ -95,6 +105,23 @@ function removeClass(element, className){
 
 function toggleClass(element, className){
   return hasClass(element, className) ? removeClass(element, className) : addClass(element, className);
+}
+
+function dispose(element){
+  if(element.parentNode)
+    element.parentNode.removeChild(element);
+}
+
+function destroy(element){
+  empty(element);
+  dispose(element);
+  // clean(element, true);
+}
+
+function empty(element){
+  $each($A(element.childNodes), function(node){
+    destroy(node);
+  });
 }
 
 function Class(obj){
@@ -156,7 +183,7 @@ var Request = new Class({
     this.xhr.onreadystatechange = function(){
       if(this.xhr.readyState == 4) {
         if(this.xhr.status == 200) {
-          this.options.onSuccess();
+          this.options.onSuccess.call(this, this.xhr.responseText, this.xhr.responseXML);
         } else {
           this.options.onFailure();
         }
