@@ -20,7 +20,7 @@ document.addEventListener('click', function(){
 },false); */
 
 window.addEventListener('load', function () {
-  
+
   //Hide the url bar, delay it a bit
   setTimeout(hideURLbar,0);
 
@@ -41,44 +41,38 @@ window.addEventListener('load', function () {
   showPage(startPage);
 
 	//Bind the events for form submitting
-	/*
-	var elements = document.getElementsByClassName('dialog');
-	var i = 0;
-	for(;i<elements.length;i++){
-    elements[i].addEventListener('submit', function (event) {
-      //Stop the submitting of the form
-      event.preventDefault();
+	$each(document.getElementsByClassName('searchbox'), function(element){
 
-      var form = $(event.target);
-      if (form.nodeName.toLowerCase() !== 'form') {
-        form = form.getParent('form');
-      }
+      element.addEventListener('submit', function (event) {
 
-      // Deselect all inputs
-      form.getElements('input').each(function (item) {
-        item.blur();
-      });
+        //Stop the submitting of the form
+        event.preventDefault();
+        var form = event.target;
 
-      //Hide the form
-      removeClass(form, 'selected');
+        // Deselect all inputs
+        $each(form.getElementsByTagName('input'), function(item) {
+          item.blur();
+        });
 
-      //Check if the action is to a #id
-      var index = form.action.lastIndexOf("#");
-      if (index !== -1)
-      {
-        //Go to the submit location
-        HistoryManager.goToPage(form.action.substr(index + 1));
-      }
-    });
-	} */
+        //Hide the form
+        removeClass(form, 'selected');
+
+        //Check if the action is to a #id
+        var index = form.action.lastIndexOf("#");
+        if (index !== -1) {
+          //Go to the submit location
+          goToPage(form.action.substr(index + 1));
+        }
+      }, false);
+	});
 
   //Start the clickwatcher
   window.addEventListener('click', onClick);
 
   setInterval(checkHash, observeDelay);
-  
+
   //private functions
-  
+
   function hideURLbar() {
     window.scrollTo(0, 0.9);
   }
@@ -198,7 +192,7 @@ window.addEventListener('load', function () {
       $chain.push(function(){
         swipePage(fromPage, toPage, backwards);
       });
-    } else {    
+    } else {
       transitionInProgress = true;
 
       // position the toPage right next to the current page

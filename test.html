@@ -30,7 +30,7 @@
 </div>
 
 <div id="searchByKey" class="searchbox">
-	<form action="" method="get">
+	<form action="#searchResults" method="get">
 		<fieldset>
       <input id="searchInput" placeholder="search" type="text" />
       <input id="submit" type="hidden" />
@@ -39,7 +39,7 @@
 </div>
 
 <div id="searchByQuery" class="searchbox">
-	<form action="" method="get">
+	<form action="#searchResults" method="get">
 		<fieldset>
       <input placeholder="Query" type="text" />
       <input type="hidden" />
@@ -170,6 +170,17 @@
         <span class="name">Search by Keyword</span>
         <span class="arrow"></span>
       </a>
+    </li>
+  </ul>
+</div>
+
+<div id="searchResults" class="content" title="Search Results">
+  <span class="graytitle">Search Results</span>
+  <ul id="searchList" class="pageitem">
+    <li class="menu">
+      <span class="name">
+        <img alt="list" src="images/loading.gif" />
+      </span>
     </li>
   </ul>
 </div>
