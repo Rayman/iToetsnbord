@@ -12,14 +12,7 @@
 	}
 } */
 
-function hideURLbar() {
-	window.scrollTo(0, 1);
-}
 
-window.onload = function () {
-	// fullscreen();
-	hideURLbar();
-};
 
 /* no blue selection
 document.addEventListener('click', function(){
@@ -27,6 +20,9 @@ document.addEventListener('click', function(){
 },false); */
 
 window.addEventListener('load', function () {
+  
+  //Hide the url bar, delay it a bit
+  setTimeout(hideURLbar,0);
 
   // Get all elements with class selected
 	var list = document.getElementsByClassName('selected');
@@ -34,7 +30,7 @@ window.addEventListener('load', function () {
 	//Startpage is the first selected = true
 	var startPage = list[0];
 
-  var	observeDelay  = 100,
+  var	observeDelay  = 200,
       backButton    = $('leftnav'), //This button is hidden when page.id == homepage.id
       homeButton    = $('blueleftbutton'),
       homePage      = startPage,
@@ -78,16 +74,24 @@ window.addEventListener('load', function () {
 
   //Start the clickwatcher
   window.addEventListener('click', onClick);
-  
+
   setInterval(checkHash, observeDelay);
   
+  //private functions
+  
+  function hideURLbar() {
+    window.scrollTo(0, 0.9);
+  }
+
   function checkHash(){
     if(currentHash != location.hash) {
-      currentHash = location.hash;
-      onHashChanged(location.hash);
+      if(!transitionInProgress) {
+        currentHash = location.hash;
+        onHashChanged(location.hash);
+      }
     }
   };
-  
+
   function onHashChanged(newHash) {
 		var pageId = newHash.substr(1); //strip the #
 
@@ -137,10 +141,9 @@ window.addEventListener('load', function () {
   }
 
   function showPage(page, backwards) {
-    log('showPage', page);
 
     // If classname == dialog means that it is a form
-    if (hasClass(page, 'dialog')) {
+    if (hasClass(page, 'searchbox')) {
       showDialog(page);
     } else {
       //Change the location to the page that about to be shown
@@ -172,7 +175,7 @@ window.addEventListener('load', function () {
 
   function showDialog(form) {
     //Unhide the form
-    addClass(form, 'selected');
+    toggleClass(form, 'selected');
 
     //Remove the old query
     form.getElementsByTagName('input').value = '';
@@ -186,27 +189,36 @@ window.addEventListener('load', function () {
     return page;
   }
 
-  var timeoutID = null;
+  var transitionInProgress = false;
+  var $chain = [];
 
   function swipePage(fromPage, toPage, backwards)	{
     //Stop the other page from hiding
-    clearTimeout(timeoutID);
+    if(transitionInProgress) {
+      $chain.push(function(){
+        swipePage(fromPage, toPage, backwards);
+      });
+    } else {    
+      transitionInProgress = true;
 
-    // position the toPage right next to the current page
-    toPage.style.webkitTransform = 'translate(' + (backwards ? '-100' : '100') + '%)';
+      // position the toPage right next to the current page
+      toPage.style.webkitTransform = 'translate(' + (backwards ? '-100' : '100') + '%)';
 
-    //Unhide it
-    addClass(toPage, 'selected');
+      //Unhide it
+      addClass(toPage, 'selected');
 
-    //Scroll to the top
-    scrollTo(0, 1);
+      //Scroll to the top
+      scrollTo(0, 1);
 
-    fromPage.style.webkitTransform = 'translate(' + (backwards ? '100' : '-100') + '%)';
-    toPage.style.webkitTransform = 'translate(0px)';
+      fromPage.style.webkitTransform = 'translate(' + (backwards ? '100' : '-100') + '%)';
+      toPage.style.webkitTransform = 'translate(0px)';
 
-    timeoutID = setTimeout(function () {
-      removeClass(fromPage, 'selected'); //Hide the fromPage
-    }, 1000);
+      setTimeout(function () {
+        transitionInProgress = false;
+        removeClass(fromPage, 'selected'); //Hide the fromPage
+        setTimeout($chain.shift(), 0);
+      }, 1000);
+    }
   }
 
 }, false);
