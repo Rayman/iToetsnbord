@@ -1,4 +1,4 @@
-$ = function(id){
+function $(id){
   return document.getElementById(id);
 }
 
@@ -31,6 +31,27 @@ function $try(){
 	return null;
 };
 
+function $type(obj){
+	if (obj == undefined) return false;
+	if(typeof obj !== 'object') {
+    if(typeof obj == 'numer' && !isFinite(obj))
+      return false;
+    return typeof obj;
+  }
+
+	if (obj.nodeName){
+		switch (obj.nodeType){
+			case 1: return 'element';
+			case 3: return (/\S/).test(obj.nodeValue) ? 'textnode' : 'whitespace';
+		}
+	} else if (typeof obj.length == 'number'){
+		if (obj.callee) return 'arguments';
+		else if (obj.item) return 'collection';
+	}
+	
+	return typeof obj;
+};
+
 Function.prototype.bind = function(obj){
   var that = this;
   return function(){
@@ -38,8 +59,12 @@ Function.prototype.bind = function(obj){
   };
 };
 
-Array.prototype.forEach = function(fn, bind){
+Array.prototype.each = function(fn, bind){
   for (var i = 0, l = this.length; i < l; i++) fn.call(bind, this[i], i, this);
+};
+
+function $each(obj, fn, bind) {
+  for (var i = 0, l = obj.length; i < l; i++) fn.call(bind, obj[i], i, obj);
 };
 
 String.prototype.clean = function(){
