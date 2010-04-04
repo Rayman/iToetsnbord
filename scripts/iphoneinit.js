@@ -92,6 +92,10 @@ window.addEventListener('load', function () {
       currentTitle.innerHTML = responseJSON.title;
       currentArtist.innerHTML = responseJSON.artist;
       currentAlbum.innerHTML = responseJSON.album;
+
+      currentAlbumArt.style.backgroundImage = 'url(\''+ responseJSON.albumart + '\')';
+
+
       //mySlider.set(responseJSON.volume);
 
       currentInfo.innerHTML =
@@ -118,7 +122,7 @@ window.addEventListener('load', function () {
       currentSongManager.update(el.getAttribute('href'));
     });
   });
-  
+
   /*
 
   //The filename for the song that's about to be played
@@ -226,10 +230,14 @@ window.addEventListener('load', function () {
     searcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
   });
 
+  */
+
   //Listener for clicking at the info link
-  infoLink.addEvent('click',function () {
+  infoLink.addEventListener('click',function () {
     currentSongManager.update();
   });
+
+  /*
 
   //Add listener for search form submit
   $('searchBySong').addEvent('submit',function (e) {
@@ -261,23 +269,24 @@ window.addEventListener('load', function () {
       searcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
   });
 
+  */
+
   //When user clicks the link to options, we do a quick request of the variables
-  $('getOptions').addEvent('click', function () {
+  $('getOptions').addEventListener('click', function () {
     currentSongManager.update();
   });
 
   //Listener for options
-  $('options').getElements('a').each(function (el) {
-    el.addEvent('click', function (event) {
+  $each($('options').getElementsByTagName('a'), function (el) {
+    el.addEventListener('click', function (event) {
       event.preventDefault();
-      currentSongManager.update(el.get('href'));
+      currentSongManager.update(el.getAttribute('href'));
     });
   });
 
   //UpDATE!!!
   currentSongManager.update();
 
-  */
 }, false);
 
 //End of file!
