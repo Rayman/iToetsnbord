@@ -111,15 +111,15 @@ window.addEventListener('load', function () {
 
   currentSongManager.initialize();
 
-  /*
-
   //When the play controls are clicked, get the html page and update the current song
-  $('playControls').getElements('a').each(function (el) {
-    el.addEvent('click', function (event) {
+  $each($('playControls').getElementsByTagName('a'), function (el) {
+    el.addEventListener('click', function (event) {
       event.preventDefault();
-      currentSongManager.update(el.get('href'));
+      currentSongManager.update(el.getAttribute('href'));
     });
   });
+  
+  /*
 
   //The filename for the song that's about to be played
   var fileName = '';
