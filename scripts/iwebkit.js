@@ -15,18 +15,20 @@
 
 
 /* no blue selection
-document.addEventListener('click', function(){
+document.addEventListener('click', function () {
   return false;
 },false); */
 
 window.addEventListener('load', function () {
 
   //Hide the url bar, delay it a bit
-  setTimeout(hideURLbar,0);
+  setTimeout(hideURLbar, 0);
 
   // Get all elements with class selected
 	var list = document.getElementsByClassName('selected');
-	if(list.length !== 1) alert('Error, no startpage or too many startpages');
+	if (list.length !== 1) {
+    alert('Error, no startpage or too many startpages');
+  }
 	//Startpage is the first selected = true
 	var startPage = list[0];
 
@@ -41,29 +43,29 @@ window.addEventListener('load', function () {
   showPage(startPage);
 
 	//Bind the events for form submitting
-	$each(document.getElementsByClassName('searchbox'), function(element){
+	$each(document.getElementsByClassName('searchbox'), function (element) {
 
-      element.addEventListener('submit', function (event) {
+    element.addEventListener('submit', function (event) {
 
-        //Stop the submitting of the form
-        event.preventDefault();
-        var form = event.target;
+      //Stop the submitting of the form
+      event.preventDefault();
+      var form = event.target;
 
-        // Deselect all inputs
-        $each(form.getElementsByTagName('input'), function(item) {
-          item.blur();
-        });
+      // Deselect all inputs
+      $each(form.getElementsByTagName('input'), function (item) {
+        item.blur();
+      });
 
-        //Hide the form
-        removeClass(form, 'selected');
+      //Hide the form
+      removeClass(form, 'selected');
 
-        //Check if the action is to a #id
-        var index = form.action.lastIndexOf("#");
-        if (index !== -1) {
-          //Go to the submit location
-          goToPage(form.action.substr(index + 1));
-        }
-      }, false);
+      //Check if the action is to a #id
+      var index = form.action.lastIndexOf("#");
+      if (index !== -1) {
+        //Go to the submit location
+        goToPage(form.action.substr(index + 1));
+      }
+    }, false);
 	});
 
   //Start the clickwatcher
@@ -77,14 +79,14 @@ window.addEventListener('load', function () {
     window.scrollTo(0, 0.9);
   }
 
-  function checkHash(){
-    if(currentHash != location.hash) {
-      if(!transitionInProgress) {
+  function checkHash() {
+    if (currentHash !== location.hash) {
+      if (!transitionInProgress) {
         currentHash = location.hash;
         onHashChanged(location.hash);
       }
     }
-  };
+  }
 
   function onHashChanged(newHash) {
 		var pageId = newHash.substr(1); //strip the #
@@ -153,7 +155,7 @@ window.addEventListener('load', function () {
       $('title').innerHTML = page.title || "";
 
       //Hide the backButton when page === home
-      if(page === homePage) {
+      if (page === homePage) {
         backButton.style.display =  "none";
         homeButton.style.display = "inline";
       } else {
@@ -188,8 +190,8 @@ window.addEventListener('load', function () {
 
   function swipePage(fromPage, toPage, backwards)	{
     //Stop the other page from hiding
-    if(transitionInProgress) {
-      $chain.push(function(){
+    if (transitionInProgress) {
+      $chain.push(function () {
         swipePage(fromPage, toPage, backwards);
       });
     } else {
@@ -202,7 +204,7 @@ window.addEventListener('load', function () {
       addClass(toPage, 'selected');
 
       //Scroll to the top
-      scrollTo(0, 1);
+      hideURLbar();
 
       fromPage.style.webkitTransform = 'translate(' + (backwards ? '100' : '-100') + '%)';
       toPage.style.webkitTransform = 'translate(0px)';
