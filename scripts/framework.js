@@ -215,7 +215,7 @@ var Request = new Class({
 });
 
 if (!JSON) {
-  JSON = {};
+  var JSON = {};
 }
 
 //JSON.parse is a modified code from http://www.json.org/json2.js
