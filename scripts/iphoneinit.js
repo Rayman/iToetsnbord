@@ -181,11 +181,21 @@ window.addEventListener('load', function () {
       $('searchQuery').innerHTML = '"'+query+'"';
 
       // Make a loading image inside a list
-      // ul > li > img
+      /*
+        <li class="menu">
+          <span class="name">
+            <img alt="list" src="images/loading.gif">
+          </span>
+        </li>
+      */
 
-      var loadingItem = document.createElement('li');
-      loadingItem.appendChild(getLoadingImage());
-      searchList.appendChild(loadingItem);
+      var loadingLi = document.createElement('li');
+      loadingLi.className = 'menu';
+      var loadingSpan = document.createElement('span');
+      loadingSpan.className = 'name';
+      loadingSpan.appendChild(getLoadingImage());
+      loadingLi.appendChild(loadingSpan);
+      searchList.appendChild(loadingLi);
     },
 
     //When the search request is complete
