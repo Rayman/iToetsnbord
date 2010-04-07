@@ -254,36 +254,36 @@ if (typeof JSON.parse !== 'function') {
 * I got this function from //www.albionresearch.com/
 * Their copyright notice is too long to include here :P
 */
-function URLDecode( ){
-   // Replace + with ' '
-   // Replace %xx with equivalent character
-   // Put [ERROR] in output if %xx is invalid.
-   var HEXCHARS = "0123456789ABCDEFabcdef"; 
-   var encoded = document.URLForm.F2.value;
-   var plaintext = "";
-   var i = 0;
-   while (i < encoded.length) {
-       var ch = encoded.charAt(i);
-	   if (ch == "+") {
-	       plaintext += " ";
-		   i++;
-	   } else if (ch == "%") {
-			if (i < (encoded.length-2) 
-					&& HEXCHARS.indexOf(encoded.charAt(i+1)) != -1 
-					&& HEXCHARS.indexOf(encoded.charAt(i+2)) != -1 ) {
-				plaintext += unescape( encoded.substr(i,3) );
-				i += 3;
-			} else {
-				alert( 'Bad escape combination near ...' + encoded.substr(i) );
-				plaintext += "%[ERROR]";
-				i++;
-			}
-		} else {
-		   plaintext += ch;
-		   i++;
-		}
-	} // while
-   document.URLForm.F1.value = plaintext;
-   document.URLForm.F1.select();
-   return false;
+function URLDecode(text){
+  // Replace + with ' '
+  // Replace %xx with equivalent character
+  // Put [ERROR] in output if %xx is invalid.
+
+  var HEXCHARS = "0123456789ABCDEFabcdef"; 
+  var encoded = text;
+  var plaintext = "";
+  var i = 0;
+  while (i < encoded.length) {
+    var ch = encoded.charAt(i);
+    if (ch == "+") {
+      plaintext += " ";
+      i++;
+    } else if (ch == "%") {
+      if (
+        i < (encoded.length-2) &&
+        HEXCHARS.indexOf(encoded.charAt(i+1)) != -1 &&
+        HEXCHARS.indexOf(encoded.charAt(i+2)) != -1 
+      ) {
+        plaintext += unescape(encoded.substr(i,3));
+        i += 3;
+      } else {
+        plaintext += "%[ERROR]";
+        i++;
+      }
+    } else {
+      plaintext += ch;
+      i++;
+    }
+  } // while
+  return plaintext;
 }
