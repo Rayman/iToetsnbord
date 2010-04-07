@@ -198,16 +198,44 @@ window.addEventListener('load', function () {
       searchList.appendChild(loadingLi);
     },
 
+    checkJSON: function(json) {
+      if($type(json) !== 'array') {
+        return false;
+      }
+
+      function convertObject(el) {
+        var empty = true;
+        for(var prop in el) {
+          el[prop] = URLDecode(el[prop]);
+          empty = false;
+        }
+        return empty ? false : el;
+      }
+
+      var result = [];
+
+      json.each(function(el){
+        var obj = convertObject(el);
+        if(obj) {
+          result.push(el);
+        }
+      });
+
+      return result.length === 0 ? false : result;
+    },
+
     //When the search request is complete
     onSearchComplete: function (responseJSON) {
 
       empty(searchList);
 
+      responseJSON = this.checkJSON(responseJSON);
+
       //When the response has no songs in it
-      if (!responseJSON || !responseJSON.length) {
+      if (!responseJSON) {
         //Maybe the responseText has some info ?
         var errorItem = document.createElement('li');
-        errorItem.innerHTML = 'No Results: ' + responseText;
+        errorItem.innerHTML = 'No Results: ';
         searchList.appendChild(errorItem);
       } else {
         responseJSON.each(function (item) {
