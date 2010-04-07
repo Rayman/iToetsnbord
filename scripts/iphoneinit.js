@@ -2,9 +2,8 @@
  * This file init's all the classes, and adds the event handlers
  */
 
- /*global $: false, $$: false, window: false, Element: false, iPhoneSlider: false, SongManager: false */
-
-"use strict";
+ var MusicSearcher;
+ var resp;
 
 window.addEventListener('load', function () {
   //Hold the JSON object with current song
@@ -123,6 +122,113 @@ window.addEventListener('load', function () {
     });
   });
 
+
+
+  MusicSearcher = {
+
+    baseUrl: 'json/getsearchresults.html?',
+
+    //The url for the searches by query
+    urlSearchByQuery: 'query=',
+
+    //The url for searches by keyword
+    urlSearchByKey:   'search_ml=',
+
+    initialize: function () {
+
+      //The request instance
+      this.xhr = new Request({
+        onSuccess: function (responseText) {
+          resp = responseText;
+          var responseJSON = JSON.parse(responseText);
+          this.onSearchComplete(responseJSON);
+        }.bind(this),
+        onFailure: function () {
+          alert('Error getting xhr request');
+        }
+      });
+    },
+
+    update: function (data) {
+      this.xhr.get(data ? this.baseUrl + data : this.baseUrl);
+    },
+
+    //Query the media library with ajax request and fire the event
+    searchByQuery: function (query) {
+      this.fireEvent('searchStart', query);
+      if (!query) {
+        return false;
+      }
+      this.update(this.urlSearchByQuery + query);
+      return true;
+    },
+
+    //Search in the media library for this key
+    searchByKey: function (key) {
+      this.onSearchStart('Search for: ' + key);
+      if (!key) {
+        return false;
+      }
+      this.update(this.urlSearchByKey + key);
+      return true;
+    },
+
+    onSearchStart: function (query) {
+      //Empty the old search
+      empty(searchList);
+
+      //Set the title
+      $('searchQuery').innerHTML = '"'+query+'"';
+
+      // Make a loading image inside a list
+      // ul > li > img
+
+      var loadingItem = document.createElement('li');
+      loadingItem.appendChild(getLoadingImage());
+      searchList.appendChild(loadingItem);
+    },
+
+    //When the search request is complete
+    onSearchComplete: function (responseJSON) {
+
+      empty(searchList);
+
+      //When the response has no songs in it
+      if (!responseJSON || !responseJSON.length) {
+        //Maybe the responseText has some info ?
+        var errorItem = document.createElement('li');
+        errorItem.innerHTML = 'No Results: ' + responseText;
+        searchList.appendChild(errorItem);
+      } else {
+        responseJSON.each(function (item) {
+          var link = document.createElement('a');
+          link.innerHTML = item.title;
+          link.addEventListener('click', function () {
+            fileName = item.filename;
+            playLink.inject(this);
+          });
+          var listItem = document.createElement('li');
+          listItem.appendChild(link);
+          searchList.appendChild(listItem);
+        });
+      }
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /*
 
   //The filename for the song that's about to be played
@@ -165,60 +271,7 @@ window.addEventListener('load', function () {
   ).inject(playLink);
 
   //Init the searcher
-  searcher = new MusicSearcher({
-    //The baseurl for the request
-    baseUrl: 'json/getsearchresults.html?',
 
-    //The url for the searches by query
-    urlSearchByQuery: 'query=',
-
-    //The url for searches by keyword
-    urlSearchByKey:   'search_ml=',
-
-    onSearchStart: function (query) {
-      //Empty the old search
-      searchList.empty();
-
-      //Set the title
-      $('searchQuery').set('html','"'+query+'"');
-
-      // Make a loading image inside a list
-      // ul > li > img
-      new Element('img',{
-        src: 'images/loading.gif'
-      })
-      .inject(new Element('li')
-        .inject(searchList)
-      );
-    },
-
-    //When the search request is complete
-    onSearchComplete: function (responseJSON, responseText) {
-      searchList.empty();
-
-      //When the response has no songs in it
-      if (!responseJSON || !responseJSON.length) {
-        //Maybe the responseText has some info ?
-        new Element('li',{
-          html: 'No Results: ' + responseText
-        }).inject(searchList);
-        return;
-      }
-      responseJSON.each(function (item) {
-        new Element('a',{
-          html: item.title,
-          events:{
-            click: function () {
-              fileName = item.filename;
-              playLink.inject(this);
-            }
-          }
-        }).inject(
-          new Element('li').inject(searchList)
-        );
-      });
-    }
-  });
 
   //Add listener for album searching
   currentAlbum.addEvent('click',function () {
