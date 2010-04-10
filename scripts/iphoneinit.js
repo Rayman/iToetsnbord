@@ -3,7 +3,6 @@
  */
 
  var MusicSearcher;
- var resp;
 
 window.addEventListener('load', function () {
   //Hold the JSON object with current song
@@ -139,7 +138,6 @@ window.addEventListener('load', function () {
       //The request instance
       this.xhr = new Request({
         onSuccess: function (responseText) {
-          resp = responseText;
           var responseJSON = JSON.parse(responseText);
           this.onSearchComplete(responseJSON);
         }.bind(this),
