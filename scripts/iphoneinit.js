@@ -2,7 +2,7 @@
  * This file init's all the classes, and adds the event handlers
  */
 
- var MusicSearcher;
+ var MusicSearcher, currentSongManager;
 
 window.addEventListener('load', function () {
   //Hold the JSON object with current song
@@ -26,7 +26,9 @@ window.addEventListener('load', function () {
   var optionsList     = $('optionsList');
   var optionsLoading  = $('optionsLoading');
 
-  var searchList      = $('searchList');
+  var searchDiv       = getChildren($('searchResults'));
+  var searchLoading   = searchDiv[0];
+  var searchList      = searchDiv[1];
 
   function getLoadingImage(){
     var img = document.createElement('img');
@@ -82,7 +84,12 @@ window.addEventListener('load', function () {
     },
 
     onSuccess: function (responseText) {
-      var responseJSON = JSON.parse(responseText);
+      log('respose', responseJSON);
+      var responseJSON = json_parse(responseText);
+
+      for(var prop in responseJSON) {
+        responseJSON[prop] = URLDecode(responseJSON[prop]);
+      }
 
       //back the current song up, so it can be used again
       currentSongPlaying = responseJSON;
@@ -138,7 +145,7 @@ window.addEventListener('load', function () {
       //The request instance
       this.xhr = new Request({
         onSuccess: function (responseText) {
-          var responseJSON = JSON.parse(responseText);
+          var responseJSON = json_parse(responseText);
           this.onSearchComplete(responseJSON);
         }.bind(this),
         onFailure: function () {
@@ -172,28 +179,12 @@ window.addEventListener('load', function () {
     },
 
     onSearchStart: function (query) {
-      //Empty the old search
-      empty(searchList);
+      //Show the loading...
+      searchLoading.style.display = "";
+      searchList.style.display = "hidden";
 
       //Set the title
       $('searchQuery').innerHTML = '"'+query+'"';
-
-      // Make a loading image inside a list
-      /*
-        <li class="menu">
-          <span class="name">
-            <img alt="list" src="images/loading.gif">
-          </span>
-        </li>
-      */
-
-      var loadingLi = document.createElement('li');
-      loadingLi.className = 'menu';
-      var loadingSpan = document.createElement('span');
-      loadingSpan.className = 'name';
-      loadingSpan.appendChild(getLoadingImage());
-      loadingLi.appendChild(loadingSpan);
-      searchList.appendChild(loadingLi);
     },
 
     checkJSON: function(json) {
@@ -202,12 +193,10 @@ window.addEventListener('load', function () {
       }
 
       function convertObject(el) {
-        var empty = true;
         for(var prop in el) {
           el[prop] = URLDecode(el[prop]);
-          empty = false;
         }
-        return empty ? false : el;
+        return el;
       }
 
       var result = [];
@@ -236,6 +225,20 @@ window.addEventListener('load', function () {
         errorItem.innerHTML = 'No Results: ';
         searchList.appendChild(errorItem);
       } else {
+        /* Make list items like this
+        <li class="title">Music</li>
+
+        <li class="withimage">
+          <a href="">
+            <img alt="test" src="" />
+            <span class="name">One Love</span>
+            <span class="comment">David Guetta</span>
+            <span class="arrow"></span>
+          </a>
+        </li>
+
+        */
+
         responseJSON.each(function (item) {
           var link = document.createElement('a');
           link.innerHTML = item.title;
@@ -250,6 +253,8 @@ window.addEventListener('load', function () {
       }
     }
   };
+
+  MusicSearcher.initialize();
 
 
 
