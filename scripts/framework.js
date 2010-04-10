@@ -176,18 +176,17 @@ function getChildren(element) {
 	return elements;
 }
 
-var Request = new Class({
-
-  initialize: function (options) {
-    this.xhr = new this.request();
-    $extend(this.options, options);
-  },
-
-  options: {
-    onSuccess: $empty,
+var Request = function (options) {
+  this.xhr = this.request();
+  this.options = {
+    // onSuccess: $empty,
     onFailure: $empty,
     url: ""
-  },
+  };
+  $extend(this.options, options);
+}
+
+Request.prototype = {
 
   request: function () {
     return $try(function () {
@@ -212,42 +211,14 @@ var Request = new Class({
     }.bind(this);
     this.xhr.send();
   }
-});
+};
 
-if (!JSON) {
-  var JSON = {};
-}
 
-//JSON.parse is a modified code from http://www.json.org/json2.js
-if (typeof JSON.parse !== 'function') {
-  JSON.parse = function (jsonText) {
-    var j;
-    var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
-
-    //cast to string
-    var text = String(jsonText);
-
-    //some unicode stuff
-    cx.lastIndex = 0;
-    if (cx.test(text)) {
-      text = text.replace(cx, function (a) {
-        return '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-      });
-    }
-
-    if (/^[\],:{}\s]*$/
-      .test(
-        text
-          .replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
-          .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
-          .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
-      )
-    ) {
-      j = eval('(' + text + ')');
-      return j;
-    }
-    throw new SyntaxError('JSON.parse');
-  };
+function json_parse (jsonText) {
+  log('converting to json');
+  //cast to string
+  var text = String(jsonText);
+  return eval('(' + text + ')');
 }
 
 /*
@@ -259,7 +230,7 @@ function URLDecode(text){
   // Replace %xx with equivalent character
   // Put [ERROR] in output if %xx is invalid.
 
-  var HEXCHARS = "0123456789ABCDEFabcdef"; 
+  var HEXCHARS = "0123456789ABCDEFabcdef";
   var encoded = text;
   var plaintext = "";
   var i = 0;
@@ -272,7 +243,7 @@ function URLDecode(text){
       if (
         i < (encoded.length-2) &&
         HEXCHARS.indexOf(encoded.charAt(i+1)) != -1 &&
-        HEXCHARS.indexOf(encoded.charAt(i+2)) != -1 
+        HEXCHARS.indexOf(encoded.charAt(i+2)) != -1
       ) {
         plaintext += unescape(encoded.substr(i,3));
         i += 3;
