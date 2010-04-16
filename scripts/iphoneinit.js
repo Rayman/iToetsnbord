@@ -27,8 +27,8 @@ window.addEventListener('load', function () {
   var optionsLoading  = $('optionsLoading');
 
   var searchDiv       = getChildren($('searchResults'));
-  var searchLoading   = searchDiv[0];
-  var searchList      = searchDiv[1];
+  var searchLoading   = getChildren(searchDiv[0])[1]; //the loading image
+  var searchList      = searchDiv[1]; //the ul for the search list
 
   function getLoadingImage(){
     var img = document.createElement('img');
@@ -84,7 +84,6 @@ window.addEventListener('load', function () {
     },
 
     onSuccess: function (responseText) {
-      log('respose', responseJSON);
       var responseJSON = json_parse(responseText);
 
       for(var prop in responseJSON) {
@@ -228,28 +227,39 @@ window.addEventListener('load', function () {
         /* Make list items like this
         <li class="title">Music</li>
 
-        <li class="withimage">
+        <li>
           <a href="">
-            <img alt="test" src="" />
             <span class="name">One Love</span>
-            <span class="comment">David Guetta</span>
             <span class="arrow"></span>
           </a>
         </li>
 
         */
-
         responseJSON.each(function (item) {
+
           var link = document.createElement('a');
-          link.innerHTML = item.title;
-          link.addEventListener('click', function () {
-            fileName = item.filename;
-            playLink.inject(this);
+          link.href='#home';
+          link.addEventListener('click', function(e){
+            currentSongManager.update('?file='+item.filename);
           });
+
+          var spanName = document.createElement('span');
+          spanName.className = 'name';
+          spanName.innerHTML = item.title;
+          link.appendChild(spanName);
+
+          var arrow = document.createElement('span');
+          arrow.className = 'arrow';
+          link.appendChild(arrow);
+
           var listItem = document.createElement('li');
           listItem.appendChild(link);
+
           searchList.appendChild(listItem);
         });
+
+        searchLoading.style.display = 'none';
+        searchList.style.display = '';
       }
     }
   };
