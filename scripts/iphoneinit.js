@@ -224,6 +224,11 @@ window.addEventListener('DOMContentLoaded', function () {
         errorItem.innerHTML = 'No Results: ';
         searchList.appendChild(errorItem);
       } else {
+        if(responseJSON.length > 100) {
+          alert('Too many results, only showing the first 100');
+        }
+        responseJSON.splice(100);
+
 
         //Sort per artist
         var artists = {};
@@ -234,6 +239,7 @@ window.addEventListener('DOMContentLoaded', function () {
             artists[item.artist] = [item];
           }
         });
+        responseJSON = null;
 
         /* Make list items like this
         <li class="title">Music</li>
@@ -317,8 +323,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
   //Add listener for search by keyword
   $('searchByKey').addEventListener('submit',function (e) {
-    log('Catch!', this);
-
     //query valid?
     if (!MusicSearcher.searchByKey($('searchInput').value.trim()))
       MusicSearcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
