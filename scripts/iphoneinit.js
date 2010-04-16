@@ -330,10 +330,19 @@ window.addEventListener('load', function () {
   });
 
   //Listener for options
-  $each($('options').getElementsByTagName('a'), function (el) {
+  $each($('optionsList').getElementsByTagName('a'), function (el) {
     el.addEventListener('click', function (event) {
       event.preventDefault();
       currentSongManager.update(el.getAttribute('href'));
+    });
+  });
+
+  $each($('advancedOptions').getElementsByTagName('a'), function (el) {
+    el.addEventListener('click', function (event) {
+      event.preventDefault();
+      if(confirm('Are you sure you want to do that?')){
+        currentSongManager.update(el.getAttribute('href'));
+      }
     });
   });
 
