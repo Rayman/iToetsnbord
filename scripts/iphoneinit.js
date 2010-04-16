@@ -159,7 +159,7 @@ window.addEventListener('load', function () {
 
     //Query the media library with ajax request and fire the event
     searchByQuery: function (query) {
-      this.fireEvent('searchStart', query);
+      this.onSearchStart(query);
       if (!query) {
         return false;
       }
@@ -290,75 +290,18 @@ window.addEventListener('load', function () {
 
   MusicSearcher.initialize();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /*
-
-  //The filename for the song that's about to be played
-  var fileName = '';
-
-  //play/enqueue link
-  var playLink = new Element('ul');
-  new Element('li').grab(
-    new Element('a',{
-      html: 'Play',
-      href: '#home',
-      events:{
-        click: function () {
-          currentSongManager.update('?file='+fileName);
-
-          //Dirty hack for removing the playlink from the DOM
-          (function () {
-            playLink.dispose();
-          }).delay(1);
-        }
-      }
-    })
-  ).inject(playLink);
-
-  new Element('li').grab(
-    new Element('a',{
-      html: 'Enqueue',
-      href: 'javascript:void(0)',
-      events:{
-        click: function () {
-          currentSongManager.update('?add='+fileName+'&playaddedifnotplaying');
-
-          //Dirty hack for removing the playlink from the DOM
-          (function () {
-            playLink.dispose();
-          }).delay(1);
-        }
-      }
-    })
-  ).inject(playLink);
-
-  //Init the searcher
-
-
   //Add listener for album searching
-  currentAlbum.addEvent('click',function () {
-    searcher.searchByQuery('ALBUM HAS "'+currentSongPlaying.album+'"');
+  currentAlbum.parentNode.addEventListener('click',function () {
+    MusicSearcher.searchByQuery('ALBUM HAS "'+currentSongPlaying.album+'"');
+  });
+  $('albumLink').addEventListener('click',function () {
+    MusicSearcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
   });
 
   //Add listener for artist searching
-  currentArtist.addEvent('click',function () {
-    searcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
+  $('artistLink').addEventListener('click',function () {
+    MusicSearcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
   });
-
-  */
 
   //Listener for clicking at the info link
   infoLink.addEventListener('click',function () {
