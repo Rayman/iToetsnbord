@@ -73,6 +73,12 @@ window.addEventListener('load', function () {
 
   setInterval(checkHash, observeDelay);
 
+
+  $('backButton').addEventListener('click', function(e) {
+   goBack();
+  });
+
+
   //private functions
 
   function hideURLbar() {
@@ -128,6 +134,11 @@ window.addEventListener('load', function () {
       goToPage(link.hash.substring(1));
     }
   }
+
+  function goBack() {
+    history.back();
+    checkHash();
+	}
 
   function goToPage(pageId) {
     var page = tryGetPage(pageId);
