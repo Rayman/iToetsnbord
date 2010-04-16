@@ -308,39 +308,21 @@ window.addEventListener('load', function () {
     currentSongManager.update();
   });
 
-  /*
-
-  //Add listener for search form submit
-  $('searchBySong').addEvent('submit',function (e) {
-    //Get the artist and song value
-    var artist = this.getElement('input[name=artist]').value.trim();
-    var song   = this.getElement('input[name=song]').value.trim();
-
-    //Format the query
-    artist = artist == '' ? '' : 'ARTIST HAS "' + artist +'"';
-    song   = song   == '' ? '' : 'TITLE HAS  "' + song   +'"';
-    query = (song != '' && artist != '') ? song + ' && ' + artist : song + artist;
-
-    //Query valid?
-    if (!searcher.searchByQuery(query))
-      searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
-  });
-
   //Add listener for search by query
-  $('searchByQuery').addEvent('submit',function (e) {
+  $('searchByQuery').addEventListener('submit',function (e) {
     //query valid?
-    if (!searcher.searchByQuery(this.getElement('input[name=query]').value.trim()))
-      searcher.fireEvent('searchComplete', [{}, "Empty Query"]);
+    if (!MusicSearcher.searchByQuery(this.getElementsByTagName('input')[0].value.trim()))
+      MusicSearcher.fireEvent('searchComplete', [{}, "Empty Query"]);
   });
 
   //Add listener for search by keyword
-  $('searchByKeyword').addEvent('submit',function (e) {
-    //query valid?
-    if (!searcher.searchByKey(this.getElement('input[name=key]').value.trim()))
-      searcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
-  });
+  $('searchByKey').addEventListener('submit',function (e) {
+    log('Catch!', this);
 
-  */
+    //query valid?
+    if (!MusicSearcher.searchByKey($('searchInput').value.trim()))
+      MusicSearcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
+  });
 
   //When user clicks the link to options, we do a quick request of the variables
   $('getOptions').addEventListener('click', function () {
