@@ -19,7 +19,7 @@ document.addEventListener('click', function () {
   return false;
 },false); */
 
-window.addEventListener('load', function () {
+window.addEventListener('DOMContentLoaded', function () {
 
   //Hide the url bar, delay it a bit
   setTimeout(hideURLbar, 0);
