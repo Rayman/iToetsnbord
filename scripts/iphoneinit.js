@@ -224,6 +224,17 @@ window.addEventListener('load', function () {
         errorItem.innerHTML = 'No Results: ';
         searchList.appendChild(errorItem);
       } else {
+
+        //Sort per artist
+        var artists = {};
+        responseJSON.each(function (item) {
+          if(artists[item.artist]) {
+            artists[item.artist].push(item);
+          } else {
+            artists[item.artist] = [item];
+          }
+        });
+
         /* Make list items like this
         <li class="title">Music</li>
 
@@ -235,28 +246,41 @@ window.addEventListener('load', function () {
         </li>
 
         */
-        responseJSON.each(function (item) {
+        for(var artist in artists) {
+          songs = artists[artist];
 
-          var link = document.createElement('a');
-          link.href='#home';
-          link.addEventListener('click', function(e){
-            currentSongManager.update('?file='+item.filename);
+          /*
+          * Make list items like this
+          * <li class="title">Music</li>
+          */
+
+          var title = document.createElement('li');
+          title.className = 'title';
+          title.innerHTML = artist;
+          searchList.appendChild(title);
+
+          songs.each(function(item) {
+            var link = document.createElement('a');
+            link.href='#home';
+            link.addEventListener('click', function(e){
+              currentSongManager.update('?file='+item.filename);
+            });
+
+            var spanName = document.createElement('span');
+            spanName.className = 'name';
+            spanName.innerHTML = item.title;
+            link.appendChild(spanName);
+
+            var arrow = document.createElement('span');
+            arrow.className = 'arrow';
+            link.appendChild(arrow);
+
+            var listItem = document.createElement('li');
+            listItem.appendChild(link);
+
+            searchList.appendChild(listItem);
           });
-
-          var spanName = document.createElement('span');
-          spanName.className = 'name';
-          spanName.innerHTML = item.title;
-          link.appendChild(spanName);
-
-          var arrow = document.createElement('span');
-          arrow.className = 'arrow';
-          link.appendChild(arrow);
-
-          var listItem = document.createElement('li');
-          listItem.appendChild(link);
-
-          searchList.appendChild(listItem);
-        });
+        }
 
         searchLoading.style.display = 'none';
         searchList.style.display = '';
