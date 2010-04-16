@@ -4,7 +4,7 @@
 
  var MusicSearcher, currentSongManager;
 
-window.addEventListener('load', function () {
+window.addEventListener('DOMContentLoaded', function () {
   //Hold the JSON object with current song
   var currentSongPlaying = null;
 
