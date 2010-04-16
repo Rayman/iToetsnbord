@@ -215,7 +215,6 @@ Request.prototype = {
 
 
 function json_parse (jsonText) {
-  log('converting to json');
   //cast to string
   var text = String(jsonText);
   return eval('(' + text + ')');
