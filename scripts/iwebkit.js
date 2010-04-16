@@ -57,7 +57,7 @@ window.addEventListener('load', function () {
       });
 
       //Hide the form
-      removeClass(form, 'selected');
+      removeClass(this, 'selected');
 
       //Check if the action is to a #id
       var index = form.action.lastIndexOf("#");
@@ -174,7 +174,9 @@ window.addEventListener('load', function () {
     toggleClass(form, 'selected');
 
     //Remove the old query
-    form.getElementsByTagName('input').value = '';
+    $each(form.getElementsByTagName('input'), function(el) {
+      el.value = '';
+    });
   }
 
   function tryGetPage(pageId) {
