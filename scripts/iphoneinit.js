@@ -190,6 +190,11 @@ window.addEventListener('DOMContentLoaded', function () {
       if($type(json) !== 'array') {
         return false;
       }
+      
+      if(json.length > 100) {
+        alert('Too many results, only showing the first 100');
+      }
+      json.splice(100);
 
       function convertObject(el) {
         for(var prop in el) {
@@ -218,18 +223,23 @@ window.addEventListener('DOMContentLoaded', function () {
       responseJSON = this.checkJSON(responseJSON);
 
       //When the response has no songs in it
-      if (!responseJSON) {
-        //Maybe the responseText has some info ?
+      if (!responseJSON) {     
+        //Maybe the responseText has some info ?        
+        
+        var errorSpan = document.createElement('span');
+        errorSpan.className = 'name';
+        errorSpan.innerHTML = 'No Results';
+        
+        var errorLink = document.createElement('a');
+        errorLink.appendChild(errorSpan);
+                
         var errorItem = document.createElement('li');
-        errorItem.innerHTML = 'No Results: ';
+        errorItem.appendChild(errorLink);
+        
         searchList.appendChild(errorItem);
+        
       } else {
-        if(responseJSON.length > 100) {
-          alert('Too many results, only showing the first 100');
-        }
-        responseJSON.splice(100);
-
-
+      
         //Sort per artist
         var artists = {};
         responseJSON.each(function (item) {
