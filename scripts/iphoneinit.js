@@ -80,9 +80,9 @@ window.addEventListener('DOMContentLoaded', function () {
         optionsLock
       ], function (el) {
         empty(el);
-        el.appendChild(getLoadingImage());
       });
       currentRating.className = 'stars0';
+      currentAlbumArt.style.backgroundImage = 'url(\'images/loading90x90.gif\')';
     },
 
     onSuccess: function (responseText) {
