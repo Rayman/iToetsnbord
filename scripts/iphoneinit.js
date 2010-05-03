@@ -14,6 +14,7 @@ window.addEventListener('DOMContentLoaded', function () {
   var currentAlbum    = $('currentAlbum');
   var currentAlbumArt = $('currentAlbumArt');
   var currentInfo     = $('currentInfo');
+  var currentRating   = $('rating');
   var infoLink        = $('infoLink');
   // var currentVolume   = $('currentVolume');
 
@@ -81,6 +82,7 @@ window.addEventListener('DOMContentLoaded', function () {
         empty(el);
         el.appendChild(getLoadingImage());
       });
+      currentRating.className = 'stars0';
     },
 
     onSuccess: function (responseText) {
@@ -107,6 +109,8 @@ window.addEventListener('DOMContentLoaded', function () {
         responseJSON.bitrate + "kbps, " +
         responseJSON.samplerate + "kHz " +
         responseJSON.channels;
+
+      currentRating.className = 'stars' + responseJSON.rating;
 
       optionsShuffle.innerHTML = responseJSON.shuffle;
       optionsRepeat.innerHTML = responseJSON.repeat;
@@ -190,7 +194,7 @@ window.addEventListener('DOMContentLoaded', function () {
       if($type(json) !== 'array') {
         return false;
       }
-      
+
       if(json.length > 100) {
         alert('Too many results, only showing the first 100');
       }
@@ -223,23 +227,23 @@ window.addEventListener('DOMContentLoaded', function () {
       responseJSON = this.checkJSON(responseJSON);
 
       //When the response has no songs in it
-      if (!responseJSON) {     
-        //Maybe the responseText has some info ?        
-        
+      if (!responseJSON) {
+        //Maybe the responseText has some info ?
+
         var errorSpan = document.createElement('span');
         errorSpan.className = 'name';
         errorSpan.innerHTML = 'No Results';
-        
+
         var errorLink = document.createElement('a');
         errorLink.appendChild(errorSpan);
-                
+
         var errorItem = document.createElement('li');
         errorItem.appendChild(errorLink);
-        
+
         searchList.appendChild(errorItem);
-        
+
       } else {
-      
+
         //Sort per artist
         var artists = {};
         responseJSON.each(function (item) {
