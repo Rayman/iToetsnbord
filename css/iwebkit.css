@@ -1182,7 +1182,7 @@ select {
 	width: 45px;
 	padding-top: 22px;
 	padding-left: 10px;
-  -webkit-border-image: url(http://192.168.2.4/images/navbuttonblue.png) 0 5 0 5 stretch stretch;
+  -webkit-border-image: url(../images/navbuttonblue.png) 0 5 0 5 stretch stretch;
   -webkit-border-radius: 6px;
   border-width: 0px 5px;
 	color: #fff;
