@@ -39,9 +39,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
   var loadingImage = getLoadingImage();
 
-/*  //The volume slider
-  var knob = $('knob');
-  var handle = $('handle');*/
+  //The volume slider
+  var knob = $('volumeknob');
+  var handle = $('volumehandle');
 
   //Init the song manager
   currentSongManager = {
@@ -311,12 +311,11 @@ window.addEventListener('DOMContentLoaded', function () {
   MusicSearcher.initialize();
 
   //Add listener for album searching
-  currentAlbum.parentNode.addEventListener('click',function () {
+  var albumSearchFunction = function () {
     MusicSearcher.searchByQuery('ALBUM HAS "'+currentSongPlaying.album+'"');
-  });
-  $('albumLink').addEventListener('click',function () {
-    MusicSearcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
-  });
+  };
+  currentAlbum.parentNode.addEventListener('click', albumSearchFunction);
+  $('albumLink').addEventListener('click', albumSearchFunction);
 
   //Add listener for artist searching
   $('artistLink').addEventListener('click',function () {
@@ -363,6 +362,80 @@ window.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
+
+  var Slider = {
+
+    onComplete: function(){
+      var vol = Slider.getStep(knob.offsetLeft);
+      currentSongManager.update('?volume=' + vol);
+    },
+
+    startDrag: function(e) {
+
+      if (e.type === 'touchstart') {
+        this.removeEventListener('mousedown', Slider.startDrag);
+        this.addEventListener('touchmove', Slider.moveDrag);
+
+        var onTouchEnd = function () {
+          this.removeEventListener('touchmove', Slider.moveDrag);
+          this.removeEventListener('touchend', onTouchEnd);
+          Slider.onComplete.apply(Slider);
+        }
+        this.addEventListener('touchend', onTouchEnd);
+      } else {
+        document.addEventListener('mousemove', Slider.moveDrag);
+        var onMouseUp = function () {
+          document.removeEventListener('mousemove', Slider.moveDrag);
+          document.removeEventListener('mouseup', onMouseUp);
+          Slider.onComplete.apply(Slider);
+        };
+        document.addEventListener('mouseup', onMouseUp);
+      }
+
+      Slider.pos = this.offsetLeft;
+      Slider.origin = Slider.getCoors(e);
+
+      e.preventDefault(); // cancels scrolling
+    },
+
+    moveDrag: function (e) {
+      var currentPos = Slider.getCoors(e);
+      var deltaX = currentPos[0] - Slider.origin[0];
+
+      var newPos = Slider.pos + deltaX;
+      var maxPos = handle.offsetWidth - knob.offsetWidth;
+
+      if(newPos < 0) newPos = 0;
+      if(newPos > maxPos) newPos = maxPos;
+      knob.style.left = newPos + 'px';
+
+      var step = Slider.getStep(newPos);
+      knob.innerHTML = "" + step + "%";
+    },
+
+    getCoors: function (e) {
+      var coors = [];
+      if (e.touches && e.touches.length) { 	// iPhone
+        coors[0] = e.touches[0].clientX;
+        coors[1] = e.touches[0].clientY;
+      } else { 								// all others
+        coors[0] = e.clientX;
+        coors[1] = e.clientY;
+      }
+      return coors;
+    },
+
+    getStep: function(newPos){
+      var steps = 100;
+      return Math.round(steps * newPos / (handle.clientWidth - knob.offsetWidth));
+    }
+  }
+
+  knob.addEventListener('mousedown', Slider.startDrag);
+  knob.addEventListener('touchstart', Slider.startDrag);
+
+  // don't try to remove the mousedown ontouchstart; it makes the first drag
+  // very slow.
 
   //UpDATE!!!
   currentSongManager.update();
