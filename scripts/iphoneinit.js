@@ -451,6 +451,10 @@ window.addEventListener('DOMContentLoaded', function () {
   // don't try to remove the mousedown ontouchstart; it makes the first drag
   // very slow.
 
+  window.addEventListener('orientationchange', function(){
+    Slider.set(Slider.step);
+  });
+
   //UpDATE!!!
   currentSongManager.update();
 
