@@ -2,7 +2,7 @@
  * This file init's all the classes, and adds the event handlers
  */
 
- var MusicSearcher, currentSongManager;
+ var MusicSearcher, currentSongManager, Slider;
 
 window.addEventListener('DOMContentLoaded', function () {
   //Hold the JSON object with current song
@@ -118,6 +118,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
       optionsLoading.style.display = 'none';
       optionsList.style.display = '';
+
+      var vol = responseJSON.volume;
+      if(vol !== Slider.step) Slider.set(vol);
     }
   };
 
@@ -363,10 +366,10 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  var Slider = {
+  Slider = {
 
     onComplete: function(){
-      var vol = Slider.getStep(knob.offsetLeft);
+      var vol = Slider.step;
       currentSongManager.update('?volume=' + vol);
     },
 
@@ -379,7 +382,7 @@ window.addEventListener('DOMContentLoaded', function () {
         var onTouchEnd = function () {
           this.removeEventListener('touchmove', Slider.moveDrag);
           this.removeEventListener('touchend', onTouchEnd);
-          Slider.onComplete.apply(Slider);
+          Slider.onComplete();
         }
         this.addEventListener('touchend', onTouchEnd);
       } else {
@@ -387,7 +390,7 @@ window.addEventListener('DOMContentLoaded', function () {
         var onMouseUp = function () {
           document.removeEventListener('mousemove', Slider.moveDrag);
           document.removeEventListener('mouseup', onMouseUp);
-          Slider.onComplete.apply(Slider);
+          Slider.onComplete();
         };
         document.addEventListener('mouseup', onMouseUp);
       }
@@ -409,8 +412,8 @@ window.addEventListener('DOMContentLoaded', function () {
       if(newPos > maxPos) newPos = maxPos;
       knob.style.left = newPos + 'px';
 
-      var step = Slider.getStep(newPos);
-      knob.innerHTML = "" + step + "%";
+      Slider.step = Slider.calculateStep();
+      Slider.onTick(Slider.step);
     },
 
     getCoors: function (e) {
@@ -425,9 +428,20 @@ window.addEventListener('DOMContentLoaded', function () {
       return coors;
     },
 
-    getStep: function(newPos){
-      var steps = 100;
-      return Math.round(steps * newPos / (handle.clientWidth - knob.offsetWidth));
+    steps: 100,
+
+    calculateStep: function(){
+      return Math.round(Slider.steps * knob.offsetLeft / (handle.clientWidth - knob.offsetWidth));
+    },
+
+    set: function(step){
+      knob.style.left = Math.round((handle.clientWidth - knob.offsetWidth) * step / Slider.steps) + 'px';
+      Slider.step = step;
+      Slider.onTick(step);
+    },
+
+    onTick: function(step){
+      knob.innerHTML = "" + step + "%";
     }
   }
 
