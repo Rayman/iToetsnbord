@@ -179,6 +179,9 @@ window.addEventListener('DOMContentLoaded', function () {
     },
 
     onSearchStart: function (query) {
+      //Remove old search results
+      empty(searchList);
+
       //Show the loading...
       searchLoading.style.display = "";
       searchList.style.display = "hidden";
@@ -220,8 +223,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //When the search request is complete
     onSearchComplete: function (responseJSON, responseText) {
-
-      empty(searchList);
 
       responseJSON = this.checkJSON(responseJSON);
 
