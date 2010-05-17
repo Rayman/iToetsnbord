@@ -1,8 +1,9 @@
 /*
  * This file init's all the classes, and adds the event handlers
  */
+ /*global window: false, $: false, getChildren: false */
 
- var MusicSearcher, currentSongManager, Slider;
+var MusicSearcher, currentSongManager, Slider;
 
 window.addEventListener('DOMContentLoaded', function () {
   //Hold the JSON object with current song
@@ -18,9 +19,6 @@ window.addEventListener('DOMContentLoaded', function () {
   var infoLink        = $('infoLink');
   // var currentVolume   = $('currentVolume');
 
-  var artistLink      = $('artistLink');
-  var albumLink       = $('albumLink');
-
   var optionsShuffle  = $('optionsShuffle');
   var optionsRepeat   = $('optionsRepeat');
   var optionsLock     = $('optionsLock');
@@ -30,14 +28,6 @@ window.addEventListener('DOMContentLoaded', function () {
   var searchDiv       = getChildren($('searchResults'));
   var searchLoading   = getChildren(searchDiv[0])[1]; //the loading image
   var searchList      = searchDiv[1]; //the ul for the search list
-
-  function getLoadingImage(){
-    var img = document.createElement('img');
-    img.src = 'images/loading.gif';
-    return img;
-  }
-
-  var loadingImage = getLoadingImage();
 
   //The volume slider
   var knob = $('volumeknob');
@@ -88,8 +78,10 @@ window.addEventListener('DOMContentLoaded', function () {
     onSuccess: function (responseText) {
       var responseJSON = json_parse(responseText);
 
-      for(var prop in responseJSON) {
-        responseJSON[prop] = URLDecode(responseJSON[prop]);
+      for (var prop in responseJSON) {
+        if (responseJSON.hasOwnProperty(prop)) {
+          responseJSON[prop] = URLDecode(responseJSON[prop]);
+        }
       }
 
       //back the current song up, so it can be used again
@@ -99,7 +91,7 @@ window.addEventListener('DOMContentLoaded', function () {
       currentArtist.innerHTML = responseJSON.artist;
       currentAlbum.innerHTML = responseJSON.album;
 
-      currentAlbumArt.style.backgroundImage = 'url(\''+ responseJSON.albumart + '\')';
+      currentAlbumArt.style.backgroundImage = 'url(\'' + responseJSON.albumart + '\')';
 
 
       //mySlider.set(responseJSON.volume);
@@ -120,7 +112,9 @@ window.addEventListener('DOMContentLoaded', function () {
       optionsList.style.display = '';
 
       var vol = responseJSON.volume;
-      if(vol !== Slider.step) Slider.set(vol);
+      if (vol !== Slider.step) {
+        Slider.set(vol);
+      }
     }
   };
 
@@ -131,7 +125,7 @@ window.addEventListener('DOMContentLoaded', function () {
     el.addEventListener('click', function (event) {
       event.preventDefault();
       currentSongManager.update(el.getAttribute('href'));
-    });
+    }, false);
   });
 
 
@@ -152,7 +146,7 @@ window.addEventListener('DOMContentLoaded', function () {
       this.xhr = new Request({
         onSuccess: function (responseText) {
           var responseJSON = json_parse(responseText);
-          this.onSearchComplete(responseJSON);
+          this.onSearchComplete(responseJSON, responseText);
         }.bind(this),
         onFailure: function () {
           alert('Error getting xhr request');
@@ -190,31 +184,33 @@ window.addEventListener('DOMContentLoaded', function () {
       searchList.style.display = "hidden";
 
       //Set the title
-      $('searchQuery').innerHTML = '"'+query+'"';
+      $('searchQuery').innerHTML = '"' + query + '"';
     },
 
-    checkJSON: function(json) {
-      if($type(json) !== 'array') {
+    checkJSON: function (json) {
+      if ($type(json) !== 'array') {
         return false;
       }
 
-      if(json.length > 100) {
+      if (json.length > 100) {
         alert('Too many results, only showing the first 100');
       }
       json.splice(100);
 
       function convertObject(el) {
-        for(var prop in el) {
-          el[prop] = URLDecode(el[prop]);
+        for (var prop in el) {
+          if (el.hasOwnProperty(prop)) {
+            el[prop] = URLDecode(el[prop]);
+          }
         }
         return el;
       }
 
       var result = [];
 
-      json.each(function(el){
+      json.each(function (el) {
         var obj = convertObject(el);
-        if(obj) {
+        if (obj) {
           result.push(el);
         }
       });
@@ -223,7 +219,7 @@ window.addEventListener('DOMContentLoaded', function () {
     },
 
     //When the search request is complete
-    onSearchComplete: function (responseJSON) {
+    onSearchComplete: function (responseJSON, responseText) {
 
       empty(searchList);
 
@@ -235,7 +231,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         var errorSpan = document.createElement('span');
         errorSpan.className = 'name';
-        errorSpan.innerHTML = 'No Results';
+        errorSpan.innerHTML = 'No Results: ' + responseText;
 
         var errorLink = document.createElement('a');
         errorLink.appendChild(errorSpan);
@@ -245,12 +241,15 @@ window.addEventListener('DOMContentLoaded', function () {
 
         searchList.appendChild(errorItem);
 
+        searchLoading.style.display = 'none';
+        searchList.style.display = '';
+
       } else {
 
         //Sort per artist
         var artists = {};
         responseJSON.each(function (item) {
-          if(artists[item.artist]) {
+          if (artists[item.artist]) {
             artists[item.artist].push(item);
           } else {
             artists[item.artist] = [item];
@@ -269,40 +268,43 @@ window.addEventListener('DOMContentLoaded', function () {
         </li>
 
         */
-        for(var artist in artists) {
-          songs = artists[artist];
+        for (var artist in artists) {
+          if (artists.hasOwnProperty(artist)) {
 
-          /*
-          * Make list items like this
-          * <li class="title">Music</li>
-          */
+            songs = artists[artist];
 
-          var title = document.createElement('li');
-          title.className = 'title';
-          title.innerHTML = artist;
-          searchList.appendChild(title);
+            /*
+            * Make list items like this
+            * <li class="title">Music</li>
+            */
 
-          songs.each(function(item) {
-            var link = document.createElement('a');
-            link.href='#home';
-            link.addEventListener('click', function(e){
-              currentSongManager.update('?file='+item.filename);
+            var title = document.createElement('li');
+            title.className = 'title';
+            title.innerHTML = artist;
+            searchList.appendChild(title);
+
+            songs.each(function (item) {
+              var link = document.createElement('a');
+              link.href = '#home';
+              link.addEventListener('click', function (e) {
+                currentSongManager.update('?file=' + item.filename);
+              });
+
+              var spanName = document.createElement('span');
+              spanName.className = 'name';
+              spanName.innerHTML = item.title;
+              link.appendChild(spanName);
+
+              var arrow = document.createElement('span');
+              arrow.className = 'arrow';
+              link.appendChild(arrow);
+
+              var listItem = document.createElement('li');
+              listItem.appendChild(link);
+
+              searchList.appendChild(listItem);
             });
-
-            var spanName = document.createElement('span');
-            spanName.className = 'name';
-            spanName.innerHTML = item.title;
-            link.appendChild(spanName);
-
-            var arrow = document.createElement('span');
-            arrow.className = 'arrow';
-            link.appendChild(arrow);
-
-            var listItem = document.createElement('li');
-            listItem.appendChild(link);
-
-            searchList.appendChild(listItem);
-          });
+          }
         }
 
         searchLoading.style.display = 'none';
@@ -315,84 +317,86 @@ window.addEventListener('DOMContentLoaded', function () {
 
   //Add listener for album searching
   var albumSearchFunction = function () {
-    MusicSearcher.searchByQuery('ALBUM HAS "'+currentSongPlaying.album+'"');
+    MusicSearcher.searchByQuery('ALBUM HAS "' + currentSongPlaying.album + '"');
   };
-  currentAlbum.parentNode.addEventListener('click', albumSearchFunction);
-  $('albumLink').addEventListener('click', albumSearchFunction);
+  currentAlbum.parentNode.addEventListener('click', albumSearchFunction, false);
+  $('albumLink').addEventListener('click', albumSearchFunction, false);
 
   //Add listener for artist searching
-  $('artistLink').addEventListener('click',function () {
-    MusicSearcher.searchByQuery('ARTIST HAS "'+currentSongPlaying.artist+'"');
-  });
+  $('artistLink').addEventListener('click', function () {
+    MusicSearcher.searchByQuery('ARTIST HAS "' + currentSongPlaying.artist + '"');
+  }, false);
 
   //Listener for clicking at the info link
-  infoLink.addEventListener('click',function () {
+  infoLink.addEventListener('click', function () {
     currentSongManager.update();
-  });
+  }, false);
 
   //Add listener for search by query
-  $('searchByQuery').addEventListener('submit',function (e) {
+  $('searchByQuery').addEventListener('submit', function (e) {
     //query valid?
-    if (!MusicSearcher.searchByQuery(this.getElementsByTagName('input')[0].value.trim()))
-      MusicSearcher.fireEvent('searchComplete', [{}, "Empty Query"]);
-  });
+    if (!MusicSearcher.searchByQuery(this.getElementsByTagName('input')[0].value.trim())) {
+      MusicSearcher.onSearchComplete({}, "Empty Query");
+    }
+  }, false);
 
   //Add listener for search by keyword
-  $('searchByKey').addEventListener('submit',function (e) {
+  $('searchByKey').addEventListener('submit', function (e) {
     //query valid?
-    if (!MusicSearcher.searchByKey($('searchInput').value.trim()))
-      MusicSearcher.fireEvent('searchComplete', [{}, "No Key Specified"]);
-  });
+    if (!MusicSearcher.searchByKey($('searchInput').value.trim())) {
+      MusicSearcher.onSearchComplete({}, "No Key Specified");
+    }
+  }, false);
 
   //When user clicks the link to options, we do a quick request of the variables
   $('getOptions').addEventListener('click', function () {
     currentSongManager.update();
-  });
+  }, false);
 
   //Listener for options
   $each($('optionsList').getElementsByTagName('a'), function (el) {
     el.addEventListener('click', function (event) {
       event.preventDefault();
       currentSongManager.update(el.getAttribute('href'));
-    });
+    }, false);
   });
 
   $each($('advancedOptions').getElementsByTagName('a'), function (el) {
     el.addEventListener('click', function (event) {
       event.preventDefault();
-      if(confirm('Are you sure you want to do that?')){
+      if (confirm('Are you sure you want to do that?')) {
         currentSongManager.update(el.getAttribute('href'));
       }
-    });
+    }, false);
   });
 
   Slider = {
 
-    onComplete: function(){
+    onComplete: function () {
       var vol = Slider.step;
       currentSongManager.update('?volume=' + vol);
     },
 
-    startDrag: function(e) {
+    startDrag: function (e) {
 
       if (e.type === 'touchstart') {
-        this.removeEventListener('mousedown', Slider.startDrag);
-        this.addEventListener('touchmove', Slider.moveDrag);
+        this.removeEventListener('mousedown', Slider.startDrag, false);
+        this.addEventListener('touchmove', Slider.moveDrag, false);
 
         var onTouchEnd = function () {
-          this.removeEventListener('touchmove', Slider.moveDrag);
-          this.removeEventListener('touchend', onTouchEnd);
-          Slider.onComplete();
-        }
-        this.addEventListener('touchend', onTouchEnd);
-      } else {
-        document.addEventListener('mousemove', Slider.moveDrag);
-        var onMouseUp = function () {
-          document.removeEventListener('mousemove', Slider.moveDrag);
-          document.removeEventListener('mouseup', onMouseUp);
+          this.removeEventListener('touchmove', Slider.moveDrag, false);
+          this.removeEventListener('touchend', onTouchEnd, false);
           Slider.onComplete();
         };
-        document.addEventListener('mouseup', onMouseUp);
+        this.addEventListener('touchend', onTouchEnd, false);
+      } else {
+        document.addEventListener('mousemove', Slider.moveDrag, false);
+        var onMouseUp = function () {
+          document.removeEventListener('mousemove', Slider.moveDrag, false);
+          document.removeEventListener('mouseup', onMouseUp, false);
+          Slider.onComplete();
+        };
+        document.addEventListener('mouseup', onMouseUp, false);
       }
 
       Slider.pos = this.offsetLeft;
@@ -408,8 +412,8 @@ window.addEventListener('DOMContentLoaded', function () {
       var newPos = Slider.pos + deltaX;
       var maxPos = handle.offsetWidth - knob.offsetWidth;
 
-      if(newPos < 0) newPos = 0;
-      if(newPos > maxPos) newPos = maxPos;
+      if (newPos < 0)      { newPos = 0; }
+      if (newPos > maxPos) { newPos = maxPos; }
       knob.style.left = newPos + 'px';
 
       Slider.step = Slider.calculateStep();
@@ -418,10 +422,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
     getCoors: function (e) {
       var coors = [];
-      if (e.touches && e.touches.length) { 	// iPhone
+      if (e.touches && e.touches.length) {  // iPhone
         coors[0] = e.touches[0].clientX;
         coors[1] = e.touches[0].clientY;
-      } else { 								// all others
+      } else {                              // all others
         coors[0] = e.clientX;
         coors[1] = e.clientY;
       }
@@ -430,30 +434,30 @@ window.addEventListener('DOMContentLoaded', function () {
 
     steps: 100,
 
-    calculateStep: function(){
+    calculateStep: function () {
       return Math.round(Slider.steps * knob.offsetLeft / (handle.clientWidth - knob.offsetWidth));
     },
 
-    set: function(step){
+    set: function (step) {
       knob.style.left = Math.round((handle.clientWidth - knob.offsetWidth) * step / Slider.steps) + 'px';
       Slider.step = step;
       Slider.onTick(step);
     },
 
-    onTick: function(step){
+    onTick: function (step) {
       knob.innerHTML = "" + step + "%";
     }
-  }
+  };
 
-  knob.addEventListener('mousedown', Slider.startDrag);
-  knob.addEventListener('touchstart', Slider.startDrag);
+  knob.addEventListener('mousedown', Slider.startDrag, false);
+  knob.addEventListener('touchstart', Slider.startDrag, false);
 
   // don't try to remove the mousedown ontouchstart; it makes the first drag
   // very slow.
 
-  window.addEventListener('orientationchange', function(){
+  window.addEventListener('orientationchange', function () {
     Slider.set(Slider.step);
-  });
+  }, false);
 
   //UpDATE!!!
   currentSongManager.update();

@@ -176,7 +176,7 @@ function getChildren(element) {
 	return elements;
 }
 
-var Request = function (options) {
+function Request(options) {
   this.xhr = this.request();
   this.options = {
     // onSuccess: $empty,
@@ -214,7 +214,7 @@ Request.prototype = {
 };
 
 
-function json_parse (jsonText) {
+function json_parse(jsonText) {
   //cast to string
   var text = String(jsonText);
   return eval('(' + text + ')');
@@ -224,7 +224,7 @@ function json_parse (jsonText) {
 * I got this function from //www.albionresearch.com/
 * Their copyright notice is too long to include here :P
 */
-function URLDecode(text){
+function URLDecode(text) {
   // Replace + with ' '
   // Replace %xx with equivalent character
   // Put [ERROR] in output if %xx is invalid.
@@ -235,16 +235,16 @@ function URLDecode(text){
   var i = 0;
   while (i < encoded.length) {
     var ch = encoded.charAt(i);
-    if (ch == "+") {
+    if (ch === "+") {
       plaintext += " ";
       i++;
-    } else if (ch == "%") {
+    } else if (ch === "%") {
       if (
-        i < (encoded.length-2) &&
-        HEXCHARS.indexOf(encoded.charAt(i+1)) != -1 &&
-        HEXCHARS.indexOf(encoded.charAt(i+2)) != -1
+        i < (encoded.length - 2) &&
+        HEXCHARS.indexOf(encoded.charAt(i + 1)) !== -1 &&
+        HEXCHARS.indexOf(encoded.charAt(i + 2)) !== -1
       ) {
-        plaintext += unescape(encoded.substr(i,3));
+        plaintext += unescape(encoded.substr(i, 3));
         i += 3;
       } else {
         plaintext += "%[ERROR]";

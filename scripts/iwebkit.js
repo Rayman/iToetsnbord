@@ -1,18 +1,4 @@
-/* function fullscreen() {
-	var a = document.getElementsByTagName("a");
-	for (var i = 0; i < a.length;i++) {
-		if (a[i].className.match("noeffect")) {
-		}
-		else {
-			a[i].onclick = function () {
-				window.location = this.getAttribute("href");
-				return false;
-			};
-		}
-	}
-} */
-
-
+/*global window: false, $: false, $each: false, addClass: false, removeClass: false */
 
 /* no blue selection
 document.addEventListener('click', function () {
@@ -69,14 +55,14 @@ window.addEventListener('DOMContentLoaded', function () {
 	});
 
   //Start the clickwatcher
-  window.addEventListener('click', onClick);
+  window.addEventListener('click', onClick, false);
 
   setInterval(checkHash, observeDelay);
 
 
-  $('backButton').addEventListener('click', function(e) {
-   goBack();
-  });
+  $('backButton').addEventListener('click', function (e) {
+    goBack();
+  }, false);
 
 
   //private functions
@@ -185,7 +171,7 @@ window.addEventListener('DOMContentLoaded', function () {
     toggleClass(form, 'selected');
 
     //Remove the old query
-    $each(form.getElementsByTagName('input'), function(el) {
+    $each(form.getElementsByTagName('input'), function (el) {
       el.value = '';
     });
   }
@@ -225,7 +211,9 @@ window.addEventListener('DOMContentLoaded', function () {
       setTimeout(function () {
         transitionInProgress = false;
         removeClass(fromPage, 'selected'); //Hide the fromPage
-        setTimeout($chain.shift(), 0);
+        if ($chain.length) {
+          setTimeout($chain.shift(), 0);
+        }
       }, 1000);
     }
   }
