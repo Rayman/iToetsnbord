@@ -95,12 +95,25 @@ window.addEventListener('DOMContentLoaded', function () {
     }, false);
 	});
 
-  //Start the clickwatcher
-  window.addEventListener('tap', onClick, false);
-  window.addEventListener('click', onClick, false);
+
+  if(window.Touch) { //iPhone
+    window.addEventListener('click', function (e) {
+      //For each click a tap is fired, so we dont do anything with click
+      event.preventDefault();
+    }, false);
+  } else { //other
+    window.addEventListener('click', function (e) {
+      e.preventDefault();
+      var theEvent = document.createEvent('MouseEvents');
+      theEvent.initEvent('tap', true, true);
+      e.target.dispatchEvent(theEvent);
+    }, false);
+  }
+
+  //Attach the ontap listener
+  window.addEventListener('tap', onTap, false);
 
   setInterval(checkHash, observeDelay);
-
 
   $('backButton').addEventListener('tap', function (e) {
     goBack();
@@ -141,15 +154,9 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-  function onClick(event) {
+  function onTap(event) {
 
     var link = event.target;
-
-    //For each click a tap is fired, so we dont do anything with click
-    if(event.type == 'click') {
-      event.preventDefault();
-      return false;
-    }
 
     //External links are allowed
     if(link.getAttribute('rel') == 'external' && event.type == 'tap') {
