@@ -122,7 +122,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
   //When the play controls are clicked, get the html page and update the current song
   $each($('playControls').getElementsByTagName('a'), function (el) {
-    el.addEventListener('click', function (event) {
+    el.addEventListener('tap', function (event) {
       event.preventDefault();
       currentSongManager.update(el.getAttribute('href'));
     }, false);
@@ -287,7 +287,7 @@ window.addEventListener('DOMContentLoaded', function () {
             songs.each(function (item) {
               var link = document.createElement('a');
               link.href = '#home';
-              link.addEventListener('click', function (e) {
+              link.addEventListener('tap', function (e) {
                 currentSongManager.update('?file=' + item.filename);
               });
 
@@ -320,16 +320,16 @@ window.addEventListener('DOMContentLoaded', function () {
   var albumSearchFunction = function () {
     MusicSearcher.searchByQuery('ALBUM HAS "' + currentSongPlaying.album + '"');
   };
-  currentAlbum.parentNode.addEventListener('click', albumSearchFunction, false);
-  $('albumLink').addEventListener('click', albumSearchFunction, false);
+  currentAlbum.parentNode.addEventListener('tap', albumSearchFunction, false);
+  $('albumLink').addEventListener('tap', albumSearchFunction, false);
 
   //Add listener for artist searching
-  $('artistLink').addEventListener('click', function () {
+  $('artistLink').addEventListener('tap', function () {
     MusicSearcher.searchByQuery('ARTIST HAS "' + currentSongPlaying.artist + '"');
   }, false);
 
   //Listener for clicking at the info link
-  infoLink.addEventListener('click', function () {
+  infoLink.addEventListener('tap', function () {
     currentSongManager.update();
   }, false);
 
@@ -350,20 +350,20 @@ window.addEventListener('DOMContentLoaded', function () {
   }, false);
 
   //When user clicks the link to options, we do a quick request of the variables
-  $('getOptions').addEventListener('click', function () {
+  $('getOptions').addEventListener('tap', function () {
     currentSongManager.update();
   }, false);
 
   //Listener for options
   $each($('optionsList').getElementsByTagName('a'), function (el) {
-    el.addEventListener('click', function (event) {
+    el.addEventListener('tap', function (event) {
       event.preventDefault();
       currentSongManager.update(el.getAttribute('href'));
     }, false);
   });
 
   $each($('advancedOptions').getElementsByTagName('a'), function (el) {
-    el.addEventListener('click', function (event) {
+    el.addEventListener('tap', function (event) {
       event.preventDefault();
       if (confirm('Are you sure you want to do that?')) {
         currentSongManager.update(el.getAttribute('href'));
