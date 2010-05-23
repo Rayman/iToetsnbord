@@ -102,7 +102,7 @@ window.addEventListener('DOMContentLoaded', function () {
         responseJSON.samplerate + "kHz " +
         responseJSON.channels;
 
-      currentRating.className = 'stars' + responseJSON.rating;
+      currentRating.className = responseJSON.rating === "0" ? "" : 'stars' + responseJSON.rating;
 
       optionsShuffle.innerHTML = responseJSON.shuffle;
       optionsRepeat.innerHTML = responseJSON.repeat;
