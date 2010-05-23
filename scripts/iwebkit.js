@@ -20,7 +20,7 @@ NoClickDelay.prototype = {
 
 		this.theTarget = document.elementFromPoint(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
 		if(this.theTarget.nodeType == 3) this.theTarget = theTarget.parentNode;
-		this.theTarget.className+= ' pressed';
+		//this.theTarget.className+= ' pressed';
 
 		this.element.addEventListener('touchmove', this, false);
 		this.element.addEventListener('touchend', this, false);

@@ -17,9 +17,6 @@ body {
 img {
 	border: 0;
 }
-a:hover .arrow {
-	background-position: 0 -13px!important;
-}
 @media screen and (max-width: 320px)
 {
 #topbar {
@@ -217,16 +214,7 @@ fieldset {
 	-webkit-border-bottom-left-radius: 8px;
 	-webkit-border-bottom-right-radius: 8px;
 }
-.menu:hover, .store:hover, .list .content li a:hover, .list .withimage:hover, .applist li:hover:nth-child(n),.ipodlist li:hover:nth-child(n) {
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#058cf5), to(#015fe6));
-}
 .ipodlist li:hover:nth-child(n) .name,.ipodlist li:hover:nth-child(n) .time{border:0}
-.menu a:hover .name, .store:hover .starcomment, .store:hover .name, .store:hover .comment, .list .withimage a:hover .comment {
-	color: #fff;
-}
-.menu a:hover .comment {
-	color: #CCF;
-}
 .menu a {
 	display: block;
 	height: 43px;
@@ -364,10 +352,6 @@ li:last-child.store .image, .store:last-child a {
 	color: #7f7f7f;
 	font-weight: lighter;
 }
-.applist a:hover .name, .applist a:hover .starcomment, .applist a:hover .comment, .applist a:hover .price {
-	color: white;
-	text-shadow: none;
-}
 .graytitle {
 	position: relative;
 	font-weight: bold;
@@ -473,9 +457,6 @@ li:last-child.store .image, .store:last-child a {
 	max-width: 93%;
 	white-space: nowrap;
 	display: block;
-}
-.list .content li a:hover {
-	color: #fff;
 }
 .list .content {
 	margin-top: -13px!important;
