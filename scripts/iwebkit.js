@@ -253,6 +253,8 @@ window.addEventListener('DOMContentLoaded', function () {
       });
     } else {
       transitionInProgress = true;
+      
+      
 
       // position the toPage right next to the current page
       toPage.style.webkitTransform = 'translate(' + (backwards ? '-100' : '100') + '%)';
@@ -262,9 +264,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
       //Scroll to the top
       hideURLbar();
-
-      fromPage.style.webkitTransform = 'translate(' + (backwards ? '100' : '-100') + '%)';
-      toPage.style.webkitTransform = 'translate(0px)';
+      
+      //wait a bit for the translation for better performance
+      setTimeout(function () {       
+        fromPage.style.webkitTransform = 'translate(' + (backwards ? '100' : '-100') + '%)';
+        toPage.style.webkitTransform = 'translate(0px)';
+      }, 0);
 
       setTimeout(function () {
         transitionInProgress = false;
@@ -272,7 +277,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if ($chain.length) {
           setTimeout($chain.shift(), 0);
         }
-      }, 1000);
+      }, 500);
     }
   }
 
