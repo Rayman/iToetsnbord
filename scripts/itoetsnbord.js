@@ -1,7 +1,10 @@
 /*
  * This file init's all the classes, and adds the event handlers
  */
- /*global window: false, $: false, getChildren: false */
+ 
+ /*global window: false, $: false, getChildren: false, Request: false, 
+ $each: false, empty: false, json_parse: false, URLDecode: false, $type: false,
+ Asset: false */
 
 var currentSongManager, Slider;
 
@@ -269,7 +272,7 @@ window.addEventListener('DOMContentLoaded', function () {
         for (var artist in artists) {
           if (artists.hasOwnProperty(artist)) {
 
-            songs = artists[artist];
+            var songs = artists[artist];
 
             /*
             * Make list items like this
@@ -410,8 +413,11 @@ window.addEventListener('DOMContentLoaded', function () {
       var newPos = Slider.pos + deltaX;
       var maxPos = handle.offsetWidth - knob.offsetWidth;
 
-      if (newPos < 0)      { newPos = 0; }
-      if (newPos > maxPos) { newPos = maxPos; }
+      if (newPos < 0) {
+        newPos = 0;
+      } else if (newPos > maxPos) {
+        newPos = maxPos;
+      }
       knob.style.left = newPos + 'px';
 
       Slider.step = Slider.calculateStep();

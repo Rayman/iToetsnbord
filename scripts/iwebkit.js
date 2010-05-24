@@ -1,4 +1,5 @@
-/*global window: false, $: false, $each: false, addClass: false, removeClass: false */
+/*global window: false, $: false, $each: false, addClass: false, removeClass: false,
+ hasClass: false, toggleClass: false */
 
 /**
  * Removes the click delay in the target element
@@ -6,33 +7,37 @@
  */
 function NoClickDelay(el) {
 	this.element = el;
-	if( window['Touch'] ) this.element.addEventListener('touchstart', this, false);
+	if (window['Touch']) {
+    this.element.addEventListener('touchstart', this, false);
+  }
 }
 
 NoClickDelay.prototype = {
 
-	onTouchStart: function(e) {
+	onTouchStart: function (e) {
 		//e.preventDefault();
 		this.moved = false;
 
 		this.theTarget = document.elementFromPoint(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
-		if(this.theTarget.nodeType == 3) this.theTarget = theTarget.parentNode;
+		if (this.theTarget.nodeType === 3) {
+      this.theTarget = this.theTarget.parentNode;
+    }
 		//this.theTarget.className+= ' pressed';
 
 		this.element.addEventListener('touchmove', this, false);
 		this.element.addEventListener('touchend', this, false);
 	},
 
-	onTouchMove: function(e) {
+	onTouchMove: function (e) {
 		this.moved = true;
 		this.theTarget.className = this.theTarget.className.replace(/ ?pressed/gi, '');
 	},
 
-	onTouchEnd: function(e) {
+	onTouchEnd: function (e) {
 		this.element.removeEventListener('touchmove', this, false);
 		this.element.removeEventListener('touchend', this, false);
 
-		if( !this.moved && this.theTarget ) {
+		if (!this.moved && this.theTarget) {
 			this.theTarget.className = this.theTarget.className.replace(/ ?pressed/gi, '');
 			var theEvent = document.createEvent('MouseEvents');
 			theEvent.initEvent('tap', true, true);
@@ -44,8 +49,8 @@ NoClickDelay.prototype = {
 };
 
 //This is so closure compiler doesn't rename 'handleEvent'
-NoClickDelay.prototype['handleEvent'] = function(e) {
-  switch(e.type) {
+NoClickDelay.prototype['handleEvent'] = function (e) {
+  switch (e.type) {
     case 'touchstart': this.onTouchStart(e); break;
     case 'touchmove': this.onTouchMove(e); break;
     case 'touchend': this.onTouchEnd(e); break;
@@ -102,10 +107,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	});
 
 
-  if(window['Touch']) { //iPhone
+  if (window['Touch']) { //iPhone
     window.addEventListener('click', function (e) {
       //For each click a tap is fired, so we dont do anything with click
-      event.preventDefault();
+      e.preventDefault();
     }, false);
   } else { //other
     window.addEventListener('click', function (e) {
@@ -165,7 +170,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var link = event.target;
 
     //External links are allowed
-    if(link.getAttribute('rel') == 'external' && event.type == 'tap') {
+    if (link.getAttribute('rel') === 'external' && event.type === 'tap') {
       window.location.href = link.href;
     }
 

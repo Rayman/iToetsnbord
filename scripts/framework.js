@@ -11,7 +11,7 @@ function $(id) {
  * MooTools More, <http://mootools.net/more>.
  * Copyright (c) 2006-2009 Aaron Newton <http://clientcide.com/>,
  * Valerio Proietti <http://mad4milk.net> &
- * the MooTools team <http://mootools.net/developers>, 
+ * the MooTools team <http://mootools.net/developers>,
  * MIT Style License.
  */
 var log = function () {
@@ -23,7 +23,6 @@ var log = function () {
     }
   }
 };
-
 
 function $extend(original, extended) {
 	for (var key in (extended || {})) {
@@ -263,13 +262,13 @@ function URLDecode(text) {
  * Provides methods to dynamically load JavaScript, CSS, and Image files into the document.
  * license: MIT-style license
  * author: Valerio Proietti
- * 
+ *
  * The script has been heavily modified
  */
 
 var Asset = {
 
-	javascript: function(source){
+	javascript: function (source) {
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = source;
@@ -277,25 +276,25 @@ var Asset = {
     return script;
 	},
 
-	css: function(source){
+	css: function (source) {
     var link = document.createElement('link');
-    link.rel = 'stylesheet',
-	  link.media = 'screen',
-		link.type = 'text/css',
+    link.rel = 'stylesheet';
+	  link.media = 'screen';
+		link.type = 'text/css';
 		link.href = source;
 		document.head.appendChild(link);
 		return link;
 	},
 
-	image: function(source){
+	image: function (source) {
 		var image = new Image();
 		image.src = source;
 		return image;
 	},
 
-	images: function(sources){
+	images: function (sources) {
 	  var images = [];
-		sources.each(function(source){
+		sources.each(function (source) {
       images.push(Asset.image(source));
     });
     return images;
