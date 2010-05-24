@@ -3,7 +3,7 @@
  */
  /*global window: false, $: false, getChildren: false */
 
-var MusicSearcher, currentSongManager, Slider;
+var currentSongManager, Slider;
 
 window.addEventListener('DOMContentLoaded', function () {
   //Hold the JSON object with current song
@@ -71,7 +71,7 @@ window.addEventListener('DOMContentLoaded', function () {
       ], function (el) {
         empty(el);
       });
-      currentRating.className = 'stars0';
+      currentRating.className = '';
       currentAlbumArt.style.backgroundImage = 'url(\'images/loading90x90.gif\')';
     },
 
@@ -87,31 +87,28 @@ window.addEventListener('DOMContentLoaded', function () {
       //back the current song up, so it can be used again
       currentSongPlaying = responseJSON;
 
-      currentTitle.innerHTML = responseJSON.title;
-      currentArtist.innerHTML = responseJSON.artist;
-      currentAlbum.innerHTML = responseJSON.album;
+      currentTitle.innerHTML = responseJSON['title'];
+      currentArtist.innerHTML = responseJSON['artist'];
+      currentAlbum.innerHTML = responseJSON['album'];
 
-      currentAlbumArt.style.backgroundImage = 'url(\'' + responseJSON.albumart + '\')';
-
-
-      //mySlider.set(responseJSON.volume);
+      currentAlbumArt.style.backgroundImage = 'url(\'' + responseJSON['albumart'] + '\')';
 
       currentInfo.innerHTML =
-        responseJSON.length + ", " +
-        responseJSON.bitrate + "kbps, " +
-        responseJSON.samplerate + "kHz " +
-        responseJSON.channels;
+        responseJSON['length'] + ", " +
+        responseJSON['bitrate'] + "kbps, " +
+        responseJSON['samplerate'] + "kHz " +
+        responseJSON['channels'];
 
-      currentRating.className = responseJSON.rating === "0" ? "" : 'stars' + responseJSON.rating;
+      currentRating.className = responseJSON['rating'] === "0" ? "" : 'stars' + responseJSON['rating'];
 
-      optionsShuffle.innerHTML = responseJSON.shuffle;
-      optionsRepeat.innerHTML = responseJSON.repeat;
-      optionsLock.innerHTML = responseJSON.lock;
+      optionsShuffle.innerHTML = responseJSON['shuffle'];
+      optionsRepeat.innerHTML = responseJSON['repeat'];
+      optionsLock.innerHTML = responseJSON['lock'];
 
       optionsLoading.style.display = 'none';
       optionsList.style.display = '';
 
-      var vol = responseJSON.volume;
+      var vol = responseJSON['volume'];
       if (vol !== Slider.step) {
         Slider.set(vol);
       }
@@ -130,7 +127,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-  MusicSearcher = {
+  var MusicSearcher = {
 
     baseUrl: 'json/getsearchresults.html?',
 
@@ -146,8 +143,8 @@ window.addEventListener('DOMContentLoaded', function () {
       this.xhr = new Request({
         onSuccess: function (responseText) {
           var responseJSON = json_parse(responseText);
-          this.onSearchComplete(responseJSON, responseText);
-        }.bind(this),
+          MusicSearcher.onSearchComplete(responseJSON, responseText);
+        },
         onFailure: function () {
           alert('Error getting xhr request');
         }
@@ -250,10 +247,10 @@ window.addEventListener('DOMContentLoaded', function () {
         //Sort per artist
         var artists = {};
         responseJSON.each(function (item) {
-          if (artists[item.artist]) {
-            artists[item.artist].push(item);
+          if (artists[item['artist']]) {
+            artists[item['artist']].push(item);
           } else {
-            artists[item.artist] = [item];
+            artists[item['artist']] = [item];
           }
         });
         responseJSON = null;
@@ -288,12 +285,12 @@ window.addEventListener('DOMContentLoaded', function () {
               var link = document.createElement('a');
               link.href = '#home';
               link.addEventListener('tap', function (e) {
-                currentSongManager.update('?file=' + item.filename);
+                currentSongManager.update('?file=' + item['filename']);
               });
 
               var spanName = document.createElement('span');
               spanName.className = 'name';
-              spanName.innerHTML = item.title;
+              spanName.innerHTML = item['title'];
               link.appendChild(spanName);
 
               var arrow = document.createElement('span');
@@ -318,14 +315,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
   //Add listener for album searching
   var albumSearchFunction = function () {
-    MusicSearcher.searchByQuery('ALBUM HAS "' + currentSongPlaying.album + '"');
+    MusicSearcher.searchByQuery('ALBUM HAS "' + currentSongPlaying['album'] + '"');
   };
   currentAlbum.parentNode.addEventListener('tap', albumSearchFunction, false);
   $('albumLink').addEventListener('tap', albumSearchFunction, false);
 
   //Add listener for artist searching
   $('artistLink').addEventListener('tap', function () {
-    MusicSearcher.searchByQuery('ARTIST HAS "' + currentSongPlaying.artist + '"');
+    MusicSearcher.searchByQuery('ARTIST HAS "' + currentSongPlaying['artist'] + '"');
   }, false);
 
   //Listener for clicking at the info link

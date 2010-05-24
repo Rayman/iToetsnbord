@@ -1,9 +1,19 @@
+/**
+ * Gets an element by its id from the document
+ * @param {string} id The id of the element
+ */
 function $(id) {
   return document.getElementById(id);
 }
 
-//The log is from mootools more
-//MooTools More, <http://mootools.net/more>. Copyright (c) 2006-2009 Aaron Newton <http://clientcide.com/>, Valerio Proietti <http://mad4milk.net> & the MooTools team <http://mootools.net/developers>, MIT Style License.
+/**
+ * The log is from mootools more
+ * MooTools More, <http://mootools.net/more>.
+ * Copyright (c) 2006-2009 Aaron Newton <http://clientcide.com/>,
+ * Valerio Proietti <http://mad4milk.net> &
+ * the MooTools team <http://mootools.net/developers>, 
+ * MIT Style License.
+ */
 var log = function () {
   if (console.log) {
     try {
@@ -13,6 +23,7 @@ var log = function () {
     }
   }
 };
+
 
 function $extend(original, extended) {
 	for (var key in (extended || {})) {
@@ -87,6 +98,12 @@ Array.prototype.each = function (fn, bind) {
   }
 };
 
+/**
+ * Iterates over all properties in obj and calls the function fn
+ * @param {Object} obj The object to iterate over
+ * @param {Function} fn The object to iterate over
+ * @param {Object=} bind The object to bind the function to (optional)
+ */
 function $each(obj, fn, bind) {
   for (var i = 0, l = obj.length; i < l; i++) {
     fn.call(bind, obj[i], i, obj);
@@ -143,27 +160,6 @@ function empty(element) {
   });
 }
 
-function Class(obj) {
-  if (!obj) {
-    return $empty;
-  }
-  var newClass = obj.initialize ? obj.initialize : $empty;
-  var impl = obj.Implements || [];
-  impl.forEach(function (el) {
-    $extend(newClass.prototype, new el());
-  });
-  $extend(newClass.prototype, obj);
-  return newClass;
-}
-
-var Options = new Class({
-
-	setOptions: function (options) {
-		$extend(this.options, options);
-	}
-
-});
-
 function getChildren(element) {
   var el = element.firstChild;
 	var elements = [];
@@ -176,6 +172,10 @@ function getChildren(element) {
 	return elements;
 }
 
+/**
+ * A request implementation
+ * @constructor
+ */
 function Request(options) {
   this.xhr = this.request();
   this.options = {

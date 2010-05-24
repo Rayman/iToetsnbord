@@ -1,18 +1,15 @@
 /*global window: false, $: false, $each: false, addClass: false, removeClass: false */
 
+/**
+ * Removes the click delay in the target element
+ * @constructor
+ */
 function NoClickDelay(el) {
 	this.element = el;
-	if( window.Touch ) this.element.addEventListener('touchstart', this, false);
+	if( window['Touch'] ) this.element.addEventListener('touchstart', this, false);
 }
 
 NoClickDelay.prototype = {
-	handleEvent: function(e) {
-		switch(e.type) {
-			case 'touchstart': this.onTouchStart(e); break;
-			case 'touchmove': this.onTouchMove(e); break;
-			case 'touchend': this.onTouchEnd(e); break;
-		}
-	},
 
 	onTouchStart: function(e) {
 		//e.preventDefault();
@@ -44,6 +41,15 @@ NoClickDelay.prototype = {
 
 		this.theTarget = undefined;
 	}
+};
+
+//This is so closure compiler doesn't rename 'handleEvent'
+NoClickDelay.prototype['handleEvent'] = function(e) {
+  switch(e.type) {
+    case 'touchstart': this.onTouchStart(e); break;
+    case 'touchmove': this.onTouchMove(e); break;
+    case 'touchend': this.onTouchEnd(e); break;
+  }
 };
 
 window.addEventListener('DOMContentLoaded', function () {
@@ -96,7 +102,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	});
 
 
-  if(window.Touch) { //iPhone
+  if(window['Touch']) { //iPhone
     window.addEventListener('click', function (e) {
       //For each click a tap is fired, so we dont do anything with click
       event.preventDefault();
@@ -257,7 +263,7 @@ window.addEventListener('DOMContentLoaded', function () {
       
 
       // position the toPage right next to the current page
-      toPage.style.webkitTransform = 'translate(' + (backwards ? '-100' : '100') + '%)';
+      toPage.style['webkitTransform'] = 'translate(' + (backwards ? '-100' : '100') + '%)';
 
       //Unhide it
       addClass(toPage, 'selected');
@@ -267,8 +273,8 @@ window.addEventListener('DOMContentLoaded', function () {
       
       //wait a bit for the translation for better performance
       setTimeout(function () {       
-        fromPage.style.webkitTransform = 'translate(' + (backwards ? '100' : '-100') + '%)';
-        toPage.style.webkitTransform = 'translate(0px)';
+        fromPage.style['webkitTransform'] = 'translate(' + (backwards ? '100' : '-100') + '%)';
+        toPage.style['webkitTransform'] = 'translate(0px)';
       }, 0);
 
       setTimeout(function () {
