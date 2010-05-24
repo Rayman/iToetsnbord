@@ -257,3 +257,47 @@ function URLDecode(text) {
   } // while
   return plaintext;
 }
+
+/**
+ * Assets.js
+ * Provides methods to dynamically load JavaScript, CSS, and Image files into the document.
+ * license: MIT-style license
+ * author: Valerio Proietti
+ * 
+ * The script has been heavily modified
+ */
+
+var Asset = {
+
+	javascript: function(source){
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = source;
+    document.head.appendChild(script);
+    return script;
+	},
+
+	css: function(source){
+    var link = document.createElement('link');
+    link.rel = 'stylesheet',
+	  link.media = 'screen',
+		link.type = 'text/css',
+		link.href = source;
+		document.head.appendChild(link);
+		return link;
+	},
+
+	image: function(source){
+		var image = new Image();
+		image.src = source;
+		return image;
+	},
+
+	images: function(sources){
+	  var images = [];
+		sources.each(function(source){
+      images.push(Asset.image(source));
+    });
+    return images;
+	}
+};

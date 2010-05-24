@@ -462,4 +462,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 }, false);
 
+window.addEventListener('load', function () {
+  Asset.images(['images/searchfield.png', 'images/navlinkleftblack.png', 'images/navleft.png', 'images/navleftblack.png', 'images/navlinkleft.png']);
+});
+
 //End of file!
