@@ -220,7 +220,7 @@ function json_parse(jsonText) {
 }
 
 /*
-* I got this function from //www.albionresearch.com/
+* I got this function from: www.albionresearch.com
 * Their copyright notice is too long to include here :P
 */
 function URLDecode(text) {
@@ -256,6 +256,43 @@ function URLDecode(text) {
   } // while
   return plaintext;
 }
+
+function URLEncode(text) {
+	// The Javascript escape and unescape functions do not correspond
+	// with what browsers actually do...
+	var SAFECHARS = "0123456789" +					// Numeric
+					"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +	// Alphabetic
+					"abcdefghijklmnopqrstuvwxyz" +
+					"-_.!~*'()";					// RFC2396 Mark characters
+	var HEX = "0123456789ABCDEF";
+ 
+	var plaintext = text;
+	var encoded = "";
+	for (var i = 0; i < plaintext.length; i++ ) {
+		var ch = plaintext.charAt(i);
+    if (ch == " ") {
+      encoded += "+";				// x-www-urlencoded, rather than %20
+		} else if (SAFECHARS.indexOf(ch) != -1) {
+      encoded += ch;
+		} else {
+      var charCode = ch.charCodeAt(0);
+			if (charCode > 255) {
+			    alert( "Unicode Character '" 
+                        + ch 
+                        + "' cannot be encoded using standard URL encoding.\n" +
+				          "(URL encoding only supports 8-bit characters.)\n" +
+						  "A space (+) will be substituted." );
+				encoded += "+";
+			} else {
+				encoded += "%";
+				encoded += HEX.charAt((charCode >> 4) & 0xF);
+				encoded += HEX.charAt(charCode & 0xF);
+			}
+		}
+	} // for
+	
+	return encoded;
+};
 
 /**
  * Assets.js

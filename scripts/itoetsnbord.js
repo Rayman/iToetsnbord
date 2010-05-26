@@ -462,6 +462,14 @@ window.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('orientationchange', function () {
     Slider.set(Slider.step);
   }, false);
+  
+  $('ratingselect').addEventListener('change', function () {
+    var rating = this.value;
+    if (rating !== "0") {
+      currentSongManager.update('?usefile=' + URLEncode(currentSongPlaying.filename) + '&rating=' + rating);
+      //Don't call history.back(), because it will cancel the xhr
+    }
+  }, false);
 
   //UpDATE!!!
   currentSongManager.update();
@@ -470,6 +478,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
 window.addEventListener('load', function () {
   Asset.images(['images/searchfield.png', 'images/navlinkleftblack.png', 'images/navleft.png', 'images/navleftblack.png', 'images/navlinkleft.png']);
-});
+}, false);
 
 //End of file!
