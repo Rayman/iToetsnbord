@@ -115,16 +115,12 @@ String.prototype.clean = function () {
 
 function $empty() { }
 
-String.prototype.contains = function (string, separator) {
-  return (separator) ? (separator + this + separator).indexOf(separator + string + separator) > -1 : this.indexOf(string) > -1;
-};
-
 String.prototype.trim = function () {
   return this.replace(/^\s+|\s+$/g, '');
 };
 
 function hasClass(element, className) {
-  return element.className.contains(className, ' ');
+  return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1;
 }
 
 function addClass(element, className) {
@@ -138,24 +134,13 @@ function removeClass(element, className) {
 }
 
 function toggleClass(element, className) {
-  return hasClass(element, className) ? removeClass(element, className) : addClass(element, className);
-}
-
-function dispose(element) {
-  if (element.parentNode) {
-    element.parentNode.removeChild(element);
-  }
-}
-
-function destroy(element) {
-  empty(element);
-  dispose(element);
-  // clean(element, true);
+  hasClass(element, className) ? removeClass(element, className) : addClass(element, className);
 }
 
 function empty(element) {
   $each($A(element.childNodes), function (node) {
-    destroy(node);
+    empty(node);
+    element.removeChild(node);
   });
 }
 
@@ -265,7 +250,7 @@ function URLEncode(text) {
 					"abcdefghijklmnopqrstuvwxyz" +
 					"-_.!~*'()";					// RFC2396 Mark characters
 	var HEX = "0123456789ABCDEF";
- 
+
 	var plaintext = text;
 	var encoded = "";
 	for (var i = 0; i < plaintext.length; i++ ) {
@@ -277,12 +262,8 @@ function URLEncode(text) {
 		} else {
       var charCode = ch.charCodeAt(0);
 			if (charCode > 255) {
-			    alert( "Unicode Character '" 
-                        + ch 
-                        + "' cannot be encoded using standard URL encoding.\n" +
-				          "(URL encoding only supports 8-bit characters.)\n" +
-						  "A space (+) will be substituted." );
-				encoded += "+";
+        alert('Error, invalid Unicode Character');
+        encoded += "+";
 			} else {
 				encoded += "%";
 				encoded += HEX.charAt((charCode >> 4) & 0xF);
@@ -290,7 +271,7 @@ function URLEncode(text) {
 			}
 		}
 	} // for
-	
+
 	return encoded;
 };
 
