@@ -43,9 +43,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
     initialize: function () {
       //The request instance
-      this.xhr = new Request({
+      currentSongManager.xhr = new Request({
         method: "get",
-        onSuccess: this.onSuccess,
+        onSuccess: currentSongManager.onSuccess,
         onFailure: function () {
           alert('Error getting xhr request');
         }
@@ -54,7 +54,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
     //Get the url
     update: function (data) {
-      this.xhr.get(data ? this.baseUrl + data : this.baseUrl);
+      currentSongManager.xhr.get(data ? currentSongManager.baseUrl + data : currentSongManager.baseUrl);
 
       //Show loading, hide results
       optionsLoading.style.display = "";
@@ -143,7 +143,7 @@ window.addEventListener('DOMContentLoaded', function () {
     initialize: function () {
 
       //The request instance
-      this.xhr = new Request({
+      currentSongManager.xhr = new Request({
         onSuccess: function (responseText) {
           var responseJSON = json_parse(responseText);
           MusicSearcher.onSearchComplete(responseJSON, responseText);
@@ -155,26 +155,26 @@ window.addEventListener('DOMContentLoaded', function () {
     },
 
     update: function (data) {
-      this.xhr.get(data ? this.baseUrl + data : this.baseUrl);
+      MusicSearcher.xhr.get(data ? MusicSearcher.baseUrl + data : MusicSearcher.baseUrl);
     },
 
     //Query the media library with ajax request and fire the event
     searchByQuery: function (query) {
-      this.onSearchStart(query);
+      MusicSearcher.onSearchStart(query);
       if (!query) {
         return false;
       }
-      this.update(this.urlSearchByQuery + query);
+      MusicSearcher.update(MusicSearcher.urlSearchByQuery + query);
       return true;
     },
 
     //Search in the media library for this key
     searchByKey: function (key) {
-      this.onSearchStart('Search for: ' + key);
+      MusicSearcher.onSearchStart('Search for: ' + key);
       if (!key) {
         return false;
       }
-      this.update(this.urlSearchByKey + key);
+      this.update(MusicSearcher.urlSearchByKey + key);
       return true;
     },
 
@@ -224,7 +224,7 @@ window.addEventListener('DOMContentLoaded', function () {
     //When the search request is complete
     onSearchComplete: function (responseJSON, responseText) {
 
-      responseJSON = this.checkJSON(responseJSON);
+      responseJSON = MusicSearcher.checkJSON(responseJSON);
 
       //When the response has no songs in it
       if (!responseJSON) {
