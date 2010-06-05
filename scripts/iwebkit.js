@@ -1,3 +1,9 @@
+/**
+ * This file initiates all the navigation stuff
+ * It includes the NoClickDelay, and various methods that leds pages transition
+ * into eachother and uses the location.hash to determine the state of the application
+ */
+
 /*global window: false, $: false, $each: false, addClass: false, removeClass: false,
  hasClass: false, toggleClass: false */
 
@@ -108,17 +114,21 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
   if (window['Touch']) { //iPhone
+
     window.addEventListener('click', function (e) {
       //For each click a tap is fired, so we dont do anything with click
       e.preventDefault();
     }, false);
+
   } else { //other
+
     window.addEventListener('click', function (e) {
       e.preventDefault();
       var theEvent = document.createEvent('MouseEvents');
       theEvent.initEvent('tap', true, true);
       e.target.dispatchEvent(theEvent);
     }, false);
+
   }
 
   //Attach the ontap listener
@@ -264,8 +274,8 @@ window.addEventListener('DOMContentLoaded', function () {
       });
     } else {
       transitionInProgress = true;
-      
-      
+
+
 
       // position the toPage right next to the current page
       toPage.style['webkitTransform'] = 'translate(' + (backwards ? '-100' : '100') + '%)';
@@ -275,9 +285,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
       //Scroll to the top
       hideURLbar();
-      
+
       //wait a bit for the translation for better performance
-      setTimeout(function () {       
+      setTimeout(function () {
         fromPage.style['webkitTransform'] = 'translate(' + (backwards ? '100' : '-100') + '%)';
         toPage.style['webkitTransform'] = 'translate(0px)';
       }, 0);

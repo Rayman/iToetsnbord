@@ -1,5 +1,5 @@
-/*
- * This file init's all the classes, and adds the event handlers
+/**
+ * This file init's all the classes, and adds the event handlers to all objects
  */
  
  /*global window: false, $: false, getChildren: false, Request: false, 
@@ -477,7 +477,11 @@ window.addEventListener('DOMContentLoaded', function () {
 }, false);
 
 window.addEventListener('load', function () {
-  Asset.images(['images/searchfield.png', 'images/navlinkleftblack.png', 'images/navleft.png', 'images/navleftblack.png', 'images/navlinkleft.png']);
+  Asset.images([
+    'images/searchfield.png',
+    'images/navlinkleftblack.png',
+    'images/navleft.png', 
+    'images/navleftblack.png',
+    'images/navlinkleft.png'
+  ]);
 }, false);
-
-//End of file!
