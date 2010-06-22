@@ -463,11 +463,15 @@ window.addEventListener('DOMContentLoaded', function () {
     Slider.set(Slider.step);
   }, false);
 
-  $('ratingselect').addEventListener('change', function () {
+  var selectRating = $('ratingselect');
+
+  selectRating.addEventListener('change', function () {
     var rating = this.value;
     if (rating !== "0") {
       currentSongManager.update('?usefile=' + URLEncode(currentSongPlaying.filename) + '&rating=' + rating);
       //Don't call history.back(), because it will cancel the xhr
+      location.href = '#home';
+      selectRating.value="0";
     }
   }, false);
 
