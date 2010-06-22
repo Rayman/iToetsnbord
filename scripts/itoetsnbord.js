@@ -1,8 +1,8 @@
 /**
  * This file init's all the classes, and adds the event handlers to all objects
  */
- 
- /*global window: false, $: false, getChildren: false, Request: false, 
+
+ /*global window: false, $: false, getChildren: false, Request: false,
  $each: false, empty: false, json_parse: false, URLDecode: false, $type: false,
  Asset: false */
 
@@ -143,7 +143,7 @@ window.addEventListener('DOMContentLoaded', function () {
     initialize: function () {
 
       //The request instance
-      currentSongManager.xhr = new Request({
+      MusicSearcher.xhr = new Request({
         onSuccess: function (responseText) {
           var responseJSON = json_parse(responseText);
           MusicSearcher.onSearchComplete(responseJSON, responseText);
@@ -462,7 +462,7 @@ window.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('orientationchange', function () {
     Slider.set(Slider.step);
   }, false);
-  
+
   $('ratingselect').addEventListener('change', function () {
     var rating = this.value;
     if (rating !== "0") {
@@ -480,7 +480,7 @@ window.addEventListener('load', function () {
   Asset.images([
     'images/searchfield.png',
     'images/navlinkleftblack.png',
-    'images/navleft.png', 
+    'images/navleft.png',
     'images/navleftblack.png',
     'images/navlinkleft.png'
   ]);
