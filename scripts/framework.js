@@ -130,7 +130,7 @@ function $A(iterable) {
 Function.prototype.bind = function (obj) {
   var that = this;
   return function () {
-    that.apply(obj, arguments);
+    return that.apply(obj, arguments);
   };
 };
 
