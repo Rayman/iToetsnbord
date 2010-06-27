@@ -105,3 +105,46 @@ describe('$type function', {
                 value_of($type(document.getElementsByTagName('div'))).should_be('collection');
         },
 });
+
+describe('$A function', {
+        'should return an array of a nodelist': function() {
+                var div = document.createElement('div');
+                div.appendChild(document.createElement('p'));
+                div.appendChild(document.createElement('a'));
+                div.appendChild(document.createElement('div'));
+                
+                var list = div.getElementsByTagName('*');
+                var arr  = $A(list);
+        
+                value_of(list).should_have(3, 'items');
+                value_of($type(arr)).should_be('array');
+                value_of(arr).should_have(3, 'items');
+        },
+        'should return a copy of an array': function() {
+          var obj1 = {a:3, b:4};
+          var obj2 = {b:5, c:6};
+          var arr1 = [9, obj1, obj2, 8];
+          var arr2 = $A(arr1);
+          
+          value_of(arr1).should_be(arr2);
+          value_of(arr1 == arr2).should_be_false();
+          value_of(arr1[1] == arr2[1]).should_be_true();
+          value_of(arr1[2] == arr2[2]).should_be_true();
+        }        
+});
+
+(function (){
+
+function Rules() {
+  return this + ' rules';
+}
+
+
+describe('bind function', {
+        'should return the function bound to an object': function() {
+            var fnc = Rules.bind('MooTools');
+            value_of(fnc()).should_be('MooTools rules');
+        }
+});
+
+})();
