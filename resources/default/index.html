@@ -1,0 +1,85 @@
+<!-- 
+# Rhythmweb - Rhythmbox web REST + Ajax environment for remote control
+# Copyright (C) 2010  Pablo Carranza
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<html>
+<head>
+	<title>Rhythmbox REST/Ajax Web Control</title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<script type="text/javascript" src="jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript" src="player.js"></script>
+</head>
+<body>
+	<div id="player">
+		<span id="player_buttons">
+			<img id="previous" class='link' src='img/previous.png' width="24" height="24" alt="Previous" title="Previous Song" />
+			<img id="seek_back" class='link' src='img/seek-backward.png' width="24" height="24" title="Back 10 secs" alt="Seek Back" />
+			<span id="play_pause" class='link'>
+				<span id='play'><img src='img/play.png' width="24" height="24" title="Play" alt="Play" /></span>
+				<span id='pause'><img src='img/pause.png' width="24" height="24" alt="Pause" title="Pause" /></span>
+			</span>
+			<img id="seek_forward" class='link' src='img/seek-forward.png' width="24" height="24" title="Forward 10 secs" alt="Seek Forward"/>
+			<img id="next" class='link' src='img/next.png' width="24" height="24" alt="Next" title="Next Song"/>
+		</span>
+		<span id="title"></span>
+		<span id="artist"></span>
+		<span id="album"></span>
+		<span id='time'></span>
+	</div>
+	<div id="tabs">
+		<div id="tabs_header">
+			<ul>
+				<li>
+					<span id="tab_search" class="selected">search</span>
+				</li>
+				<li>
+					<span id="tab_queue">queue</span>
+				</li>
+				<li>
+					<span id="tab_tags">cloud</span>
+				</li>
+				<li>
+					<span id="tab_sources">sources</span>
+				</li>
+			</ul>
+			<div id="status_feedback"></div>
+			<div id='volume'>
+				<img id='vol_down' class='link' src='img/volume-down.png' title='Lower volume' alt='volume down' width='16' height='16' />
+				<img id='vol_status' class='link' src='img/volume-medium.png' width='24' height='24' alt='volume status' />
+				<img id='vol_up' class='link' src='img/volume-up.png' title='Raise volume' alt='volume up' width='16' height='16' />
+			</div>
+		</div>
+		<div id="content">
+			<div id="search">
+				search: <input type="text" id="search_filter" />
+				<img id="do_search" src="img/search.png" width="24" height="24" alt="Search" title="Search" />
+				<div id="search_result"></div>
+			</div>
+			<div id="queue" class="hide">
+			</div>
+			<div id="tags" class="hide">
+				<div id="artists_cloud"></div>
+				<div id="albums_cloud"></div>
+				<div id="genres_cloud"></div>
+			</div>
+			<div id="sources" class="hide">
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,394 @@
+/*
+# Rhythmweb - Rhythmbox web REST + Ajax environment for remote control
+# Copyright (C) 2010  Pablo Carranza
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+body {
+		font-family: Verdana, Helvetica, Sans-Serif;
+}
+img {
+	border: 0px;
+}
+.link {
+	cursor: pointer;
+}
+.hide {
+	display: none;
+}
+/* ****************************************************** PLAYER */
+#player {
+	float: left;
+	clear: both;
+	width: 100%;
+	line-height: 2em;
+}
+#player_buttons {
+	float: left;
+}
+#title {
+	float: left;
+	margin-left: 1em;
+	font-size: 1.7em;
+	font-weight: bold;
+}
+#artist {
+	float: left;
+	margin-left: 0.7em;
+	font-size: 1.1em;
+}
+#album {
+	float: left;
+	margin-left: 0.3em;
+	font-size: 1.1em;
+}
+#title {
+	float: left;
+	margin-left: 0.7em;
+}
+#time {
+	float: right;
+	clear: right;
+	margin-right: 1em;
+}
+
+#volume {
+	float: right;
+	clear: right;
+	margin-right: 1em;
+}
+
+#volume img {
+	vertical-align: middle;
+}
+
+#vol_status {
+	margin-left: 6px;
+	margin-right: 6px;
+}
+
+/* ****************************************************** END PLAYER */
+/* ****************************************************** QUEUE */
+#queue, #library, #tags, #sources {
+	float: left;
+	clear: both;
+	width: 100%;
+	line-height: 2em;
+	vertical-align: middle;
+}
+.line {
+	clear: both;
+	width: 100%;
+	display: table;
+	background: white;
+	font-style: normal;
+}
+.line:focus, .line:hover { 
+	font-style: italic;
+	color: #f80; 
+}
+
+.track_actions {
+	width: 8%;
+	display: table-cell;
+	padding-right: 10px;
+	text-align: right;
+	vertical-align: middle;
+}
+.track_number {
+	width: 2%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.track_title {
+	width: 20%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.track_genre {
+	width: 10%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.track_artist {
+	width: 15%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.track_album {
+	width: 25%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.track_duration {
+	width: 5%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.track_rating {
+	width: 15%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.track_artist:hover, .track_album:hover, .track_genre:hover, .track_duration:hover, .track_title:hover {
+    font-weight: bold;
+    font-style: normal;
+}
+#clear_queue {
+	float: left;
+}
+
+.enqueue {
+	display:block;
+	float: left;
+}
+
+.dequeue {
+	display:block;
+	float: left;
+}
+
+.play {
+	background:url(img/play_grey.png) no-repeat center center;
+	height: 24px; 
+	width: 24px;
+	border: none;
+	display:block;
+	float: left;
+}
+
+.play span {
+	display: none;
+}
+
+.play:hover {
+	background:url(img/play.png) no-repeat center center;
+	border: none;
+}
+
+/* ****************************************************** END QUEUE */
+/* ****************************************************** TABS */
+#tabs_header {
+	width: 100%;
+	clear: both;
+}
+
+#status_feedback {
+	color: #f80;
+	float: left;
+}
+
+#tabs ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	background: white;
+	float: left;
+}
+
+#tabs li {
+	float: left;
+	margin: 0 1em 0 0;	
+}
+#tabs li span {
+	text-decoration: none;
+	display: block;
+	width: 6em;
+	padding: 0 0.5em;
+	font-weight: bold;
+	color: black;
+	border-bottom: 0.5em solid #fc6;
+	color: #fc6;
+	cursor: pointer;
+}
+#tabs li span:hover {
+	color: #fa3;
+	border-color: #fa3;
+}
+#content {
+	border-top: 1px solid  #fc6;
+	clear: both;
+	padding: 0.7em;
+}
+#tabs .selected {
+	color: #f80;
+	border-color: #f80;
+	position: relative;
+	top: 1px;
+}
+/* ****************************************************** END TABS */
+/* ****************************************************** LIBRARY BROWSING */
+.library_previous {
+	float: left;
+	clear: left;
+	width: 10%;
+}
+.library_status {
+	position: relative;
+	float: left;
+	text-align: center;
+	width: 80%;
+}
+.library_next {
+	float: left;
+	clear: right;
+	width: 10%;
+}
+#go_next_top {
+	float: right;
+}
+#go_next {
+	float: right;
+}
+/* ****************************************************** END LIBRARY BROWSING */
+/* ****************************************************** SEARCH */
+#search {
+	float: left;
+	clear: both;
+	width: 100%;
+	line-height: 2em;
+}
+#search_filter {
+	border: 1px solid grey;
+	width: 70%;
+}
+#search_filter:hover {
+	border: 1px solid blue;
+}
+
+#img_searching {
+	margin-left: auto;
+	margin-right: auto;
+	vertical-align: middle;
+}
+
+#do_search {
+	vertical-align: middle;
+	cursor: pointer;
+}
+#search_add_all {
+	float: left;
+}
+.searchfor {
+	float: left;
+	font-weight: bolder;
+}
+.cell {
+	float: left;
+	margin-left: 1em;
+}
+.prop {
+	float: left;
+	font-weight: bold;
+}
+.value {
+	float: left;
+	font-style: italic;
+}
+/* ****************************************************** END SEARCH */
+
+
+/* ****************************************************** TAG CLOUD */
+.tag_ar {
+	float: left;
+	margin-left: 1em;
+	margin-right: 1em;
+	color: 330066;
+	cursor: pointer;
+}
+
+.tag_al {
+	float: left;
+	margin-left: 1em;
+	margin-right: 1em;
+	color: 660033;
+	cursor: pointer;
+}
+
+.tag_gr {
+	float: left;
+	margin-left: 1em;
+	margin-right: 1em;
+	color: 000033;
+	cursor: pointer;
+}
+
+.xxx_large {
+	font-weight: bold;
+	font-size: xx-large;
+}
+
+.xx_large {
+	font-size: xx-large;
+}
+
+.x_large {
+	font-size: x-large;
+}
+
+.large {
+	font-size: large;
+}
+
+.medium {
+	font-size: medium;
+}
+
+.small {
+	font-size: small;
+}
+
+.x_small {
+	font-size: x-small;
+}
+
+.xx_small {
+	font-size: xx-small;
+}
+
+/* ****************************************************** END TAG CLOUD */
+/* ****************************************************** SOURCES */
+.pl_row {
+	width: 100%;
+	float: left;
+	clear: both;
+	margin-bottom: 2em;
+}
+
+.pl_name img {
+	margin-right: 1em;
+	vertical-align: middle;
+}
+
+.pl_name {
+	float: left;
+	clear: right;
+	font-size: large;
+	font-weigth: bolder;
+	color: 000033;
+	cursor: pointer;
+	margin-left: 1em;
+}
+
+.pl_load {
+	vertical-align: middle;
+}
+
+.pl_entries {
+	margin-left: 2em;
+	float: left;
+	font-size: medium;
+}
+/* ****************************************************** END SOURCES */
